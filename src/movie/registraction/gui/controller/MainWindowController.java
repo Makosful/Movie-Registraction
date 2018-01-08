@@ -82,14 +82,14 @@ public class MainWindowController implements Initializable {
         //uses the API url + our fixed search index to display us all the metadata of the movie searched for - if possible.
         URL searchLink = new URL("http://www.omdbapi.com/?apikey=872a80a7&t=" + searchInput);
         //Opens up a connection for us to READ from a buffered reader in an inputstream from our API link.
-        URLConnection yc = searchLink.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                yc.getInputStream()));
+        URLConnection con = searchLink.openConnection();
+        BufferedReader buffRead = new BufferedReader(new InputStreamReader(
+                con.getInputStream()));
         String inputLine;
-        while ((inputLine = in.readLine()) != null) {
+        while ((inputLine = buffRead.readLine()) != null) {
             System.out.println(inputLine);
         }
-        in.close();
+        buffRead.close();
     }
 
     @FXML
