@@ -6,6 +6,7 @@
 package movie.registraction.be;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -134,7 +135,7 @@ public class Movie
      * The removeMovieCategory list and removeMovieCategory list is then looped through, 
      * adding/removing the categories in the database to this specific movie.
      */
-    public void saveMovieCategories() 
+    public void saveMovieCategories() throws SQLException 
     {
         Iterator<String> in = getCategories().iterator();
         while (in.hasNext())
