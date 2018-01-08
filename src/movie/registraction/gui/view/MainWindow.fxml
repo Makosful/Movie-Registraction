@@ -22,6 +22,12 @@
                <children>
                   <VBox spacing="10.0">
                      <children>
+                        <AnchorPane>
+                           <children>
+                              <TextField fx:id="txtTitleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="160.0" />
+                              <JFXButton fx:id="btnTitleSearch" onAction="#titleSearch" prefWidth="150.0" text="Fucking Search!" AnchorPane.rightAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
                         <Accordion fx:id="acdPanes">
                           <panes>
                             <TitledPane fx:id="acdGenre" animated="false" text="Genre">
@@ -53,12 +59,6 @@
                               </TitledPane>
                           </panes>
                         </Accordion>
-                        <AnchorPane>
-                           <children>
-                              <TextField fx:id="txtTitleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="160.0" />
-                              <JFXButton fx:id="btnTitleSearch" onAction="#titleSearch" prefWidth="150.0" text="Fucking Search!" AnchorPane.rightAnchor="0.0" />
-                           </children>
-                        </AnchorPane>
                         <HBox spacing="10.0">
                            <children>
                               <JFXButton fx:id="btnFilterSearch" buttonType="RAISED" onAction="#searchFilters" text="Fucking Update!" />
