@@ -12,15 +12,52 @@ import java.util.List;
  *
  * @author B
  */
-public class Movie {
+public class Movie 
+{
+    
+    private String movieName;
+    private int year;
+    private double rating;
     
     List<String> categories = new ArrayList();
 
-    public List<String> getCategories() {
+    public List<String> getCategories() 
+    {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(List<String> categories) 
+    {
         this.categories = categories;
+    }
+    
+    public void setMovieName(String movieName)
+    {
+        this.movieName = movieName;
+    }
+    
+    public void setMovieYear(int year)
+    {
+        this.year = year;
+    }
+    
+    public void setRating(double rating)
+    {
+        this.rating = rating;
+    }
+    
+    public String getMovieName()
+    {
+        return movieName;
+    }
+
+    public int getYear() 
+    {
+        return year;
+    }
+
+    public double getRating() 
+    {
+        return rating;
     }
 }
