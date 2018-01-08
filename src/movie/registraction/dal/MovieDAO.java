@@ -32,18 +32,14 @@ public class MovieDAO {
 
    
 
-    
+    /*
+        Adding a category.
+    */
     public void addCategory(String category) throws SQLException
     {
         System.out.println("Add:"+category);
-    }
-    
-    
-    public void removeCategory(String category) throws SQLServerException, SQLException
-    {
-        try(Connection con = db.getConnection())
+                try(Connection con = db.getConnection())
         {
-        System.out.println("Remove:"+category);
         
         String sql = "INSERT INTO Category Values (?)";
         PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -52,18 +48,58 @@ public class MovieDAO {
         preparedStatement.executeUpdate();
         }
     }
+    
+    /*
+        Removing a category.
+    */
+    public void removeCategory(String category) throws SQLServerException, SQLException
+    {
+        try(Connection con = db.getConnection())
+        {
+            String sql = "DELETE FROM Category WHERE name = (?)";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setString(1, category);
+            preparedStatement.executeUpdate();
+        }
+    }
 
-
-    public void addMovieCategory(int movieId, String category) 
+    /*
+        Method to add a category to a specific movie.
+    */
+    public void addMovieCategory(int movieId, String category) throws SQLServerException, SQLException 
     {
         System.out.println("Add:"+movieId+category);
+        try(Connection con = db.getConnection())
+        {
+            String sql = "INSERT INTO CatMovie Values (?), (?)";
+            
+            PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            
+            preparedStatement.setString(1, category);
+            preparedStatement.setInt(2, movieId);
+            
+            preparedStatement.executeUpdate();
+        }
         
     }
-    
-    public void removeMovieCategory(int movieId, String category) 
+    /*
+        Method to remove a genre from a movie.
+    */
+    public void removeMovieCategory(int movieId, String category) throws SQLServerException, SQLException 
     {
 
         System.out.println("Remove:"+movieId+category);
+        
+        try(Connection con = db.getConnection())
+        {
+            String sql = "DELETE FROM CatMovie WHERE movieId = ? AND categoryId = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            
+            preparedStatement.setInt(1, movieId);
+            preparedStatement.setString(2, category);
+            
+            preparedStatement.executeUpdate();
+        }
         
     }
 
