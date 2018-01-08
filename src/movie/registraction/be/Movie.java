@@ -16,11 +16,13 @@ public class Movie {
     
     List<String> categories = new ArrayList();
 
-    public List<String> getCategories() {
+    public List<String> getCategories() 
+    {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(List<String> categories) 
+    {
         this.categories = categories;
     }
 }
