@@ -1,14 +1,19 @@
 package movie.registraction.gui.controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXListView;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
+import movie.registraction.gui.model.MainWindowModel;
 
 /**
  *
@@ -17,61 +22,72 @@ import javafx.scene.layout.GridPane;
 public class MainWindowController implements Initializable
 {
 
-    private Label label;
-    @FXML
-    private TabPane tabPanes;
-    @FXML
-    private Tab paneFilterSearch;
-    @FXML
-    private FlowPane flpGenre;
-    @FXML
-    private FlowPane flpYear;
-    @FXML
-    private FlowPane flpOther;
     @FXML
     private ScrollPane scrlFilterSearch;
-    @FXML
-    private GridPane gridFilterSearch;
-    @FXML
-    private Tab paneTitleSearch;
     @FXML
     private TextField txtTitleSearch;
     @FXML
     private JFXButton btnTitleSearch;
     @FXML
-    private ScrollPane scrlTitleSearch;
-    @FXML
-    private GridPane gridTitleSearch;
-    @FXML
     private JFXButton btnFilterSearch;
     @FXML
     private JFXButton btnClearFilters;
+    @FXML
+    private TitledPane acdGenre;
+    @FXML
+    private TitledPane acdYear;
+    @FXML
+    private TitledPane acdOther;
+    @FXML
+    private Accordion acdPanes;
+    @FXML
+    private GridPane gridResults;
+    @FXML
+    private JFXListView<JFXCheckBox> lstGenre;
+    @FXML
+    private JFXListView<JFXCheckBox> lstYear;
+    @FXML
+    private JFXListView<JFXCheckBox> lstOther;
 
-    private void handleButtonAction(ActionEvent event)
-    {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
+    private MainWindowModel model;
 
+    /**
+     * Constructor for all intrents and purposes
+     *
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        // TODO
+        // Access the Model
+        model = new MainWindowModel();
+
+        // Set default values
+        acdPanes.setExpandedPane(acdGenre);
+
+        lstGenre.setItems(model.getGenreList());
+        lstYear.setItems(model.getYearList());
+        lstOther.setItems(model.getOtherList());
+
     }
 
     @FXML
     private void titleSearch(ActionEvent event)
     {
+        model.fxmlTitleSearch(txtTitleSearch.getText());
     }
 
     @FXML
     private void searchFilters(ActionEvent event)
     {
+        model.fxmlFilterSearch();
     }
 
     @FXML
     private void clearFilters(ActionEvent event)
     {
+        model.fxmlCleatFilters();
     }
 
 }
