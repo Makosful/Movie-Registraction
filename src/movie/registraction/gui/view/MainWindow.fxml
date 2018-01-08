@@ -48,7 +48,7 @@
                                     </AnchorPane>
                               </content>
                             </TitledPane>
-                              <TitledPane fx:id="acdOther" animated="false" layoutX="10.0" layoutY="35.0" text="Countries">
+                              <TitledPane fx:id="acdOther" animated="false" layoutX="10.0" layoutY="35.0" text="Country">
                                  <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
