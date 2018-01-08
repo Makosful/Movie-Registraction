@@ -8,6 +8,7 @@ package movie.registraction.dal;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,9 +39,18 @@ public class MovieDAO {
     }
     
     
-    public void removeCategory(String category)
+    public void removeCategory(String category) throws SQLServerException, SQLException
     {
+        try(Connection con = db.getConnection())
+        {
         System.out.println("Remove:"+category);
+        
+        String sql = "INSERT INTO Category Values (?)";
+        PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        
+        preparedStatement.setString(1, category);
+        preparedStatement.executeUpdate();
+        }
     }
 
 
