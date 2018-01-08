@@ -27,9 +27,6 @@ public class MovieDAO {
     {
         db = new DataBaseConnector();
     }
-    
-
-   
 
     
     public void addCategory(String category) throws SQLException
