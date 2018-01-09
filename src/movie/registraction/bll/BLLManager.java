@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
 
 /**
  *
@@ -16,10 +19,12 @@ public class BLLManager
 {
 
     OmdbSearch omdb;
-
+    MovieTilePane mtPane;
+    
     public BLLManager()
     {
         omdb = new OmdbSearch();
+        mtPane = new MovieTilePane();
     }
 
     /**
@@ -72,5 +77,10 @@ public class BLLManager
             }
         else
             throw new UnsupportedOperationException("This feature is not supported on your platform");
+    }
+    
+    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
+    {
+        mtPane.setPictures(anchorPane, tilePane, fileList);
     }
 }

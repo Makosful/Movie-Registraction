@@ -1,12 +1,16 @@
 package movie.registraction.gui.model;
 
 import com.jfoenix.controls.JFXCheckBox;
+import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.changeCategories;
@@ -140,6 +144,11 @@ public class MainWindowModel
     public void fxmlUploadFiles()
     {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
+    {
+        bll.setPictures(anchorPane, tilePane, fileList);
     }
 
 }
