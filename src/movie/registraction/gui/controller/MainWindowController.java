@@ -1,6 +1,5 @@
 package movie.registraction.gui.controller;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
 import java.io.File;
@@ -13,10 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,9 +31,9 @@ public class MainWindowController implements Initializable
     @FXML
     private TextField txtTitleSearch;
     @FXML
-    private JFXButton btnTitleSearch;
+    private Button btnTitleSearch;
     @FXML
-    private JFXButton btnClearFilters;
+    private Button btnClearFilters;
     @FXML
     private TitledPane acdGenre;
     @FXML
@@ -125,5 +121,6 @@ public class MainWindowController implements Initializable
     @FXML
     private void uploadFiles(ActionEvent event)
     {
+        model.fxmlUploadFiles();
     }
 }
