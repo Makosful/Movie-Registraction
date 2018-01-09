@@ -75,7 +75,7 @@ public class TestingController implements Initializable {
                 file = new File("C:\\Users\\Hussain\\Documents\\uiBBu.png");
                 t.getChildren().add(new ImageView(file.toURI().toString()));
                 System.out.println("testest"+i);
-            
+                System.out.println(t.getChildren().get(i));
                 
             }
         }
