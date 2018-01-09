@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
     <children>
         <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -91,18 +91,14 @@
 >>>>>>> 4ac1e551ac0e69cc9b41fbccec9cec339e1bd2b7
                     </children>
                 </VBox>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane>
                <children>
-                  <ButtonBar buttonMinWidth="50.0" buttonOrder="" prefHeight="32.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="780.0" AnchorPane.topAnchor="0.0">
+                  <ButtonBar buttonMinWidth="50.0" buttonOrder="" prefHeight="31.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="830.0" AnchorPane.topAnchor="0.0">
                      <buttons>
-                        <RadioButton ellipsisString="Title" maxWidth="100.0" minWidth="50.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="50.0" text="Title">
-                           <padding>
-                              <Insets right="50.0" />
-                           </padding>
-                        </RadioButton>
-                        <RadioButton ellipsisString="Rating" maxWidth="100.0" mnemonicParsing="false" text="Rating" />
-                        <ComboBox maxWidth="150.0" minWidth="150.0" prefHeight="31.0" prefWidth="150.0" promptText="Sort order" />
-                        <ComboBox maxWidth="150.0" minWidth="150.0" prefWidth="150.0" promptText="Min. rating" />
+                        <RadioButton fx:id="rBTitle" ellipsisString="Title" maxWidth="75.0" mnemonicParsing="false" prefHeight="21.0" selected="true" text="Title" />
+                        <RadioButton fx:id="rBRating" ellipsisString="Rating" maxWidth="100.0" mnemonicParsing="false" text="Rating" />
+                        <ComboBox fx:id="comBoxSortOrder" maxWidth="150.0" prefWidth="150.0" promptText="Sort order" />
+                        <ComboBox fx:id="comBoxMinRating" maxWidth="150.0" prefHeight="31.0" prefWidth="150.0" promptText="Min. rating" />
                      </buttons>
                   </ButtonBar>
                </children>
@@ -114,7 +110,6 @@
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="440.0" prefWidth="1280.0">
                                       <children>
                                           <JFXListView fx:id="lstYear" prefHeight="180.0" prefWidth="1280.0" />
-                              <Button layoutX="14.0" layoutY="214.0" mnemonicParsing="false" onAction="#btnChangeCategories" text="Change categories" />
                                       </children>
                                   </AnchorPane>
                               </content>
@@ -124,6 +119,7 @@
                      <children>
                         <FlowPane prefHeight="31.0" prefWidth="1280.0">
                            <children>
+                              <Button mnemonicParsing="false" onAction="#btnChangeCategories" text="Change categories" />
                               <Button mnemonicParsing="false" onAction="#uploadFiles" text="Upload file(s)">
                                  <FlowPane.margin>
                                     <Insets right="50.0" />

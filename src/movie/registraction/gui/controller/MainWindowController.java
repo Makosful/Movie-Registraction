@@ -58,6 +58,10 @@ public class MainWindowController implements Initializable
     private JFXListView<?> lstGenre1;
     @FXML
     private JFXListView<?> lstGenre2;
+    @FXML
+    private ComboBox<String> comBoxSortOrder;
+    @FXML
+    private ComboBox<String> comBoxMinRating;
 
     /**
      * Constructor for all intrents and purposes
@@ -73,14 +77,18 @@ public class MainWindowController implements Initializable
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-
         lstGenre.setItems(model.getGenreList());
         lstYear.setItems(model.getYearList());
         lstOther.setItems(model.getOtherList());
-
-        //binding anchorpane to scrollpane
-        //anchorForScroll.maxWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
-        //anchorForScroll.minWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
+        
+        //Initializing methods
+        comboBoxSetup();
+    }
+    
+    private void comboBoxSetup()
+    {
+        comBoxSortOrder.getItems().addAll("Ascending", "Descending");
+        comBoxMinRating.getItems().addAll("Minimum: 1", "Minimum: 2", "Minimum: 3", "Minimum: 4", "Minimum: 5", "Minimum: 6", "Minimum: 7", "Minimum: 8", "Minimum: 9");
     }
 
     @FXML
