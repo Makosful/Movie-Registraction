@@ -24,8 +24,13 @@
                             <children>
                                 <AnchorPane>
                                     <children>
-                                        <TextField fx:id="txtTitleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="160.0" />
-                                        <JFXButton fx:id="btnTitleSearch" onAction="#titleSearch" prefWidth="150.0" text="Fucking Search!" AnchorPane.rightAnchor="0.0" />
+                                        <TextField fx:id="txtTitleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="240.0" />
+                              <HBox spacing="10.0" AnchorPane.rightAnchor="0.0">
+                                 <children>
+                                              <JFXButton fx:id="btnTitleSearch" onAction="#titleSearch" text="Fucking Search!" />
+                                              <JFXButton fx:id="btnClearFilters" buttonType="RAISED" onAction="#clearFilters" text="Fucking Clear Filters!" />
+                                 </children>
+                              </HBox>
                                     </children>
                                 </AnchorPane>
                                 <Accordion fx:id="acdPanes">
@@ -68,15 +73,6 @@
                                         </TitledPane>
                                     </panes>
                                 </Accordion>
-                                <HBox spacing="10.0">
-                                    <children>
-                                        <JFXButton fx:id="btnFilterSearch" buttonType="RAISED" onAction="#searchFilters" text="Fucking Update!" />
-                                        <JFXButton fx:id="btnClearFilters" buttonType="RAISED" onAction="#clearFilters" text="Fucking Clear Filters!" />
-                                    </children>
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                </HBox>
                             </children>
                         </VBox>
                         <AnchorPane VBox.vgrow="ALWAYS">
@@ -92,21 +88,6 @@
                                 </ScrollPane>
                             </children>
                         </AnchorPane>
-                        <AnchorPane>
-                            <children>
-                                <TextField fx:id="txtTitleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="160.0" />
-                                <JFXButton fx:id="btnTitleSearch" onAction="#titleSearch" prefWidth="150.0" text="Fucking Search!" AnchorPane.rightAnchor="0.0" />
-                            </children>
-                        </AnchorPane>
-                        <HBox spacing="10.0">
-                            <children>
-                                <JFXButton fx:id="btnFilterSearch" buttonType="RAISED" onAction="#searchFilters" text="Fucking Update!" />
-                                <JFXButton fx:id="btnClearFilters" buttonType="RAISED" onAction="#clearFilters" text="Fucking Clear Filters!" />
-                            </children>
-                            <VBox.margin>
-                                <Insets />
-                            </VBox.margin>
-                        </HBox>
                     </children>
                 </VBox>
                 <AnchorPane VBox.vgrow="ALWAYS">
