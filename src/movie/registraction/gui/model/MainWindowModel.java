@@ -159,7 +159,8 @@ public class MainWindowModel
         } catch (SQLException ex) {
             Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+    }
+    
     public void fxmlUploadFiles()
     {
         throw new UnsupportedOperationException("Not supported yet.");

@@ -103,6 +103,7 @@ public class MainWindowController implements Initializable
         model.fxmlClearFilters();
     }
 
+    @FXML
     private void btnChangeCategories(ActionEvent event)
     {
         try
@@ -126,7 +127,7 @@ public class MainWindowController implements Initializable
         }
     }
 
-
+    @FXML
     private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException {
         
     
