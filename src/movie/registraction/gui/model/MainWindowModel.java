@@ -1,37 +1,40 @@
 package movie.registraction.gui.model;
 
 import com.jfoenix.controls.JFXCheckBox;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import movie.registraction.be.Categories;
 
 /**
  *
  * @author Axl
  */
-public class MainWindowModel
-{
+public class MainWindowModel {
 
     private ObservableList<JFXCheckBox> genres;
     private ObservableList<JFXCheckBox> years;
     private ObservableList<JFXCheckBox> others;
+    private Categories categories;
 
-    public MainWindowModel()
-    {
+    public MainWindowModel() throws IOException {
         genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
-
-        for (int i = 0; i < 10; i++)
-        {
+        categories = new Categories();
+        
+        for (int i = 0; i < 10; i++) {
             int j = i + 1;
             String s = "CheckBox" + j;
 
             JFXCheckBox cb = new JFXCheckBox(s);
-            genres.add(cb);
+            //genres.add(cb);
         }
 
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             int y = 1990;
             int y2 = y + i;
 
@@ -40,18 +43,15 @@ public class MainWindowModel
         }
     }
 
-    public void fxmlTitleSearch(String text)
-    {
+    public void fxmlTitleSearch(String text) {
         System.out.println(text);
     }
 
-    public void fxmlFilterSearch()
-    {
+    public void fxmlFilterSearch() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void fxmlCleatFilters()
-    {
+    public void fxmlCleatFilters() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -60,18 +60,25 @@ public class MainWindowModel
      *
      * @return
      */
-    public ObservableList<JFXCheckBox> getGenreList()
-    {
-        return genres;
+    public ObservableList<JFXCheckBox> getGenreList() {
+        try {
+            for(String category :  categories.allCategories())
+            {
+                JFXCheckBox cb = new JFXCheckBox(category);
+                genres.add(cb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+       return genres;
     }
 
-    public ObservableList<JFXCheckBox> getYearList()
-    {
+    public ObservableList<JFXCheckBox> getYearList() {
         return years;
     }
 
-    public ObservableList<JFXCheckBox> getOtherList()
-    {
+    public ObservableList<JFXCheckBox> getOtherList() {
         return others;
     }
 }

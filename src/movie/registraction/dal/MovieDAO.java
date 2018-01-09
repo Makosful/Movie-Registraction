@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -53,7 +55,7 @@ public class MovieDAO {
     {
         try(Connection con = db.getConnection())
         {
-            String sql = "DELETE FROM Category WHERE name = (?)";
+            String sql = "DELETE FROM Category WHERE name = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, category);
             preparedStatement.executeUpdate();
@@ -100,7 +102,7 @@ public class MovieDAO {
         
     }
 
-    public ObservableList<String> getAllCategories() throws SQLServerException, SQLException
+    public List<String> getAllCategories() throws SQLServerException, SQLException
     {
         try (Connection con = db.getConnection())
         {
@@ -109,7 +111,8 @@ public class MovieDAO {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             
-            ObservableList<String> categories = FXCollections.observableArrayList();
+            List<String> categories = new ArrayList();
+           
             while(rs.next())
             {
                 categories.add(rs.getString("name"));
