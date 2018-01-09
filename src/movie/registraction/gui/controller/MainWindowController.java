@@ -10,12 +10,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -30,8 +35,6 @@ public class MainWindowController implements Initializable {
     private TextField txtTitleSearch;
     @FXML
     private JFXButton btnTitleSearch;
-    @FXML
-    private JFXButton btnFilterSearch;
     @FXML
     private JFXButton btnClearFilters;
     @FXML
@@ -52,6 +55,10 @@ public class MainWindowController implements Initializable {
     private JFXListView<JFXCheckBox> lstOther;
 
     private MainWindowModel model;
+    @FXML
+    private TitledPane acdOther1;
+    @FXML
+    private JFXListView<?> lstOther1;
 
     /**
      * Constructor for all intrents and purposes
@@ -98,7 +105,6 @@ public class MainWindowController implements Initializable {
         buffRead.close();
     }
 
-    @FXML
     private void searchFilters(ActionEvent event) {
         model.fxmlFilterSearch();
     }
@@ -106,5 +112,29 @@ public class MainWindowController implements Initializable {
     @FXML
     private void clearFilters(ActionEvent event) {
         model.fxmlCleatFilters();
+    }
+
+    @FXML
+    private void btnChangeCategories(ActionEvent event) 
+    {
+        try
+        {
+            File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            EditCategoriesController controller;
+            controller = fxmlLoader.getController();
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException ex)
+        {
+            System.out.println(ex.getMessage());
+        }
     }
 }
