@@ -28,6 +28,7 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
+    private final ObservableList<String> movies;
     private changeCategories categories;
 
     public MainWindowModel()
@@ -37,6 +38,8 @@ public class MainWindowModel
         genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
+        movies = FXCollections.observableArrayList();
+
         try
         {
             categories = new changeCategories();
@@ -192,6 +195,7 @@ public class MainWindowModel
                 // Save this path to storage
                 String path = dir.getAbsolutePath();
                 bll.saveDirectory(path);
+                updateMovieList();
 
             }
             catch (BLLException ex)
@@ -204,6 +208,24 @@ public class MainWindowModel
     public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
     {
         bll.setPictures(anchorPane, tilePane, fileList);
+    }
+
+    private void updateMovieList()
+    {
+        try
+        {
+            movies.setAll(bll.getMovieList());
+        }
+        catch (BLLException ex)
+        {
+            System.out.println("Failed to update movie list");
+            ex.printStackTrace();
+        }
+    }
+
+    public ObservableList<String> getMovieList()
+    {
+        return movies;
     }
 
 }

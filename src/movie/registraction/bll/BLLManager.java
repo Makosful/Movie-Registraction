@@ -7,10 +7,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
-import movie.registraction.dal.DALExceptions;
+import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
 
 /**
@@ -93,7 +94,7 @@ public class BLLManager
             dal.saveDirectory(path);
             System.out.println("Second " + dal.loadDirectory());
         }
-        catch (DALExceptions ex)
+        catch (DALException ex)
         {
             throw new BLLException();
         }
@@ -102,5 +103,17 @@ public class BLLManager
     public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
     {
         mtPane.setPictures(anchorPane, tilePane, fileList);
+    }
+
+    public ArrayList<String> getMovieList() throws BLLException
+    {
+        try
+        {
+            return dal.getMovieList();
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
     }
 }

@@ -7,7 +7,7 @@ import java.io.PrintWriter;
  *
  * @author Axl
  */
-public class DALExceptions extends Exception
+public class DALException extends Exception
 {
 
     @Override
