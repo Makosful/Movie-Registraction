@@ -18,7 +18,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.gui.model.MainWindowModel;
@@ -57,11 +56,11 @@ public class MainWindowController implements Initializable
 
     private MainWindowModel model;
     @FXML
-    private TitledPane acdOther1;
-    @FXML
-    private JFXListView<?> lstOther1;
-    @FXML
     private AnchorPane anchorPane;
+    @FXML
+    private JFXListView<?> lstGenre1;
+    @FXML
+    private JFXListView<?> lstGenre2;
 
     /**
      * Constructor for all intrents and purposes
@@ -121,5 +120,10 @@ public class MainWindowController implements Initializable
         {
             System.out.println(ex.getMessage());
         }
+    }
+
+    @FXML
+    private void uploadFiles(ActionEvent event)
+    {
     }
 }

@@ -137,4 +137,9 @@ public class MainWindowModel
         categories.saveCategories();
     }
 
+    public void fxmlUploadFiles()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
