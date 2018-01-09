@@ -15,6 +15,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import movie.registraction.gui.model.MainWindowModel;
 
@@ -31,8 +32,6 @@ public class MainWindowController implements Initializable {
     @FXML
     private JFXButton btnTitleSearch;
     @FXML
-    private JFXButton btnFilterSearch;
-    @FXML
     private JFXButton btnClearFilters;
     @FXML
     private TitledPane acdGenre;
@@ -43,8 +42,6 @@ public class MainWindowController implements Initializable {
     @FXML
     private Accordion acdPanes;
     @FXML
-    private GridPane gridResults;
-    @FXML
     private JFXListView<JFXCheckBox> lstGenre;
     @FXML
     private JFXListView<JFXCheckBox> lstYear;
@@ -52,6 +49,12 @@ public class MainWindowController implements Initializable {
     private JFXListView<JFXCheckBox> lstOther;
 
     private MainWindowModel model;
+    @FXML
+    private TitledPane acdOther1;
+    @FXML
+    private JFXListView<?> lstOther1;
+    @FXML
+    private AnchorPane anchorForScroll;
 
     /**
      * Constructor for all intrents and purposes
@@ -75,6 +78,9 @@ public class MainWindowController implements Initializable {
         lstYear.setItems(model.getYearList());
         lstOther.setItems(model.getOtherList());
 
+        //binding anchorpane to scrollpane
+        //anchorForScroll.maxWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
+        //anchorForScroll.minWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
     }
 
     @FXML
@@ -98,7 +104,6 @@ public class MainWindowController implements Initializable {
         buffRead.close();
     }
 
-    @FXML
     private void searchFilters(ActionEvent event) {
         model.fxmlFilterSearch();
     }
