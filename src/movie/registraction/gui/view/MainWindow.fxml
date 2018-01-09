@@ -92,11 +92,7 @@
                <children>
                           <ScrollPane fx:id="scrlFilterSearch" prefHeight="441.0" prefWidth="1280.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="440.0" prefWidth="1280.0">
-                                      <children>
-                                          <JFXListView fx:id="lstYear" prefHeight="180.0" prefWidth="1280.0" />
-                                      </children>
-                                  </AnchorPane>
+                                    <JFXListView fx:id="lstYear" prefHeight="440.0" prefWidth="1280.0" />
                               </content>
                           </ScrollPane>
                   <JFXListView fx:id="lstGenre2" prefHeight="440.0" prefWidth="1280.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
