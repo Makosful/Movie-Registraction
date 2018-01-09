@@ -5,7 +5,6 @@
  */
 package movie.registraction.gui.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -23,44 +22,49 @@ import movie.registraction.gui.model.MainWindowModel;
  *
  * @author B
  */
-public class EditCategoriesController implements Initializable {
+public class EditCategoriesController implements Initializable
+{
 
     @FXML
     private TextField txtFieldCategory;
     MainWindowModel m;
     @FXML
     private ListView<String> lstViewAllCategories;
+
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        try {
-            m = new MainWindowModel();
-        } catch (IOException ex) {
-            Logger.getLogger(EditCategoriesController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try {
-            lstViewAllCategories.setItems(m.getAllCategories());
-        } catch (SQLException ex) {
-            Logger.getLogger(EditCategoriesController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }    
+    public void initialize(URL url, ResourceBundle rb)
+    {
+        m = new MainWindowModel();
 
-    @FXML
-    private void btnAddCategory(ActionEvent event) throws SQLException {
-       m.addChosenCategory(txtFieldCategory.getText());
+        try
+        {
+            lstViewAllCategories.setItems(m.getAllCategories());
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(EditCategoriesController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
-    private void btnRemoveCategory(ActionEvent event) {
+    private void btnAddCategory(ActionEvent event) throws SQLException
+    {
+        m.addChosenCategory(txtFieldCategory.getText());
+    }
+
+    @FXML
+    private void btnRemoveCategory(ActionEvent event)
+    {
         m.removeChosenCategory(lstViewAllCategories.getSelectionModel().getSelectedItem());
     }
 
     @FXML
-    private void btnSaveCategories(ActionEvent event) throws SQLException {
+    private void btnSaveCategories(ActionEvent event) throws SQLException
+    {
         m.saveCategories();
     }
-    
+
 }
