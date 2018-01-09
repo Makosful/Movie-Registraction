@@ -37,7 +37,7 @@ public class MovieDAO {
     public void addCategory(String category) throws SQLException
     {
         System.out.println("Add:"+category);
-                try(Connection con = db.getConnection())
+        try(Connection con = db.getConnection())
         {
         
         String sql = "INSERT INTO Category Values (?)";
@@ -53,6 +53,8 @@ public class MovieDAO {
     */
     public void removeCategory(String category) throws SQLServerException, SQLException
     {
+        System.out.println("Remove:"+category);
+        
         try(Connection con = db.getConnection())
         {
             String sql = "DELETE FROM Category WHERE name = ?";
