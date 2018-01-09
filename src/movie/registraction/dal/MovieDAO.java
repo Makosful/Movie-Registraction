@@ -36,9 +36,8 @@ public class MovieDAO {
     /**
      * Adds the provided category
      * @param category
-     * @throws SQLException 
      */
-    public void addCategory(String category) throws SQLException
+    public void addCategory(String category) throws DALException 
     {
         System.out.println("Add:"+category);
         try(Connection con = db.getConnection())
@@ -49,16 +48,17 @@ public class MovieDAO {
         
         preparedStatement.setString(1, category);
         preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DALException();
         }
     }
     
     /**
      * Removes the provided category
      * @param category
-     * @throws SQLServerException
-     * @throws SQLException 
+     * @throws movie.registraction.dal.DALException
      */
-    public void removeCategory(String category) throws SQLServerException, SQLException
+    public void removeCategory(String category) throws DALException
     {
         System.out.println("Remove:"+category);
         
@@ -68,6 +68,8 @@ public class MovieDAO {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, category);
             preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DALException();
         }
     }
 
@@ -75,14 +77,14 @@ public class MovieDAO {
      * Adds a category to a specific movie
      * @param movieId
      * @param category
-     * @throws SQLServerException
-     * @throws SQLException 
+     * @throws movie.registraction.dal.DALException
      */
-    public void addMovieCategory(int movieId, String category) throws SQLServerException, SQLException 
+    public void addMovieCategory(int movieId, String category) throws DALException 
     {
         System.out.println("Add:"+movieId+category);
         
-        int categoryId = getCategoryId(category);
+        int categoryId;
+        categoryId = getCategoryId(category);
         
         try(Connection con = db.getConnection())
         {
@@ -94,6 +96,8 @@ public class MovieDAO {
             preparedStatement.setInt(2, movieId);
             
             preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DALException();
         }
         
     }
@@ -102,15 +106,14 @@ public class MovieDAO {
      * Removes a category from a specific movie
      * @param movieId
      * @param category
-     * @throws SQLServerException
-     * @throws SQLException 
      */
-    public void removeMovieCategory(int movieId, String category) throws SQLServerException, SQLException 
+    public void removeMovieCategory(int movieId, String category) throws DALException 
     {
 
         System.out.println("Remove:"+movieId+category);
         
-        int categoryId = getCategoryId(category);
+        int categoryId;
+        categoryId = getCategoryId(category);
         
         try(Connection con = db.getConnection())
         {
@@ -121,6 +124,8 @@ public class MovieDAO {
             preparedStatement.setInt(2, categoryId);
             
             preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DALException();
         }
         
     }
@@ -128,11 +133,10 @@ public class MovieDAO {
     
     /**
      * Returns all categories
-     * @return
-     * @throws SQLServerException
-     * @throws SQLException 
+     * @return List of strings
+     * @throws movie.registraction.dal.DALException
      */
-    public List<String> getAllCategories() throws SQLServerException, SQLException
+    public List<String> getAllCategories() throws DALException 
     {
         try (Connection con = db.getConnection())
         {
@@ -149,6 +153,8 @@ public class MovieDAO {
             }
             
             return categories;
+        } catch (SQLException ex) {
+            throw new DALException();
         }
     }
     
@@ -156,10 +162,10 @@ public class MovieDAO {
     /**
      * Gets the id for the provided category
      * @param category
-     * @return
+     * @return int id
      * @throws SQLException 
      */
-    private int getCategoryId(String category) throws SQLException
+    private int getCategoryId(String category) throws DALException
     {
         try (Connection con = db.getConnection())
         {
@@ -172,7 +178,8 @@ public class MovieDAO {
             
             return rs.getInt("id");
             
-
+        } catch (SQLException ex) {
+            throw new DALException();
         }
     }
     
