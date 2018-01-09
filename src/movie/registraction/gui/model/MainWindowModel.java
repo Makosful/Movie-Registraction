@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import movie.registraction.be.Categories;
+import movie.registraction.bll.changeCategories;
 
 /**
  *
@@ -18,13 +18,13 @@ public class MainWindowModel {
     private ObservableList<JFXCheckBox> genres;
     private ObservableList<JFXCheckBox> years;
     private ObservableList<JFXCheckBox> others;
-    private Categories categories;
+    private changeCategories categories;
 
     public MainWindowModel() throws IOException {
         genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
-        categories = new Categories();
+        categories = new changeCategories();
         
         for (int i = 0; i < 10; i++) {
             int j = i + 1;
@@ -81,4 +81,22 @@ public class MainWindowModel {
     public ObservableList<JFXCheckBox> getOtherList() {
         return others;
     }
+
+    public ObservableList<String> getAllCategories() throws SQLException
+    {
+        return categories.allCategories();
+    }
+
+    public void addChosenCategory(String category) {
+        categories.addChosenCategory(category);
+    }
+
+    public void removeChosenCategory(String category) {
+        categories.removeChosenCategory(category);
+    }
+
+    public void saveCategories() throws SQLException {
+        categories.saveCategories();
+    }
+    
 }
