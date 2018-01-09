@@ -30,6 +30,12 @@ public class Movie
     
     List<String> categories;
 
+    public Movie()
+    {
+        categories = new ArrayList();
+    }
+    
+    
     public int getId() 
     {
         return id;
