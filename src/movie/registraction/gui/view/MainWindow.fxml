@@ -24,7 +24,7 @@
                             <children>
                                 <AnchorPane>
                                     <children>
-                                        <TextField fx:id="txtTitleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="240.0" />
+                                        <TextField fx:id="txtTitleSearch" onAction="#titleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="240.0" />
                               <HBox spacing="10.0" AnchorPane.rightAnchor="0.0">
                                  <children>
                                               <JFXButton fx:id="btnTitleSearch" onAction="#titleSearch" text="Fucking Search!" />
