@@ -74,12 +74,12 @@
                 </VBox>
             <AnchorPane>
                <children>
-                  <ButtonBar buttonMinWidth="50.0" buttonOrder="" prefHeight="31.0" prefWidth="389.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="891.0" AnchorPane.topAnchor="0.0">
+                  <ButtonBar buttonMinWidth="50.0" buttonOrder="" prefHeight="31.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="830.0" AnchorPane.topAnchor="0.0">
                      <buttons>
                         <RadioButton fx:id="rBTitle" ellipsisString="Title" maxWidth="75.0" mnemonicParsing="false" prefHeight="21.0" selected="true" text="Title" />
                         <RadioButton fx:id="rBRating" ellipsisString="Rating" maxWidth="100.0" mnemonicParsing="false" text="Rating" />
-                        <ComboBox fx:id="comBoxSortOrder" maxWidth="150.0" prefWidth="125.0" promptText="Sort order" />
-                        <ComboBox fx:id="comBoxMinRating" maxWidth="125.0" prefWidth="100.0" promptText="Min. rating" />
+                        <ComboBox fx:id="comBoxSortOrder" maxWidth="150.0" prefWidth="150.0" promptText="Sort order" />
+                        <ComboBox fx:id="comBoxMinRating" maxWidth="150.0" prefHeight="31.0" prefWidth="150.0" promptText="Min. rating" />
                      </buttons>
                   </ButtonBar>
                </children>
