@@ -6,6 +6,8 @@ import com.jfoenix.controls.JFXListView;
 import java.net.*;
 import java.io.*;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,8 +61,12 @@ public class MainWindowController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Access the Model
-        model = new MainWindowModel();
+        try {
+            // Access the Model
+            model = new MainWindowModel();
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);

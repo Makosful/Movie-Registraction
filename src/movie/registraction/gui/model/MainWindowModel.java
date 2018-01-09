@@ -1,8 +1,13 @@
 package movie.registraction.gui.model;
 
 import com.jfoenix.controls.JFXCheckBox;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import movie.registraction.be.Categories;
 
 /**
  *
@@ -13,18 +18,20 @@ public class MainWindowModel {
     private ObservableList<JFXCheckBox> genres;
     private ObservableList<JFXCheckBox> years;
     private ObservableList<JFXCheckBox> others;
+    private Categories categories;
 
-    public MainWindowModel() {
+    public MainWindowModel() throws IOException {
         genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
-
+        categories = new Categories();
+        
         for (int i = 0; i < 10; i++) {
             int j = i + 1;
             String s = "CheckBox" + j;
 
             JFXCheckBox cb = new JFXCheckBox(s);
-            genres.add(cb);
+            //genres.add(cb);
         }
 
         for (int i = 0; i < 10; i++) {
@@ -54,7 +61,17 @@ public class MainWindowModel {
      * @return
      */
     public ObservableList<JFXCheckBox> getGenreList() {
-        return genres;
+        try {
+            for(String category :  categories.allCategories())
+            {
+                JFXCheckBox cb = new JFXCheckBox(category);
+                genres.add(cb);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+       return genres;
     }
 
     public ObservableList<JFXCheckBox> getYearList() {
