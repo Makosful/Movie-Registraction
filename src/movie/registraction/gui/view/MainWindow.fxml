@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
     <children>
         <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -107,6 +107,7 @@
                                  </FlowPane.margin>
                               </Button>
                               <Button mnemonicParsing="false" text="Delete selected file(s)" />
+                              <Button mnemonicParsing="false" onAction="#btnChangeMovieCategory" text="Change movie categories" />
                            </children>
                         </FlowPane>
                      </children>
