@@ -81,13 +81,8 @@ public class MainWindowModel
     }
 
     public void fxmlFilterSearch()
+    public void fxmlClearFilters()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void fxmlCleatFilters()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**

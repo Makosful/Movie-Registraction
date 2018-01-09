@@ -97,7 +97,7 @@ public class MainWindowController implements Initializable
     @FXML
     private void clearFilters(ActionEvent event)
     {
-        model.fxmlCleatFilters();
+        model.fxmlClearFilters();
     }
 
     @FXML
