@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
@@ -26,11 +25,19 @@
                             <children>
                                 <AnchorPane>
                                     <children>
-                                        <TextField fx:id="txtTitleSearch" onAction="#titleSearch" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="240.0" />
+                                        <TextField fx:id="txtTitleSearch" onAction="#titleSearch" prefHeight="31.0" prefWidth="1015.0" promptText="Search text" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="265.0" />
                               <HBox spacing="10.0" AnchorPane.rightAnchor="0.0">
                                  <children>
-                                              <JFXButton fx:id="btnTitleSearch" onAction="#titleSearch" text="Fucking Search!" />
-                                              <JFXButton fx:id="btnClearFilters" buttonType="RAISED" onAction="#clearFilters" text="Fucking Clear Filters!" />
+                                    <Button fx:id="btnTitleSearch" mnemonicParsing="false" onAction="#titleSearch" text="Fucking search!">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button fx:id="btnClearFilters" mnemonicParsing="false" onAction="#clearFilters" text="Fucking search!">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Button>
                                  </children>
                               </HBox>
                                     </children>
