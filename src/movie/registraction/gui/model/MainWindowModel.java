@@ -176,11 +176,14 @@ public class MainWindowModel
         }
     }
 
+    /**
+     * Choses the library path
+     *
+     * Defaults to the Windows Videos library
+     */
     public void fxmlUploadFiles()
     {
         DirectoryChooser dc = new DirectoryChooser();
-        File def = new File("C:\\Users\\Axl\\Videos");
-        dc.setInitialDirectory(def);
         File dir = dc.showDialog(null);
 
         if (dir.exists())
