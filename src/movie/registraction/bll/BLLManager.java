@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
 import movie.registraction.dal.DALExceptions;
 import movie.registraction.dal.DALManager;
 
@@ -21,11 +24,14 @@ public class BLLManager
 
     DALManager dal;
 
+    MovieTilePane mtPane;
+
     public BLLManager()
     {
         dal = new DALManager();
 
         omdb = new OmdbSearch();
+        mtPane = new MovieTilePane();
     }
 
     /**
@@ -91,5 +97,10 @@ public class BLLManager
         {
             throw new BLLException();
         }
+    }
+
+    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
+    {
+        mtPane.setPictures(anchorPane, tilePane, fileList);
     }
 }

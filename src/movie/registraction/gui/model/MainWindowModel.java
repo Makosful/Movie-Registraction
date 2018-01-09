@@ -4,10 +4,13 @@ import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
@@ -159,6 +162,11 @@ public class MainWindowModel
                 System.out.println("Could not save path");
                 System.out.println(dir.getAbsolutePath());
             }
+    }
+
+    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
+    {
+        bll.setPictures(anchorPane, tilePane, fileList);
     }
 
 }

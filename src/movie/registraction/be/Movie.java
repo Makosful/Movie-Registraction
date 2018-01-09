@@ -5,6 +5,7 @@
  */
 package movie.registraction.be;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,8 +26,16 @@ public class Movie
     private String movieName;
     private int year;
     private double rating;
+    private File file;
+    
     List<String> categories;
 
+    public Movie()
+    {
+        categories = new ArrayList();
+    }
+    
+    
     public int getId() 
     {
         return id;
@@ -62,6 +71,11 @@ public class Movie
         this.rating = rating;
     }
     
+    public void setFile(File file) 
+    {
+        this.file = file;
+    }
+    
     public String getMovieName()
     {
         return movieName;
@@ -75,6 +89,10 @@ public class Movie
     public double getRating() 
     {
         return rating;
+    }
+
+    public File getFile() {
+        return file;
     }
     
 }
