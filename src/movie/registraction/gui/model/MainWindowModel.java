@@ -80,14 +80,8 @@ public class MainWindowModel
 
     }
 
-    public void fxmlFilterSearch()
+    public void fxmlClearFilters()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void fxmlCleatFilters()
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -128,13 +122,16 @@ public class MainWindowModel
         return categories.allCategories();
     }
 
-    public void addChosenCategory(String category) {
+    public void addChosenCategory(String category)
+    {
         categories.addChosenCategory(category);
     }
 
-    public void removeChosenCategory(String category) {
+    public void removeChosenCategory(String category)
+    {
         categories.removeChosenCategory(category);
     }
+
 
     public void saveCategories(){
         try {
@@ -162,6 +159,11 @@ public class MainWindowModel
         } catch (SQLException ex) {
             Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    public void fxmlUploadFiles()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+            
+
 }

@@ -1,6 +1,5 @@
 package movie.registraction.gui.controller;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
 import java.io.File;
@@ -14,12 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.gui.model.MainWindowModel;
@@ -37,9 +32,9 @@ public class MainWindowController implements Initializable
     @FXML
     private TextField txtTitleSearch;
     @FXML
-    private JFXButton btnTitleSearch;
+    private Button btnTitleSearch;
     @FXML
-    private JFXButton btnClearFilters;
+    private Button btnClearFilters;
     @FXML
     private TitledPane acdGenre;
     @FXML
@@ -48,8 +43,6 @@ public class MainWindowController implements Initializable
     private TitledPane acdOther;
     @FXML
     private Accordion acdPanes;
-    @FXML
-    private GridPane gridResults;
     @FXML
     private JFXListView<JFXCheckBox> lstGenre;
     @FXML
@@ -60,11 +53,11 @@ public class MainWindowController implements Initializable
 
     private MainWindowModel model;
     @FXML
-    private TitledPane acdOther1;
-    @FXML
-    private JFXListView<?> lstOther1;
-    @FXML
     private AnchorPane anchorPane;
+    @FXML
+    private JFXListView<?> lstGenre1;
+    @FXML
+    private JFXListView<?> lstGenre2;
 
     /**
      * Constructor for all intrents and purposes
@@ -85,6 +78,9 @@ public class MainWindowController implements Initializable
         lstYear.setItems(model.getYearList());
         lstOther.setItems(model.getOtherList());
 
+        //binding anchorpane to scrollpane
+        //anchorForScroll.maxWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
+        //anchorForScroll.minWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
     }
 
     @FXML
@@ -93,15 +89,10 @@ public class MainWindowController implements Initializable
         model.fxmlTitleSearch(txtTitleSearch.getText());
     }
 
-    private void searchFilters(ActionEvent event)
-    {
-        model.fxmlFilterSearch();
-    }
-
     @FXML
     private void clearFilters(ActionEvent event)
     {
-        model.fxmlCleatFilters();
+        model.fxmlClearFilters();
     }
 
     private void btnChangeCategories(ActionEvent event)
@@ -127,6 +118,7 @@ public class MainWindowController implements Initializable
         }
     }
 
+
     private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException {
         
     
@@ -143,6 +135,11 @@ public class MainWindowController implements Initializable
             stage.setScene(new Scene(root));
             stage.show();
         
-  
+    }
+    
+    @FXML
+    private void uploadFiles(ActionEvent event)
+    {
+        model.fxmlUploadFiles();
     }
 }
