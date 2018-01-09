@@ -10,9 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
+import movie.registraction.dal.DALException;
 import movie.registraction.dal.MovieDAO;
 
 /**
@@ -99,8 +102,9 @@ public class changeCategories
      * The removeMovieCategory list and removeMovieCategory list is then looped
      * through,
      * adding/removing the categories in the database to this specific movie.
+     * @throws movie.registraction.dal.DALException
      */
-    public void saveMovieCategories() throws SQLException
+    public void saveMovieCategories() throws DALException
     {
        
         Iterator<String> in = movie.getCategories().iterator();
@@ -117,12 +121,19 @@ public class changeCategories
         }
 
         for (String cat : removeMovieCategory){
-           
-            mDAO.removeMovieCategory(1, cat);
+            try {
+                mDAO.removeMovieCategory(1, cat);
+            } catch (DALException ex) {
+                throw new DALException();
+            }
         }
         
         for (String cat : chosenMovieCategories){
-            mDAO.addMovieCategory(1, cat);
+            try {
+                mDAO.addMovieCategory(1, cat);
+            } catch (DALException ex) {
+                throw new DALException();
+            }
         }
         removeMovieCategory.clear();
         chosenMovieCategories.clear();
@@ -130,20 +141,21 @@ public class changeCategories
 
     /**
      * Gets all categories from the db
-     *
-     * @return
-     *
-     * @throws SQLException
+     * @return ObservableList of strings
+     * @throws movie.registraction.dal.DALException
      */
-    public ObservableList<String> allCategories() throws SQLException
+    public ObservableList<String> allCategories() throws DALException 
     {
-        categories.addAll(mDAO.getAllCategories());
+        try {
+            categories.addAll(mDAO.getAllCategories());
+        } catch (DALException ex) {
+                throw new DALException();
+        }
         return categories;
     }
 
     /**
      * Adds a category to the observableList "categories"
-     *
      * @param category
      */
     public void addChosenCategory(String category)
@@ -156,7 +168,6 @@ public class changeCategories
      * Removes a category from the observableList "categories" by iterating
      * through
      * the list and finds the specific category and removes it
-     *
      * @param category
      */
     public void removeChosenCategory(String category)
@@ -172,7 +183,11 @@ public class changeCategories
         }
     }
 
-    public void saveCategories() throws SQLException
+    /**
+     * 
+     * @throws DALException 
+     */
+    public void saveCategories() throws DALException
     {
         Iterator<String> in = mDAO.getAllCategories().iterator();
         while (in.hasNext())
@@ -187,10 +202,19 @@ public class changeCategories
         }
 
         for (String cat : removeCategory){
-            mDAO.removeCategory(cat);
+            
+            try {
+                 mDAO.removeCategory(cat);
+            } catch (DALException ex) {
+                throw new DALException();
+            }
         }
         for (String cat : categories){
-            mDAO.addCategory(cat);
+            try {
+                mDAO.addCategory(cat);
+            } catch (DALException ex) {
+                throw new DALException();
+            }
         }
         removeCategory.clear();
         categories.clear();
