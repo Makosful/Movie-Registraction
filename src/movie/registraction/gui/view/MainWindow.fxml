@@ -29,14 +29,8 @@
                               <HBox spacing="10.0" AnchorPane.rightAnchor="0.0">
                                  <children>
                                     <Button fx:id="btnTitleSearch" mnemonicParsing="false" onAction="#titleSearch" text="Fucking search!">
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
                                     </Button>
                                     <Button fx:id="btnClearFilters" mnemonicParsing="false" onAction="#clearFilters" text="Fucking search!">
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
                                     </Button>
                                  </children>
                               </HBox>
