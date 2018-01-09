@@ -15,6 +15,7 @@ import javafx.stage.DirectoryChooser;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.changeCategories;
+import movie.registraction.dal.DALException;
 
 /**
  *
@@ -46,15 +47,6 @@ public class MainWindowModel
         }
         catch (BLLException ex)
         {
-        }
-
-        for (int i = 0; i < 10; i++)
-        {
-            int j = i + 1;
-            String s = "CheckBox" + j;
-
-            JFXCheckBox cb = new JFXCheckBox(s);
-            //genres.add(cb);
         }
 
         for (int i = 0; i < 10; i++)
@@ -95,9 +87,10 @@ public class MainWindowModel
     /**
      * Gets the list of Genres
      *
-     * @return
+     * @return Observablelist of checkboxes
+     * @throws movie.registraction.dal.DALException
      */
-    public ObservableList<JFXCheckBox> getGenreList()
+    public ObservableList<JFXCheckBox> getGenreList() throws DALException
     {
         try
         {
@@ -107,75 +100,115 @@ public class MainWindowModel
                 genres.add(cb);
             }
         }
-        catch (SQLException ex)
+        catch (DALException ex)
         {
-            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DALException();
         }
 
         return genres;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public ObservableList<JFXCheckBox> getYearList()
     {
         return years;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public ObservableList<JFXCheckBox> getOtherList()
     {
         return others;
     }
 
-    public ObservableList<String> getAllCategories() throws SQLException
+    /**
+     * Gets all categories from changeCategories class 
+     * @return
+     * @throws DALException 
+     */
+    public ObservableList<String> getAllCategories() throws DALException 
     {
-        return categories.allCategories();
+        try {
+            return categories.allCategories();
+        } catch (DALException ex) {
+            throw new DALException();
+        }
     }
 
+    /**
+     * Sends the category string to chosenCategories class to be added
+     * @param category 
+     */
     public void addChosenCategory(String category)
     {
         categories.addChosenCategory(category);
     }
 
+    /**
+     * Sends the category string to chosenCategories class to be removed
+     * @param category 
+     */
     public void removeChosenCategory(String category)
     {
         categories.removeChosenCategory(category);
     }
 
-    public void saveCategories()
-    {
-        try
-        {
+    /**
+     * Save the category changes in changeCategories class
+     * @throws DALException 
+     */
+    public void saveCategories() throws DALException
+    {        
+        try {
             categories.saveCategories();
+        } catch (DALException ex) {
+            throw new DALException();
         }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
+    /**
+     * Gets the allready exsisting categories for a specific movie
+     * @return Observable list of category strings
+     */
     public ObservableList<String> loadChosenMovieCategories()
     {
         return categories.loadChosenMovieCategories();
     }
 
+    /**
+     * Sends the category string to chosenCategories class to be added for a movie
+     * @param category 
+     */
     public void addChosenMovieCategory(String category)
     {
         categories.addChosenMovieCategory(category);
     }
-
+    
+    /**
+     * Sends the category string to chosenCategories class to be removed for a movie
+     * @param category 
+     */
     public void removeChosenMovieCategory(String category)
     {
         categories.removeChosenMovieCategory(category);
     }
 
-    public void saveMovieCategories()
+    /**
+     * Save the movie category changes in changeCategories class
+     * @throws DALException 
+     */
+    public void saveMovieCategories() throws DALException
     {
-        try
-        {
+        try {
             categories.saveMovieCategories();
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DALException ex) {
+            throw new DALException();
         }
     }
 
