@@ -1,12 +1,14 @@
 package movie.registraction.gui.model;
 
 import com.jfoenix.controls.JFXCheckBox;
+import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.DirectoryChooser;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.changeCategories;
@@ -139,7 +141,24 @@ public class MainWindowModel
 
     public void fxmlUploadFiles()
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        DirectoryChooser dc = new DirectoryChooser();
+        File def = new File("C:\\Users\\Axl\\Videos");
+        dc.setInitialDirectory(def);
+        File dir = dc.showDialog(null);
+
+        if (dir.exists())
+            try
+            {
+                // Save this path to storage
+                String path = dir.getAbsolutePath();
+                bll.saveDirectory(path);
+
+            }
+            catch (BLLException ex)
+            {
+                System.out.println("Could not save path");
+                System.out.println(dir.getAbsolutePath());
+            }
     }
 
 }

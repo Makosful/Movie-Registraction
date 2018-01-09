@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import movie.registraction.dal.DALExceptions;
+import movie.registraction.dal.DALManager;
 
 /**
  *
@@ -17,8 +19,12 @@ public class BLLManager
 
     OmdbSearch omdb;
 
+    DALManager dal;
+
     public BLLManager()
     {
+        dal = new DALManager();
+
         omdb = new OmdbSearch();
     }
 
@@ -72,5 +78,18 @@ public class BLLManager
             }
         else
             throw new UnsupportedOperationException("This feature is not supported on your platform");
+    }
+
+    public void saveDirectory(String path) throws BLLException
+    {
+        try
+        {
+            dal.saveDirectory(path);
+            System.out.println("Second " + dal.loadDirectory());
+        }
+        catch (DALExceptions ex)
+        {
+            throw new BLLException();
+        }
     }
 }
