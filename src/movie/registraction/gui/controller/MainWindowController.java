@@ -48,8 +48,6 @@ public class MainWindowController implements Initializable
     @FXML
     private Accordion acdPanes;
     @FXML
-    private GridPane gridResults;
-    @FXML
     private JFXListView<JFXCheckBox> lstGenre;
     @FXML
     private JFXListView<JFXCheckBox> lstYear;
@@ -84,6 +82,9 @@ public class MainWindowController implements Initializable
         lstYear.setItems(model.getYearList());
         lstOther.setItems(model.getOtherList());
 
+        //binding anchorpane to scrollpane
+        //anchorForScroll.maxWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
+        //anchorForScroll.minWidthProperty().bind(scrlFilterSearch.widthProperty().subtract(10).subtract(10));
     }
 
     @FXML
