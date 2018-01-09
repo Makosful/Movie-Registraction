@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -31,9 +33,11 @@ public class MovieDAO {
         db = new DataBaseConnector();
     }
 
-    /*
-        Adding a category.
-    */
+    /**
+     * Adds the provided category
+     * @param category
+     * @throws SQLException 
+     */
     public void addCategory(String category) throws SQLException
     {
         System.out.println("Add:"+category);
@@ -41,16 +45,19 @@ public class MovieDAO {
         {
         
         String sql = "INSERT INTO Category Values (?)";
-        PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement preparedStatement = con.prepareStatement(sql);
         
         preparedStatement.setString(1, category);
         preparedStatement.executeUpdate();
         }
     }
     
-    /*
-        Removing a category.
-    */
+    /**
+     * Removes the provided category
+     * @param category
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public void removeCategory(String category) throws SQLServerException, SQLException
     {
         System.out.println("Remove:"+category);
@@ -64,32 +71,46 @@ public class MovieDAO {
         }
     }
 
-    /*
-        Method to add a category to a specific movie.
-    */
+    /**
+     * Adds a category to a specific movie
+     * @param movieId
+     * @param category
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public void addMovieCategory(int movieId, String category) throws SQLServerException, SQLException 
     {
         System.out.println("Add:"+movieId+category);
+        
+        int categoryId = getCategoryId(category);
+        
         try(Connection con = db.getConnection())
         {
-            String sql = "INSERT INTO CatMovie Values (?), (?)";
+            String sql = "INSERT INTO CatMovie (categoryId, movieId) Values (?, ?)";
             
-            PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
             
-            preparedStatement.setString(1, category);
+            preparedStatement.setInt(1, categoryId);
             preparedStatement.setInt(2, movieId);
             
             preparedStatement.executeUpdate();
         }
         
     }
-    /*
-        Method to remove a genre from a movie.
-    */
+    
+    /**
+     * Removes a category from a specific movie
+     * @param movieId
+     * @param category
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public void removeMovieCategory(int movieId, String category) throws SQLServerException, SQLException 
     {
 
         System.out.println("Remove:"+movieId+category);
+        
+        int categoryId = getCategoryId(category);
         
         try(Connection con = db.getConnection())
         {
@@ -97,13 +118,20 @@ public class MovieDAO {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             
             preparedStatement.setInt(1, movieId);
-            preparedStatement.setString(2, category);
+            preparedStatement.setInt(2, categoryId);
             
             preparedStatement.executeUpdate();
         }
         
     }
 
+    
+    /**
+     * Returns all categories
+     * @return
+     * @throws SQLServerException
+     * @throws SQLException 
+     */
     public List<String> getAllCategories() throws SQLServerException, SQLException
     {
         try (Connection con = db.getConnection())
@@ -124,5 +152,28 @@ public class MovieDAO {
         }
     }
     
+    
+    /**
+     * Gets the id for the provided category
+     * @param category
+     * @return
+     * @throws SQLException 
+     */
+    private int getCategoryId(String category) throws SQLException
+    {
+        try (Connection con = db.getConnection())
+        {
+            String sql = "SELECT id FROM Category WHERE name = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, category);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            rs.next();
+            
+            return rs.getInt("id");
+            
+
+        }
+    }
     
 }

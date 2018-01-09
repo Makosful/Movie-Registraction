@@ -34,9 +34,9 @@ public class changeCategories
         try
         {
             movie = new Movie();
-
             mDAO = new MovieDAO();
             removeCategory = new ArrayList();
+            removeMovieCategory = new ArrayList();
         }
         catch (IOException ex)
         {
@@ -102,24 +102,28 @@ public class changeCategories
      */
     public void saveMovieCategories() throws SQLException
     {
+       
         Iterator<String> in = movie.getCategories().iterator();
         while (in.hasNext())
         {
             String cat = in.next();
 
-            if (!chosenMovieCategories.contains(cat))
+            if (!chosenMovieCategories.contains(cat)){
                 removeMovieCategory.add(cat);
-            else
+            }
+            else{
                 chosenMovieCategories.remove(cat);
-
+            }
         }
 
-        for (String cat : removeMovieCategory)
+        for (String cat : removeMovieCategory){
+           
             mDAO.removeMovieCategory(1, cat);
-
-        for (String cat : chosenMovieCategories)
+        }
+        
+        for (String cat : chosenMovieCategories){
             mDAO.addMovieCategory(1, cat);
-
+        }
         removeMovieCategory.clear();
         chosenMovieCategories.clear();
     }
@@ -182,12 +186,12 @@ public class changeCategories
 
         }
 
-        for (String cat : removeCategory)
+        for (String cat : removeCategory){
             mDAO.removeCategory(cat);
-
-        for (String cat : categories)
+        }
+        for (String cat : categories){
             mDAO.addCategory(cat);
-
+        }
         removeCategory.clear();
         categories.clear();
     }
