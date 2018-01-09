@@ -55,7 +55,7 @@ public class MovieDAO {
     {
         try(Connection con = db.getConnection())
         {
-            String sql = "DELETE FROM Category WHERE name = (?)";
+            String sql = "DELETE FROM Category WHERE name = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, category);
             preparedStatement.executeUpdate();
