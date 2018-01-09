@@ -1,6 +1,8 @@
 package movie.registraction.bll;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -55,5 +57,20 @@ public class BLLManager
         {
             throw new BLLException();
         }
+    }
+
+    public void openFileInNative(File file) throws BLLException
+    {
+        if (Desktop.isDesktopSupported())
+            try
+            {
+                Desktop.getDesktop().open(file);
+            }
+            catch (IOException ex)
+            {
+                throw new BLLException();
+            }
+        else
+            throw new UnsupportedOperationException("This feature is not supported on your platform");
     }
 }
