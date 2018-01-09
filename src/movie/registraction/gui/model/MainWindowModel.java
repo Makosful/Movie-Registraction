@@ -137,9 +137,43 @@ public class MainWindowModel
         categories.removeChosenCategory(category);
     }
 
-    public void saveCategories() throws SQLException
+    public void saveCategories()
     {
-        categories.saveCategories();
+        try
+        {
+            categories.saveCategories();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public ObservableList<String> loadChosenMovieCategories()
+    {
+        return categories.loadChosenMovieCategories();
+    }
+
+    public void addChosenMovieCategory(String category)
+    {
+        categories.addChosenMovieCategory(category);
+    }
+
+    public void removeChosenMovieCategory(String category)
+    {
+        categories.removeChosenMovieCategory(category);
+    }
+
+    public void saveMovieCategories()
+    {
+        try
+        {
+            categories.saveMovieCategories();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void fxmlUploadFiles()
