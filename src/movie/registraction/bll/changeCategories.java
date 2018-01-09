@@ -114,21 +114,35 @@ public class changeCategories {
     }
     
     
-    
+    /**
+     * Gets all categories from the db
+     * @return
+     * @throws SQLException 
+     */
     public ObservableList<String> allCategories() throws SQLException
     {
         categories.addAll(mDAO.getAllCategories());
         return categories; 
     }
     
-    
-    public void addChosenCategory(String category) {
+    /**
+     * Adds a category to the observableList "categories"
+     * @param category 
+     */
+    public void addChosenCategory(String category) 
+    {
         if(!categories.contains(category)){
             categories.add(category);
         }
     }
 
-    public void removeChosenCategory(String category) {        
+    /**
+     * Removes a category from the observableList "categories" by iterating through 
+     * the list and finds the specific category and removes it
+     * @param category 
+     */
+    public void removeChosenCategory(String category) 
+    {        
         Iterator<String> i = categories.iterator();
         while (i.hasNext())
         {
