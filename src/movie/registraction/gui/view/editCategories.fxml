@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="344.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9" fx:controller="movie.registraction.gui.controller.EditCategoriesController">
+   <children>
+      <ListView fx:id="lstViewAllCategories" layoutX="71.0" layoutY="85.0" prefHeight="260.0" prefWidth="200.0" />
+      <TextField fx:id="txtFieldCategory" layoutX="71.0" layoutY="47.0" />
+      <Button layoutX="232.0" layoutY="47.0" mnemonicParsing="false" onAction="#btnAddCategory" text="Add" />
+      <Button layoutX="71.0" layoutY="353.0" mnemonicParsing="false" onAction="#btnRemoveCategory" text="Remove" />
+      <Button layoutX="231.0" layoutY="353.0" mnemonicParsing="false" onAction="#btnSaveCategories" text="Save" />
+   </children>
+</AnchorPane>

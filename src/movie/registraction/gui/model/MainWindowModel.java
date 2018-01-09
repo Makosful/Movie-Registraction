@@ -122,4 +122,22 @@ public class MainWindowModel
     {
         return others;
     }
+
+    public ObservableList<String> getAllCategories() throws SQLException
+    {
+        return categories.allCategories();
+    }
+
+    public void addChosenCategory(String category) {
+        categories.addChosenCategory(category);
+    }
+
+    public void removeChosenCategory(String category) {
+        categories.removeChosenCategory(category);
+    }
+
+    public void saveCategories() throws SQLException {
+        categories.saveCategories();
+    }
+    
 }

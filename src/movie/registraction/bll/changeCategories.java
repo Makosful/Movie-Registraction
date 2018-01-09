@@ -5,7 +5,6 @@
  */
 package movie.registraction.bll;
 
-import movie.registraction.be.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.MovieDAO;
 
 /**
@@ -123,18 +123,37 @@ public class changeCategories
         chosenMovieCategories.clear();
     }
 
+    /**
+     * Gets all categories from the db
+     *
+     * @return
+     *
+     * @throws SQLException
+     */
     public ObservableList<String> allCategories() throws SQLException
     {
         categories.addAll(mDAO.getAllCategories());
         return categories;
     }
 
+    /**
+     * Adds a category to the observableList "categories"
+     *
+     * @param category
+     */
     public void addChosenCategory(String category)
     {
         if (!categories.contains(category))
             categories.add(category);
     }
 
+    /**
+     * Removes a category from the observableList "categories" by iterating
+     * through
+     * the list and finds the specific category and removes it
+     *
+     * @param category
+     */
     public void removeChosenCategory(String category)
     {
         Iterator<String> i = categories.iterator();
