@@ -27,6 +27,12 @@ public class Movie
     private double rating;
     List<String> categories;
 
+    public Movie()
+    {
+        categories = new ArrayList();
+    }
+    
+    
     public int getId() 
     {
         return id;

@@ -34,6 +34,7 @@ public class changeCategories
         try
         {
             movie = new Movie();
+
             mDAO = new MovieDAO();
             removeCategory = new ArrayList();
         }

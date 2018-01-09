@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXListView;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -103,7 +104,6 @@ public class MainWindowController implements Initializable
         model.fxmlCleatFilters();
     }
 
-    @FXML
     private void btnChangeCategories(ActionEvent event)
     {
         try
@@ -125,5 +125,24 @@ public class MainWindowController implements Initializable
         {
             System.out.println(ex.getMessage());
         }
+    }
+
+    private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException {
+        
+    
+            File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            EditMovieCategoryController controller;
+            controller = fxmlLoader.getController();
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        
+  
     }
 }
