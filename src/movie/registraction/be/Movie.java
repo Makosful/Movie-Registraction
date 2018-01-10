@@ -6,93 +6,99 @@
 package movie.registraction.be;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import movie.registraction.dal.MovieDAO;
-
 
 /**
  *
  * @author B
  */
-public class Movie 
-{
+public class Movie {
+
     private int id;
-    private String movieName;
+    private String movieTitle;
     private int year;
-    private double rating;
-    private File file;
-    
+    private double imdbRating;
+    private double personalRating;
+    private String imgPath; //Movie poster
+    private String filePath;
+    private int movieLength; //Minutes
+
     List<String> categories;
 
-    public Movie()
-    {
+    public Movie() {
         categories = new ArrayList();
     }
-    
-    
-    public int getId() 
-    {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(int id) 
-    {
+    public void setId(int id) {
         this.id = id;
     }
-    
-    public List<String> getCategories() 
-    {
+
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<String> categories) 
-    {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
-    
-    public void setMovieName(String movieName)
-    {
-        this.movieName = movieName;
-    }
-    
-    public void setMovieYear(int year)
-    {
-        this.year = year;
-    }
-    
-    public void setRating(double rating)
-    {
-        this.rating = rating;
-    }
-    
-    public void setFile(File file) 
-    {
-        this.file = file;
-    }
-    
-    public String getMovieName()
-    {
-        return movieName;
+
+    public void setMovieName(String movieTitle) {
+        this.movieTitle = movieTitle;
     }
 
-    public int getYear() 
-    {
+    public void setMovieYear(int year) {
+        this.year = year;
+    }
+
+    public void setImdbRating(double imdbRating) {
+        this.imdbRating = imdbRating;
+    }
+
+    public void setPersonalRating(double personalRating) {
+        this.personalRating = personalRating;
+    }
+
+    public void setFile(String filePath) {
+        this.filePath = filePath;
+    }
+    
+    public void setFileImg(String fileImg) {
+        this.imgPath = imgPath;
+    }
+    
+    public void setMovieLength(int movieLength) {
+        this.movieLength = movieLength;
+    }
+
+    public String getFileImg() {
+        return imgPath;
+    }
+    
+    public int getMovieLength() {
+        return movieLength;
+    }
+    
+    public String getMovieTitle() {
+        return movieTitle;
+    }
+
+    public int getYear() {
         return year;
     }
 
-    public double getRating() 
-    {
-        return rating;
+    public double getImdbRating() {
+        return imdbRating;
     }
 
-    public File getFile() {
-        return file;
+    public double getPersonalRating() {
+        return personalRating;
     }
-    
+
+    public String getFilePath() {
+        return filePath;
+    }
 }
