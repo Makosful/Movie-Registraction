@@ -240,6 +240,16 @@ public class MovieDAO {
     }
 
     
+    /**
+     * Creates movie a movie object if it has not been creatd previously, if it 
+     * has been created before, the resultsets movie-category is added to the 
+     * previous movie object. This procedure is necessary because movies with several
+     * categories appear several times in the reultsets, when using LEFT/RIGHT or INNER JOIN. 
+     * @param rs
+     * @param previousMovie
+     * @return
+     * @throws SQLException 
+     */
      private Movie createMovieFromDB(ResultSet rs, Movie previousMovie) throws SQLException
      {
          
