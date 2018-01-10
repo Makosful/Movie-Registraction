@@ -20,7 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import movie.registraction.bll.BLLException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -104,6 +103,13 @@ public class MainWindowController implements Initializable
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
         comBoxMinRating.getItems().addAll("Minimum: 1", "Minimum: 2", "Minimum: 3", "Minimum: 4", "Minimum: 5", "Minimum: 6", "Minimum: 7", "Minimum: 8", "Minimum: 9");
     }
+    
+    private void modalWindowSetup()
+    {
+        for (Object movie : model.getMovieList()) {
+            
+        }
+    }
 
     @FXML
     private void titleSearch(ActionEvent event)
@@ -157,8 +163,8 @@ public class MainWindowController implements Initializable
     @FXML
     private void uploadFiles(ActionEvent event)
     {
-     //   model.fxmlUploadFiles();
-        setPictures();
+       // model.fxmlUploadFiles();
+        setPictures(); // Midlertidigt.
     }
     
     private void setPictures()
