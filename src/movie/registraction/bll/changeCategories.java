@@ -96,10 +96,10 @@ public class changeCategories
      * current movie category,
      * it is added to the removeMovieCategory list.
      * If the new chosenMovieCategories list does contain the specific current
-     * movie category,
-     * it is removed from the removeMovieCategory list since it should not be
+     * movie object category,
+     * it is removed from the chosenMovieCategory list since it should not be
      * added again.
-     * The removeMovieCategory list and removeMovieCategory list is then looped
+     * The removeMovieCategory list and chosenMovieCategory list is then looped
      * through,
      * adding/removing the categories in the database to this specific movie.
      * @throws movie.registraction.dal.DALException
@@ -184,8 +184,20 @@ public class changeCategories
     }
 
     /**
-     * 
-     * @throws DALException 
+     * Prepares the newly added or removed categories to be inserted or deleted
+     * in the database.
+     * The method compares the current list of categories to the new list of
+     * chosen categories.
+     * If the new categories list does not contain the specific
+     * current movie category,
+     * it is added to the removeMovieCategory list.
+     * If the new categories list does contain the specific current
+     * movie object category,
+     * it is then removed from the category list since it should not be
+     * added again.
+     * The removeMovieCategory list and category list is then looped
+     * through,
+     * adding/removing the categories in the database to this specific movie.
      */
     public void saveCategories() throws DALException
     {
