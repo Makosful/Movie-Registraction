@@ -13,12 +13,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
+import movie.registraction.dal.MovieDAO;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -29,9 +32,8 @@ public class EditMovieCategoryController implements Initializable {
     
     
     private MainWindowModel m;
+    private Movie movie;
     
-    @FXML
-    private Label label;
     @FXML
     private ListView<String> listViewAll;
     @FXML
@@ -43,8 +45,18 @@ public class EditMovieCategoryController implements Initializable {
         m = new MainWindowModel();
   
         listViewAll.setItems(m.getAllCategories());
-
-        listViewChosen.setItems(m.loadChosenMovieCategories());
+        try {
+            MovieDAO mDAO = new MovieDAO();
+            
+            ObservableList<Movie> movie = mDAO.getAllMovies();
+            listViewChosen.setItems(m.loadChosenMovieCategories(movie.get(0)));
+            
+        } catch (IOException ex) {
+            Logger.getLogger(EditMovieCategoryController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DALException ex) {
+            Logger.getLogger(EditMovieCategoryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
         listViewAll.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 

@@ -50,10 +50,10 @@ public class changeCategories
     /**
      * Gets all the previously chosen categories from the movie object and adds
      * them an observablelist
-     *
+     * @param movie
      * @return ObservableList
      */
-    public ObservableList<String> loadChosenMovieCategories()
+    public ObservableList<String> loadChosenMovieCategories(Movie movie)
     {
         chosenMovieCategories.addAll(movie.getCategories());
         return chosenMovieCategories;

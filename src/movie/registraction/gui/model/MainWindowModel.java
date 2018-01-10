@@ -12,6 +12,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
+import movie.registraction.be.Movie;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.changeCategories;
@@ -188,11 +189,12 @@ public class MainWindowModel
     /**
      * Gets the allready exsisting categories for a specific movie
      *
+     * @param movie
      * @return Observable list of category strings
      */
-    public ObservableList<String> loadChosenMovieCategories()
+    public ObservableList<String> loadChosenMovieCategories(Movie movie)
     {
-        return categories.loadChosenMovieCategories();
+        return categories.loadChosenMovieCategories(movie);
     }
 
     /**
