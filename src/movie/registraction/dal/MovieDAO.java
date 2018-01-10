@@ -279,6 +279,54 @@ public class MovieDAO {
      }
      
      
+     /**
+      * Add a new movie to the database
+      * @param movieMetaData
+      * @return
+      * @throws DALException 
+      */
+     public int addMovie(List<String> movieMetaData) throws DALException
+     {
+      
+            
+            try (Connection con = db.getConnection())
+            {
+                int id;
+                java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+                String sqlInsert = "INSERT INTO Movie "
+                                 + "(name, filePath, imgPath, lastView, personalRating, imdbRating, year, movieLength) "
+                                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                
+                PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, movieMetaData.get(0));
+                preparedStatement.setString(2, movieMetaData.get(1));
+                preparedStatement.setString(3, movieMetaData.get(2));
+                preparedStatement.setDate(4, null);
+                preparedStatement.setDouble(5, Double.parseDouble(movieMetaData.get(3)));
+                preparedStatement.setDouble(6, Double.parseDouble(movieMetaData.get(4)));
+                preparedStatement.setInt(7, Integer.parseInt(movieMetaData.get(5)));
+                preparedStatement.setInt(8, Integer.parseInt(movieMetaData.get(6)));
+                
+                preparedStatement.executeUpdate();
+
+                ResultSet rsi = preparedStatement.getGeneratedKeys();
+
+                rsi.next();
+
+                id = rsi.getInt(1);
+
+                return id;
+            }
+            catch (SQLException ex)
+            {
+                throw new DALException();
+            }
+            
+            
+            
+            
+            
+     }
 
 
     
