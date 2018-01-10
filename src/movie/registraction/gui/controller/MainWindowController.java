@@ -170,7 +170,6 @@ public class MainWindowController implements Initializable
         FileChooser.ExtensionFilter mp4Filter = new FileChooser.ExtensionFilter("MP4 Files", "*.mp4");
         FileChooser.ExtensionFilter mpeg4Filter = new FileChooser.ExtensionFilter("MPEG4 Files", "*.mpeg4");
         FileChooser.ExtensionFilter imgFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
-
         
         // Adds the filters
         fc.getExtensionFilters().addAll(mp4Filter, mpeg4Filter, imgFilter);
