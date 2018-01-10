@@ -78,14 +78,7 @@ public class MainWindowController implements Initializable
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        try
-        {
-            lstGenre.setItems(model.getGenreList());
-        }
-        catch (BLLException ex)
-        {
-            System.out.println(ex);
-        }
+        lstGenre.setItems(model.getGenreList());
         lstYear.setItems(model.getYearList());
         lstOther.setItems(model.getOtherList());
 
@@ -112,27 +105,21 @@ public class MainWindowController implements Initializable
     }
 
     @FXML
-    private void btnChangeCategories(ActionEvent event)
+    private void btnChangeCategories(ActionEvent event) throws IOException
     {
-        try
-        {
-            File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
-            FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-            Parent root;
-            root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(anchorPane.getScene().getWindow());
-            EditCategoriesController controller;
-            controller = fxmlLoader.getController();
+        File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+        Parent root;
+        root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(anchorPane.getScene().getWindow());
+        EditCategoriesController controller;
+        controller = fxmlLoader.getController();
 
-            stage.setScene(new Scene(root));
-            stage.show();
-        }
-        catch (IOException ex)
-        {
-            System.out.println(ex.getMessage());
-        }
+        stage.setScene(new Scene(root));
+        stage.show();
+        
     }
 
     @FXML

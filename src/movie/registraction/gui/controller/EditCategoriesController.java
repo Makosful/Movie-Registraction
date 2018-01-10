@@ -40,11 +40,7 @@ public class EditCategoriesController implements Initializable
     {
         m = new MainWindowModel();
 
-        try {
-            lstViewAllCategories.setItems(m.getAllCategories());
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
-        }
+        lstViewAllCategories.setItems(m.getAllCategories());
     }
 
     @FXML
@@ -62,11 +58,8 @@ public class EditCategoriesController implements Initializable
     @FXML
     private void btnSaveCategories(ActionEvent event)
     {
-        try {
-            m.saveCategories();
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
-        }
+
+        m.saveCategories();
     }
 
 }

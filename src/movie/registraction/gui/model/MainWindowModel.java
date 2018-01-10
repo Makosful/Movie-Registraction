@@ -27,6 +27,7 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
     private final ObservableList<String> movies;
+    private final ObservableList<String> allCategories;
     private changeCategories categories;
 
     public MainWindowModel()
@@ -37,6 +38,7 @@ public class MainWindowModel
         years = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
         movies = FXCollections.observableArrayList();
+        allCategories = FXCollections.observableArrayList(); 
 
         try
         {
@@ -87,10 +89,8 @@ public class MainWindowModel
      * Gets the list of Genres
      *
      * @return Observablelist of checkboxes
-     *
-     * @throws movie.registraction.bll.BLLException
      */
-    public ObservableList<JFXCheckBox> getGenreList() throws BLLException
+    public ObservableList<JFXCheckBox> getGenreList()
     {
         try
         {
@@ -102,7 +102,7 @@ public class MainWindowModel
         }
         catch (DALException ex)
         {
-            throw new BLLException();
+            System.out.println("Could not get the list of categories");
         }
 
         return genres;
@@ -131,18 +131,18 @@ public class MainWindowModel
      *
      * @return
      *
-     * @throws DALException
      */
-    public ObservableList<String> getAllCategories() throws DALException
+    public ObservableList<String> getAllCategories() 
     {
         try
         {
-            return categories.allCategories();
+            allCategories.addAll(categories.allCategories());
         }
         catch (DALException ex)
         {
-            throw new DALException();
+            System.out.println("Could not get the list of categories");
         }
+        return allCategories;
     }
 
     /**
@@ -167,10 +167,8 @@ public class MainWindowModel
 
     /**
      * Save the category changes in changeCategories class
-     *
-     * @throws DALException
      */
-    public void saveCategories() throws DALException
+    public void saveCategories()
     {
         try
         {
@@ -178,7 +176,7 @@ public class MainWindowModel
         }
         catch (DALException ex)
         {
-            throw new DALException();
+            System.out.println("Could not save the category changes");
         }
 
     }
@@ -217,10 +215,8 @@ public class MainWindowModel
 
     /**
      * Save the movie category changes in changeCategories class
-     *
-     * @throws DALException
      */
-    public void saveMovieCategories() throws DALException
+    public void saveMovieCategories()
     {
         try
         {
@@ -228,7 +224,7 @@ public class MainWindowModel
         }
         catch (DALException ex)
         {
-            throw new DALException();
+            System.out.println("Could not save the movie categories");
         }
     }
 

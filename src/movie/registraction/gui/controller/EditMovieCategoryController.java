@@ -41,16 +41,9 @@ public class EditMovieCategoryController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
     
         m = new MainWindowModel();
-       
-    
-        try {
-            listViewAll.setItems(m.getAllCategories());
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
-        }
-        
-        
-        
+  
+        listViewAll.setItems(m.getAllCategories());
+
         listViewChosen.setItems(m.loadChosenMovieCategories());
         
         listViewAll.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -69,11 +62,7 @@ public class EditMovieCategoryController implements Initializable {
 
     @FXML
     private void btnSave(ActionEvent event) {
-        try {
             m.saveMovieCategories();
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 
     @FXML
