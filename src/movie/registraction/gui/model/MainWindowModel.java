@@ -3,10 +3,7 @@ package movie.registraction.gui.model;
 import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.AnchorPane;
@@ -57,6 +54,8 @@ public class MainWindowModel
             JFXCheckBox cb = new JFXCheckBox(String.valueOf(y2));
             years.add(cb);
         }
+
+        loadMovieList();
     }
 
     public void fxmlTitleSearch(String text)
@@ -88,9 +87,10 @@ public class MainWindowModel
      * Gets the list of Genres
      *
      * @return Observablelist of checkboxes
-     * @throws movie.registraction.dal.DALException
+     *
+     * @throws movie.registraction.bll.BLLException
      */
-    public ObservableList<JFXCheckBox> getGenreList() throws DALException
+    public ObservableList<JFXCheckBox> getGenreList() throws BLLException
     {
         try
         {
@@ -102,15 +102,15 @@ public class MainWindowModel
         }
         catch (DALException ex)
         {
-            throw new DALException();
+            throw new BLLException();
         }
 
         return genres;
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public ObservableList<JFXCheckBox> getYearList()
     {
@@ -118,8 +118,8 @@ public class MainWindowModel
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public ObservableList<JFXCheckBox> getOtherList()
     {
@@ -127,22 +127,28 @@ public class MainWindowModel
     }
 
     /**
-     * Gets all categories from changeCategories class 
+     * Gets all categories from changeCategories class
+     *
      * @return
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public ObservableList<String> getAllCategories() throws DALException 
+    public ObservableList<String> getAllCategories() throws DALException
     {
-        try {
+        try
+        {
             return categories.allCategories();
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
 
     /**
      * Sends the category string to chosenCategories class to be added
-     * @param category 
+     *
+     * @param category
      */
     public void addChosenCategory(String category)
     {
@@ -151,7 +157,8 @@ public class MainWindowModel
 
     /**
      * Sends the category string to chosenCategories class to be removed
-     * @param category 
+     *
+     * @param category
      */
     public void removeChosenCategory(String category)
     {
@@ -160,20 +167,25 @@ public class MainWindowModel
 
     /**
      * Save the category changes in changeCategories class
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public void saveCategories() throws DALException
-    {        
-        try {
+    {
+        try
+        {
             categories.saveCategories();
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
-        
+
     }
 
     /**
      * Gets the allready exsisting categories for a specific movie
+     *
      * @return Observable list of category strings
      */
     public ObservableList<String> loadChosenMovieCategories()
@@ -182,17 +194,21 @@ public class MainWindowModel
     }
 
     /**
-     * Sends the category string to chosenCategories class to be added for a movie
-     * @param category 
+     * Sends the category string to chosenCategories class to be added for a
+     * movie
+     *
+     * @param category
      */
     public void addChosenMovieCategory(String category)
     {
         categories.addChosenMovieCategory(category);
     }
-    
+
     /**
-     * Sends the category string to chosenCategories class to be removed for a movie
-     * @param category 
+     * Sends the category string to chosenCategories class to be removed for a
+     * movie
+     *
+     * @param category
      */
     public void removeChosenMovieCategory(String category)
     {
@@ -201,13 +217,17 @@ public class MainWindowModel
 
     /**
      * Save the movie category changes in changeCategories class
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public void saveMovieCategories() throws DALException
     {
-        try {
+        try
+        {
             categories.saveMovieCategories();
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
@@ -248,11 +268,33 @@ public class MainWindowModel
         try
         {
             movies.setAll(bll.getMovieList());
+            System.out.println("Successfully updated movie list");
         }
         catch (BLLException ex)
         {
             System.out.println("Failed to update movie list");
             ex.printStackTrace();
+        }
+    }
+
+    private void loadMovieList()
+    {
+        try
+        {
+            String lib = bll.loadDirectory("path.txt");
+
+            if (lib.isEmpty())
+                return;
+            else
+            {
+                movies.setAll(bll.getMovieList());
+                System.out.println("Successfully added library");
+            }
+        }
+        catch (BLLException ex)
+        {
+            System.out.println("Failed to load library path");
+            //ex.printStackTrace();
         }
     }
 
