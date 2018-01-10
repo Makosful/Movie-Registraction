@@ -209,8 +209,8 @@ public class MovieDAO {
                         + "Movie.movieLength, "
                         + "Category.name AS categoryName "
                         + "FROM Movie "
-                        + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
-                        + "INNER JOIN Category ON CatMovie.categoryId = Category.id";
+                        + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id";
             
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
@@ -238,6 +238,7 @@ public class MovieDAO {
             }
             
             return movies;
+            
         } catch (SQLException ex) {
             throw new DALException();
         }
