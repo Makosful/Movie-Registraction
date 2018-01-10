@@ -43,9 +43,9 @@ public class Movie
         return categories;
     }
 
-    public void setCategories(List<String> categories) 
+    public void setCategories(String category) 
     {
-        this.categories = categories;
+        this.categories.add(category);
     }
     
     public void setMovieName(String movieName)
