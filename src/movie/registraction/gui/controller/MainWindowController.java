@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -77,7 +80,11 @@ public class MainWindowController implements Initializable
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        lstGenre.setItems(model.getGenreList());
+        try {
+            lstGenre.setItems(model.getGenreList());
+        } catch (DALException ex) {
+            System.out.println(ex.getMessage());
+        }
         lstYear.setItems(model.getYearList());
         lstOther.setItems(model.getOtherList());
         

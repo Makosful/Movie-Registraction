@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -41,11 +42,13 @@ public class EditMovieCategoryController implements Initializable {
     
         m = new MainWindowModel();
        
+    
         try {
             listViewAll.setItems(m.getAllCategories());
-        } catch (SQLException ex) {
-            Logger.getLogger(EditMovieCategoryController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DALException ex) {
+            System.out.println(ex.getMessage());
         }
+        
         
         
         listViewChosen.setItems(m.loadChosenMovieCategories());
@@ -66,7 +69,11 @@ public class EditMovieCategoryController implements Initializable {
 
     @FXML
     private void btnSave(ActionEvent event) {
-        m.saveMovieCategories();
+        try {
+            m.saveMovieCategories();
+        } catch (DALException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @FXML
