@@ -10,10 +10,13 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.TilePane;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
+import movie.registraction.dal.MovieDAO;
 
 /**
  *
@@ -27,13 +30,20 @@ public class BLLManager
     DALManager dal;
 
     MovieTilePane mtPane;
+    
+    MovieDAO mDAO;
 
-    public BLLManager()
+    public BLLManager() throws BLLException
     {
         dal = new DALManager();
-
         omdb = new OmdbSearch();
         mtPane = new MovieTilePane();
+        
+         try {
+            mDAO = new MovieDAO();
+        } catch (IOException ex) {
+            throw new BLLException();
+        }
     }
 
     /**
@@ -165,4 +175,28 @@ public class BLLManager
             throw new BLLException();
         }
     }
+    
+    
+    /**
+     * Adds a movie with the supplied metadata, the addmovie returns the inserted 
+     * movie row id, which is used to inserting the movies categories
+     * @param movieMetaData
+     * @throws DALException 
+     */
+    public void addMovie(List<String> movieMetaData) throws DALException
+    {
+        try {
+           int movieId = mDAO.addMovie(movieMetaData);
+           //TODO - den specifikke plad i det medsendte metadata kendes ikke endnu, dette er blot et eksempel
+           String[] metaMovieCategories = movieMetaData.get(99).split(" ");
+           for(String category : metaMovieCategories)
+           {
+               mDAO.addMovieCategory(movieId, category);
+           }
+           
+        } catch (DALException ex) {
+            throw new DALException();
+        }
+    }
+   
 }
