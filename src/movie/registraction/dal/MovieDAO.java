@@ -220,15 +220,8 @@ public class MovieDAO {
             while (rs.next())
             {
                 
-                if(movie.getId() == rs.getInt("id"))
-                {
-                    movie.setCategories(rs.getString("categoryName"));
-                }
-                else
-                {
-                    movie = createMovieFromDB(rs);
+                movie = createMovieFromDB(rs, movie);
               
-                }    
                 
                 if (!movies.contains(movie))
                 {
@@ -247,8 +240,17 @@ public class MovieDAO {
     }
 
     
-     private Movie createMovieFromDB(ResultSet rs) throws SQLException
+     private Movie createMovieFromDB(ResultSet rs, Movie previousMovie) throws SQLException
      {
+         
+        if(previousMovie.getId() == rs.getInt("id"))
+        {
+            previousMovie.setCategories(rs.getString("categoryName"));
+            return previousMovie;
+        }
+        else
+        {
+         
         Movie movie = new Movie();
         movie.setId(rs.getInt("id"));
         movie.setMovieName(rs.getString("name"));
@@ -262,6 +264,8 @@ public class MovieDAO {
         movie.setCategories(rs.getString("categoryName"));
         
         return movie;
+        
+        }
      }
 
     
