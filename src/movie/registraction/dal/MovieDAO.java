@@ -248,7 +248,6 @@ public class MovieDAO {
         Movie movie = new Movie();
         movie.setId(rs.getInt("id"));
         movie.setMovieName(rs.getString("name"));
-        movie.setRating(rs.getDouble("rating"));
         movie.setMovieYear(rs.getInt("year"));
         movie.setCategories(rs.getString("categoryName"));
         
