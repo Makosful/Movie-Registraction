@@ -209,8 +209,8 @@ public class MovieDAO {
                         + "Movie.movieLength, "
                         + "Category.name AS categoryName "
                         + "FROM Movie "
-                        + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
-                        + "INNER JOIN Category ON CatMovie.categoryId = Category.id";
+                        + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id";
             
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
@@ -220,15 +220,8 @@ public class MovieDAO {
             while (rs.next())
             {
                 
-                if(movie.getId() == rs.getInt("id"))
-                {
-                    movie.setCategories(rs.getString("categoryName"));
-                }
-                else
-                {
-                    movie = createMovieFromDB(rs);
+                movie = createMovieFromDB(rs, movie);
               
-                }    
                 
                 if (!movies.contains(movie))
                 {
@@ -238,6 +231,7 @@ public class MovieDAO {
             }
             
             return movies;
+            
         } catch (SQLException ex) {
             throw new DALException();
         }
@@ -246,8 +240,17 @@ public class MovieDAO {
     }
 
     
-     private Movie createMovieFromDB(ResultSet rs) throws SQLException
+     private Movie createMovieFromDB(ResultSet rs, Movie previousMovie) throws SQLException
      {
+         
+        if(previousMovie.getId() == rs.getInt("id"))
+        {
+            previousMovie.setCategories(rs.getString("categoryName"));
+            return previousMovie;
+        }
+        else
+        {
+         
         Movie movie = new Movie();
         movie.setId(rs.getInt("id"));
         movie.setMovieName(rs.getString("name"));
@@ -261,6 +264,8 @@ public class MovieDAO {
         movie.setCategories(rs.getString("categoryName"));
         
         return movie;
+        
+        }
      }
 
     
