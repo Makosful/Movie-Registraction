@@ -14,9 +14,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
     <children>
         <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -80,7 +81,8 @@
                         <RadioButton fx:id="rBTitle" ellipsisString="Title" maxWidth="75.0" mnemonicParsing="false" prefHeight="21.0" selected="true" text="Title">
                            <toggleGroup>
                               <ToggleGroup fx:id="rbToggleGrp" />
-                           </toggleGroup></RadioButton>
+                           </toggleGroup>
+                        </RadioButton>
                         <RadioButton fx:id="rBRating" ellipsisString="Rating" maxWidth="100.0" mnemonicParsing="false" text="Rating" toggleGroup="$rbToggleGrp" />
                         <ComboBox fx:id="comBoxSortOrder" maxWidth="150.0" prefWidth="150.0" promptText="Sort order" />
                         <ComboBox fx:id="comBoxMinRating" maxWidth="150.0" prefHeight="31.0" prefWidth="150.0" promptText="Min. rating" />
@@ -88,30 +90,27 @@
                   </ButtonBar>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="475.0" prefWidth="1280.0">
+                    <ScrollPane fx:id="scrlFilterSearch" hbarPolicy="NEVER" prefHeight="441.0" prefWidth="1280.0">
+               <content>
+                  <TilePane fx:id="tilePane" prefHeight="126.0" prefWidth="1264.0" />
+               </content>
+                    </ScrollPane>
+                        <JFXListView fx:id="lstYear" prefHeight="440.0" prefWidth="1280.0" />
+            <JFXListView fx:id="lstGenre2" prefHeight="440.0" prefWidth="1280.0" />
+            <AnchorPane prefHeight="31.0" prefWidth="1280.0">
                <children>
-                          <ScrollPane fx:id="scrlFilterSearch" prefHeight="441.0" prefWidth="1280.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                              <content>
-                                    <JFXListView fx:id="lstYear" prefHeight="440.0" prefWidth="1280.0" />
-                              </content>
-                          </ScrollPane>
-                  <JFXListView fx:id="lstGenre2" prefHeight="440.0" prefWidth="1280.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <AnchorPane layoutY="438.0" prefHeight="31.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="450.0">
+                  <FlowPane prefHeight="31.0" prefWidth="1280.0">
                      <children>
-                        <FlowPane prefHeight="31.0" prefWidth="1280.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#btnChangeCategories" text="Change categories" />
-                              <Button mnemonicParsing="false" onAction="#uploadFiles" text="Upload file(s)">
-                                 <FlowPane.margin>
-                                    <Insets right="50.0" />
-                                 </FlowPane.margin>
-                              </Button>
-                              <Button mnemonicParsing="false" text="Delete selected file(s)" />
-                              <Button mnemonicParsing="false" onAction="#btnChangeMovieCategory" text="Change movie categories" />
-                           </children>
-                        </FlowPane>
+                        <Button mnemonicParsing="false" onAction="#btnChangeCategories" text="Change categories" />
+                        <Button mnemonicParsing="false" onAction="#uploadFiles" text="Upload file(s)">
+                           <FlowPane.margin>
+                              <Insets right="50.0" />
+                           </FlowPane.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" text="Delete selected file(s)" />
+                        <Button mnemonicParsing="false" onAction="#btnChangeMovieCategory" text="Change movie categories" />
                      </children>
-                  </AnchorPane>
+                  </FlowPane>
                </children>
             </AnchorPane>
             </children>

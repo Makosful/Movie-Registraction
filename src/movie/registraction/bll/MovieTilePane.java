@@ -17,14 +17,16 @@ import javafx.scene.layout.TilePane;
  */
 public class MovieTilePane 
 {
-    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
-    {
-        tilePane.setHgap(0);
-        tilePane.setPrefColumns(3);
-        anchorPane.getChildren().add(tilePane);
+    public void setPictures(TilePane tilePane, List<File> fileList)
+    {        
+        tilePane.setHgap(20);
+        tilePane.setPrefColumns(4);
         for(File files : fileList)
         {
-            tilePane.getChildren().add(new ImageView(files.toURI().toString()));
+            ImageView imageView = new ImageView(files.toURI().toString());
+            imageView.setFitHeight(200);
+            imageView.setFitWidth(150);
+            tilePane.getChildren().add(imageView);
         }
     }
 }
