@@ -20,8 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import movie.registraction.be.Movie;
-import movie.registraction.bll.BLLException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**

@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
