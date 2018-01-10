@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -18,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.gui.model.MainWindowModel;
@@ -58,10 +58,6 @@ public class MainWindowController implements Initializable
     @FXML
     private AnchorPane anchorPane;
     @FXML
-    private JFXListView<?> lstGenre1;
-    @FXML
-    private JFXListView<?> lstGenre2;
-    @FXML
     private ComboBox<String> comBoxSortOrder;
     @FXML
     private ComboBox<String> comBoxMinRating;
@@ -101,14 +97,12 @@ public class MainWindowController implements Initializable
     private void comboBoxSetup()
     {
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
-        comBoxMinRating.getItems().addAll("Minimum: 1", "Minimum: 2", "Minimum: 3", "Minimum: 4", "Minimum: 5", "Minimum: 6", "Minimum: 7", "Minimum: 8", "Minimum: 9");
+        comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars", "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
     }
     
     private void modalWindowSetup()
     {
-        for (Object movie : model.getMovieList()) {
-            
-        }
+        //TODO
     }
 
     @FXML
@@ -169,12 +163,34 @@ public class MainWindowController implements Initializable
     
     private void setPictures()
     {
-        List<File> fileList = new ArrayList();
-        for (int i = 0; i < 100; i++) 
+        // Creates a new FileChooser object
+        FileChooser fc = new FileChooser();
+        
+        // Defines what files it will look for
+        FileChooser.ExtensionFilter mp4Filter = new FileChooser.ExtensionFilter("MP4 Files", "*.mp4");
+        FileChooser.ExtensionFilter mpeg4Filter = new FileChooser.ExtensionFilter("MPEG4 Files", "*.mpeg4");
+        FileChooser.ExtensionFilter imgFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
+
+        
+        // Adds the filters
+        fc.getExtensionFilters().addAll(mp4Filter, mpeg4Filter, imgFilter);
+
+        // Opens the FileChooser and saves the results in a list
+        List<File> chosenFiles = fc.showOpenMultipleDialog(null);
+
+        // Checks if any files where chosen
+        if (chosenFiles != null)
         {
-            fileList.add(new File("C:\\Users\\Hussain\\Documents\\uiBBu.png"));
+            // If valid files were chosen, add them as movies
+            //List<File> addedFiles;
+            model.setPictures(tilePane, chosenFiles);
         }
-        model.setPictures(tilePane, fileList);
+        else
+        {
+            // Otherwise return
+            System.out.println("One or more invalid file(s) / None selected");
+            return;
+        }
     }
     /*
     Binds the TilePane to the ScrollPane, height n width.
