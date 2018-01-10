@@ -269,56 +269,7 @@ public class MovieDAO {
      }
      
      
-         /**
-     * Gets all movies from the database. Because there is more categories for 
-     * each movie, multiple rows of the same movies come from the database, and this method 
-     * sorts it, so each movie can have several categories. If the movieid is the same 
-     * as the previous movie in the while loop it adds a category instead of a new
-     * movie instance
-     * @return
-     * @throws DALException 
-     */
-    public Movie getMovie(int movieId) throws DALException
-    {
-        try (Connection con = db.getConnection())
-        {
-            String sql = "SELECT "
-                        + "Movie.id, "
-                        + "Movie.name, "
-                        + "Movie.filePath, "
-                        + "Movie.imgPath, "
-                        + "Movie.personalRating, "
-                        + "Movie.imdbRating, "
-                        + "Movie.year, "
-                        + "Movie.lastView,"
-                        + "Movie.movieLength, "
-                        + "Category.name AS categoryName "
-                        + "FROM Movie "
-                        + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
-                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id "
-                        + "WHERE Movie.id = ?";
-            
-            PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, movieId);
-            ResultSet rs = preparedStatement.executeQuery();
 
-            
-            Movie movie = new Movie();
-            while (rs.next())
-            {
-                
-                movie = createMovieFromDB(rs, movie);
-
-            }
-            
-            return movie;
-            
-        } catch (SQLException ex) {
-            throw new DALException();
-        }
-
-        
-    }
 
     
 }
