@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import movie.registraction.dal.DALException;
+import movie.registraction.bll.BLLException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -80,18 +78,21 @@ public class MainWindowController implements Initializable
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        try {
+        try
+        {
             lstGenre.setItems(model.getGenreList());
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
         }
         lstYear.setItems(model.getYearList());
         lstOther.setItems(model.getOtherList());
-        
+
         //Initializing methods
         comboBoxSetup();
     }
-    
+
     private void comboBoxSetup()
     {
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
@@ -135,24 +136,24 @@ public class MainWindowController implements Initializable
     }
 
     @FXML
-    private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException {
-        
-    
-            File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
-            FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-            Parent root;
-            root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(anchorPane.getScene().getWindow());
-            EditMovieCategoryController controller;
-            controller = fxmlLoader.getController();
+    private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException
+    {
 
-            stage.setScene(new Scene(root));
-            stage.show();
-        
+        File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+        Parent root;
+        root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(anchorPane.getScene().getWindow());
+        EditMovieCategoryController controller;
+        controller = fxmlLoader.getController();
+
+        stage.setScene(new Scene(root));
+        stage.show();
+
     }
-    
+
     @FXML
     private void uploadFiles(ActionEvent event)
     {
