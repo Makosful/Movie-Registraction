@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import movie.registraction.dal.DALException;
@@ -129,9 +130,14 @@ public class BLLManager
         }
     }
 
-    public void setPictures(TilePane tilePane, List<File> fileList)
+    public void setPictures(TilePane tilePane, List<File> fileList, ContextMenu contextMenu)
     {
-        mtPane.setPictures(tilePane, fileList);
+        mtPane.setPictures(tilePane, fileList, contextMenu);
+    }
+    
+    public void closeMenu(ContextMenu contextMenu)
+    {
+        contextMenu.hide();
     }
 
     /**

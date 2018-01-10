@@ -157,8 +157,8 @@ public class MainWindowController implements Initializable
     @FXML
     private void uploadFiles(ActionEvent event)
     {
-     //   model.fxmlUploadFiles();
-        setPictures();
+       // model.fxmlUploadFiles();
+        setPictures(); // Midlertidigt.
     }
     
     private void setPictures()

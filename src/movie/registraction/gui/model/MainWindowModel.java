@@ -6,6 +6,11 @@ import java.net.URL;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
@@ -29,6 +34,7 @@ public class MainWindowModel
     private final ObservableList<String> movies;
     private final ObservableList<String> allCategories;
     private changeCategories categories;
+    private ContextMenu contextMenu;
 
     public MainWindowModel()
     {
@@ -256,8 +262,52 @@ public class MainWindowModel
 
     public void setPictures(TilePane tilePane, List<File> fileList)
     {
-        bll.setPictures(tilePane, fileList);
+        setupMenu(tilePane);
+        bll.setPictures(tilePane, fileList, contextMenu);
     }
+    
+    private void setupMenu(TilePane tilePane)
+    {
+        contextMenu = new ContextMenu();
+        MenuItem test1 = new MenuItem("1");
+        MenuItem test2 = new MenuItem("2");
+        MenuItem test3 = new MenuItem("3");
+        
+        //<editor-fold defaultstate="collapsed" desc="setOnAction">
+test1.setOnAction(new EventHandler<ActionEvent>()
+{
+    @Override
+    public void handle(ActionEvent event)
+    {
+        System.out.println("1");
+        bll.closeMenu(contextMenu);
+    }
+});
+
+test2.setOnAction(new EventHandler<ActionEvent>()
+{
+    @Override
+    public void handle(ActionEvent event)
+    {
+        System.out.println("2");
+        bll.closeMenu(contextMenu);
+    }
+});
+
+test3.setOnAction(new EventHandler<ActionEvent>()
+{
+    @Override
+    public void handle(ActionEvent event)
+    {
+        System.out.println("3");
+        bll.closeMenu(contextMenu);
+    }
+});
+//</editor-fold>
+                
+        contextMenu.getItems().addAll(test1, test2, test3);
+    }
+    
 
     private void updateMovieList()
     {
