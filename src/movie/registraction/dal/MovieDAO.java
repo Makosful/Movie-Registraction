@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import movie.registraction.be.Movie;
 
 /**
  *
@@ -182,5 +183,76 @@ public class MovieDAO {
             throw new DALException();
         }
     }
+    
+    /**
+     * Gets all movies from the database. Because there is more categories for 
+     * each movie, multiple rows of the same movies come from the database, and this method 
+     * sorts it, so each movie can have several categories. If the movieid is the same 
+     * as the previous movie in the while loop it adds a category instead of a new
+     * movie instance
+     * @return
+     * @throws DALException 
+     */
+    public ObservableList<Movie> getAllMovies() throws DALException
+    {
+        try (Connection con = db.getConnection())
+        {
+            String sql = "SELECT "
+                        + "Movie.id, "
+                        + "Movie.name, "
+                        + "Movie.rating, "
+                        + "Movie.filelink, "
+                        + "Movie.year, "
+                        + "Movie.lastview, "
+                        + "Category.name AS categoryName "
+                        + "FROM Movie "
+                        + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                        + "INNER JOIN Category ON CatMovie.categoryId = Category.id";
+            
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            ObservableList<Movie> movies = FXCollections.observableArrayList();
+            Movie movie = new Movie();
+            while (rs.next())
+            {
+                
+                if(movie.getId() == rs.getInt("id"))
+                {
+                    movie.setCategories(rs.getString("categoryName"));
+                }
+                else
+                {
+                    movie = createMovieFromDB(rs);
+              
+                }    
+                
+                if (!movies.contains(movie))
+                {
+                    movies.add(movie);
+                }
+
+            }
+            
+            return movies;
+        } catch (SQLException ex) {
+            throw new DALException();
+        }
+
+        
+    }
+
+    
+     private Movie createMovieFromDB(ResultSet rs) throws SQLException
+     {
+        Movie movie = new Movie();
+        movie.setId(rs.getInt("id"));
+        movie.setMovieName(rs.getString("name"));
+        movie.setMovieYear(rs.getInt("year"));
+        movie.setCategories(rs.getString("categoryName"));
+        
+        return movie;
+     }
+
     
 }
