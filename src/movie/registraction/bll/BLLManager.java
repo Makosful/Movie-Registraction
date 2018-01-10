@@ -129,9 +129,9 @@ public class BLLManager
         }
     }
 
-    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
+    public void setPictures(TilePane tilePane, List<File> fileList)
     {
-        mtPane.setPictures(anchorPane, tilePane, fileList);
+        mtPane.setPictures(tilePane, fileList);
     }
 
     /**

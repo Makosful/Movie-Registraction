@@ -254,9 +254,9 @@ public class MainWindowModel
             }
     }
 
-    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
+    public void setPictures(TilePane tilePane, List<File> fileList)
     {
-        bll.setPictures(anchorPane, tilePane, fileList);
+        bll.setPictures(tilePane, fileList);
     }
 
     private void updateMovieList()

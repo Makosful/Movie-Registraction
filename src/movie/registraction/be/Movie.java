@@ -6,16 +6,8 @@
 package movie.registraction.be;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import movie.registraction.dal.MovieDAO;
-
-
 /**
  *
  * @author B
