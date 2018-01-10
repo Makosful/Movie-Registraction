@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.layout.AnchorPane;
@@ -72,6 +73,14 @@ public class BLLManager
         }
     }
 
+    /**
+     * Attempts to open a file in the desktop's standard application. May not
+     * work on all Operating Systems
+     *
+     * @param file The tile to open
+     *
+     * @throws BLLException
+     */
     public void openFileInNative(File file) throws BLLException
     {
         if (Desktop.isDesktopSupported())
@@ -87,12 +96,20 @@ public class BLLManager
             throw new UnsupportedOperationException("This feature is not supported on your platform");
     }
 
+    /**
+     * Saves the library path to the root folder
+     *
+     * @param path The file name and or path of the file to be written to. If no
+     *             path prefixes the file name, the file will be stored in the
+     *             application's root folder
+     *
+     * @throws BLLException
+     */
     public void saveDirectory(String path) throws BLLException
     {
         try
         {
             dal.saveDirectory(path);
-            System.out.println("Second " + dal.loadDirectory());
         }
         catch (DALException ex)
         {
@@ -100,16 +117,43 @@ public class BLLManager
         }
     }
 
-    public void setPictures(AnchorPane anchorPane, TilePane tilePane, List<File> fileList)
+    public String loadDirectory(String path) throws BLLException
     {
-        mtPane.setPictures(anchorPane, tilePane, fileList);
+        try
+        {
+            return dal.loadDirectory(path);
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
     }
 
+    public void setPictures(TilePane tilePane, List<File> fileList)
+    {
+        mtPane.setPictures(tilePane, fileList);
+    }
+
+    /**
+     * Gets the list of movies in the library
+     *
+     * Return the list of movies in the library as a String ArrayList
+     *
+     * @return
+     *
+     * @throws BLLException
+     */
     public ArrayList<String> getMovieList() throws BLLException
     {
         try
         {
-            return dal.getMovieList();
+            ArrayList<Path> moviePaths = dal.getMovieList();
+            ArrayList<String> movieStrings = new ArrayList();
+
+            for (int i = 0; i < moviePaths.size(); i++)
+                movieStrings.add(moviePaths.get(i).toString());
+
+            return movieStrings;
         }
         catch (DALException ex)
         {

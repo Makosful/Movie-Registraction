@@ -44,13 +44,15 @@ public class DALManager
     /**
      * Loads the saved library
      *
+     * @param path
+     *
      * @return A String object containing the path to the library
      *
      * @throws DALException
      */
-    public String loadDirectory() throws DALException
+    public String loadDirectory(String path) throws DALException
     {
-        try (BufferedReader br = new BufferedReader(new FileReader("path.txt")))
+        try (BufferedReader br = new BufferedReader(new FileReader(path)))
         {
             String s = br.readLine();
 
@@ -66,17 +68,29 @@ public class DALManager
         }
     }
 
-    public ArrayList<String> getMovieList() throws DALException
+    /**
+     * Gets the list of Paths for all items in the library
+     *
+     * This method will look through the specified library folder and retrive
+     * all items with the ending .jpg and .png
+     *
+     * @return An ArrayList containing paths
+     *
+     * @throws DALException
+     */
+    public ArrayList<Path> getMovieList() throws DALException
     {
-        ArrayList<String> list = new ArrayList();
+        ArrayList<Path> list = new ArrayList();
 
-        Path startPath = Paths.get(this.loadDirectory());
+        Path startPath = Paths.get(this.loadDirectory("path.txt"));
 
         try (Stream<Path> paths = Files.walk(startPath))
         {
             paths
                     .filter(Files::isRegularFile)
-                    .forEach(System.out::println);
+                    .filter(p -> p.toString().endsWith(".jpg")
+                                 || p.toString().endsWith(".png"))
+                    .forEach(list::add);
         }
         catch (IOException ex)
         {

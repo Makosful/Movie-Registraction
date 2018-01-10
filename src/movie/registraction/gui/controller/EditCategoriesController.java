@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -39,13 +40,10 @@ public class EditCategoriesController implements Initializable
     {
         m = new MainWindowModel();
 
-        try
-        {
+        try {
             lstViewAllCategories.setItems(m.getAllCategories());
-        }
-        catch (SQLException ex)
-        {
-            Logger.getLogger(EditCategoriesController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DALException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -62,9 +60,13 @@ public class EditCategoriesController implements Initializable
     }
 
     @FXML
-    private void btnSaveCategories(ActionEvent event) throws SQLException
+    private void btnSaveCategories(ActionEvent event)
     {
-        m.saveCategories();
+        try {
+            m.saveCategories();
+        } catch (DALException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
 }
