@@ -200,10 +200,13 @@ public class MovieDAO {
             String sql = "SELECT "
                         + "Movie.id, "
                         + "Movie.name, "
-                        + "Movie.rating, "
-                        + "Movie.filelink, "
+                        + "Movie.filePath, "
+                        + "Movie.imgPath, "
+                        + "Movie.personalRating, "
+                        + "Movie.imdbRating, "
                         + "Movie.year, "
-                        + "Movie.lastview, "
+                        + "Movie.lastView,"
+                        + "Movie.movieLength, "
                         + "Category.name AS categoryName "
                         + "FROM Movie "
                         + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
@@ -249,6 +252,12 @@ public class MovieDAO {
         movie.setId(rs.getInt("id"));
         movie.setMovieName(rs.getString("name"));
         movie.setMovieYear(rs.getInt("year"));
+        movie.setPersonalRating(rs.getDouble("personalRating"));
+        movie.setImdbRating(rs.getDouble("imdbRating"));
+        movie.setLastView(rs.getString("lastView"));
+        movie.setFilePath(rs.getString("filePath"));
+        movie.setFileImg(rs.getString("imgPath"));
+        movie.setMovieLength(rs.getInt("movieLength"));
         movie.setCategories(rs.getString("categoryName"));
         
         return movie;
