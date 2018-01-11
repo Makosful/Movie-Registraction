@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import movie.registraction.be.Movie;
+import movie.registraction.dal.DALException;
 import movie.registraction.dal.MovieDAO;
 
 /**
@@ -220,8 +221,13 @@ public class Rating {
                 else
                 {
                     Node node = (Node)e.getSource();
+                    //Test movie id
                     int movieId = 1;
-                    mDAO.setPersonalRating(movieId, gridPane.getColumnIndex(node));
+                    try {
+                        mDAO.setPersonalRating(movieId, gridPane.getColumnIndex(node)+1);
+                    } catch (DALException ex) {
+                        System.out.println(ex.getMessage());
+                    }
                 }
             }
         });
