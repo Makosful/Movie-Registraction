@@ -9,12 +9,16 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
@@ -183,6 +187,7 @@ public class MainWindowController implements Initializable
             // If valid files were chosen, add them as movies
             //List<File> addedFiles;
             model.setPictures(tilePane, chosenFiles);
+            imageClick(tilePane, model.getContextMenu());
         }
         else
         {
@@ -199,4 +204,35 @@ public class MainWindowController implements Initializable
         tilePane.prefWidthProperty().bind(scrlFilterSearch.widthProperty());
         tilePane.prefHeightProperty().bind(scrlFilterSearch.heightProperty());
     }
+    
+        /*
+    Code so you can click or right click on an image and soemthing happens.
+    Mouse event.
+    */  
+    private void imageClick(TilePane tilePane, ContextMenu contextMenu)
+    {
+        for(ImageView imageView : model.GetImageViewList())
+        {
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() 
+        {
+            @Override
+            public void handle(MouseEvent event) 
+            {
+                MouseButton mouseButton = event.getButton();
+                if (mouseButton == MouseButton.PRIMARY) 
+                {
+                    model.closeMenuOrClick(contextMenu);
+                }
+
+                if (mouseButton == MouseButton.SECONDARY) 
+                {
+                    model.contextMenuOpenOrNot(contextMenu);
+                    contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
+                }
+            }
+
+        });
+        }
+    }
+    
 }
