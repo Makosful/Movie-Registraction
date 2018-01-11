@@ -287,6 +287,7 @@ public class MainWindowModel
         File dir = dc.showDialog(null);
 
         if (dir.exists())
+        {
             try
             {
                 // Save this path to storage
@@ -300,6 +301,7 @@ public class MainWindowModel
                 System.out.println("Could not save path");
                 System.out.println(dir.getAbsolutePath());
             }
+        }
     }
 
     /**
@@ -307,24 +309,25 @@ public class MainWindowModel
      *
      * @param tilePane
      * @param fileList
+     * @throws movie.registraction.dal.DALException
      */
-    public void setPictures(TilePane tilePane, List<File> fileList) throws DALException
+    public void setPictures(TilePane tilePane, File file) throws DALException
     {
         imageViewList = new ArrayList();
         setupMenu(tilePane);
         tilePane.setHgap(20);
         tilePane.setPrefColumns(4);
-        for (File files : fileList)
-        {
-            imageView = new ImageView(files.toURI().toString());
+//        for (File files : fileList)
+//        {
+        imageView = new ImageView(file.toURI().toString());
             imageView.setFitHeight(IMAGE_HEIGHT);
             imageView.setFitWidth(IMAGE_WIDTH);
             imageViewList.add(imageView);
 
-            tilePane.getChildren().add(imageView); 
-            bll.imageIdMovieId(files, imageView);
-        }
-        }
+            tilePane.getChildren().add(imageView);
+        bll.imageIdMovieId(file, imageView);
+//        }
+    }
 
     /**
      * Sets up the contextmenu with the choices user get.

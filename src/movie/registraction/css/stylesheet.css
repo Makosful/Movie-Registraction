@@ -44,9 +44,9 @@ and open the template in the editor.
     -fx-text-fill: white;
 }
 
-  /////////////////
+  /*///////////////
  // ID SPECIFIC //
-/////////////////
+///////////////*/
 
 #flpGenre, #flpYear, #flpOther {
     -fx-background-color: #090a0c, linear-gradient(#38424b 0%, #22272c 100%);

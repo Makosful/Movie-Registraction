@@ -241,6 +241,7 @@ public class MainWindowController implements Initializable
 
                 String fileName = chosenFile.getName();
                 fileName = FilenameUtils.getBaseName(fileName);
+                model.setPictures(tilePane, chosenFile);
                 System.out.println(fileName); //For debugging
             }
         else
