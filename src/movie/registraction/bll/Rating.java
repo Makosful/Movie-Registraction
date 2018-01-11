@@ -6,6 +6,8 @@
 package movie.registraction.bll;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -22,7 +24,8 @@ public class Rating {
     private boolean half;
     private int wholeNumber;
     private MovieDAO mDAO;
-    
+    List<Label> stars;
+    List<Label> emptyStars;
     public Rating(double rating, String ratingType, GridPane gridPane) throws IOException
     {
         try {
@@ -31,6 +34,26 @@ public class Rating {
             throw new IOException();
         }
         
+        stars = new ArrayList();
+        emptyStars = new ArrayList();
+        
+        
+        for(int i = 0; i < 10; i++)
+        {
+            Label star = new Label("*");
+            saveRatingChangesHandler(star, gridPane);
+            setOnMouseEnteredHandler(star, gridPane);
+            stars.add(star);
+            
+            
+            Label emptyStar = new Label("0");
+            saveRatingChangesHandler(emptyStar, gridPane);
+            setOnMouseEnteredHandler(emptyStar, gridPane);
+            emptyStars.add(emptyStar);
+            
+        }
+        
+        setOnMouseExitedHandler(gridPane);
         initRating(ratingType, rating);
         setRatingStars(gridPane);
     }
@@ -78,11 +101,10 @@ public class Rating {
             if(i <= wholeNumber)
             {
 
-                Label label = new Label("*"+i);
-                gridPane.setColumnIndex(label, i-1);
-                gridPane.getChildren().add(label);
+                gridPane.setColumnIndex(stars.get(i-1), i-1);
+                gridPane.getChildren().add(stars.get(i-1));
                 
-                setOnMouseEnteredHandler(label, gridPane);
+                
                 
             }
             else if(i == wholeNumber+1 && half == true)
@@ -95,13 +117,12 @@ public class Rating {
                 setOnMouseEnteredHandler(label, gridPane);
             }
             else
-            {
+            {  
+              
+                gridPane.setColumnIndex(emptyStars.get(i-1), i-1);
+                gridPane.getChildren().add(emptyStars.get(i-1));
                 
-                Label label = new Label("-"+i);
-                gridPane.setColumnIndex(label, i-1);
-                gridPane.getChildren().add(label);
-                
-               setOnMouseEnteredHandler(label, gridPane);
+
             }
             
         }
@@ -118,26 +139,16 @@ public class Rating {
         for(int i = 0; i < 10; i++){
            if(i <= starIndex){  
               
-         
-                Label label = new Label("++");
-                gridPane.setColumnIndex(label, i);
-                gridPane.getChildren().add(label);
+                gridPane.setColumnIndex(stars.get(i), i);
+                gridPane.getChildren().add(stars.get(i));
                 
-                saveRatingChangesHandler(label, gridPane);
-                setOnMouseEnteredHandler(label, gridPane);
-                setOnMouseExitedHandler(gridPane);
-                
+
                
            }else{
 
-                Label label = new Label("0");
-                gridPane.setColumnIndex(label, i);
-                gridPane.getChildren().add(label);
-                
-                saveRatingChangesHandler(label, gridPane);
-                setOnMouseEnteredHandler(label, gridPane);
-                setOnMouseExitedHandler(gridPane);
-                
+         
+                gridPane.setColumnIndex(emptyStars.get(i), i);
+                gridPane.getChildren().add(emptyStars.get(i));
                 
            }
        }
@@ -150,6 +161,7 @@ public class Rating {
      */
     private void setOnMouseEnteredHandler(Label label, GridPane gridPane)
     {
+        System.out.println("HEJ");
         label.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
