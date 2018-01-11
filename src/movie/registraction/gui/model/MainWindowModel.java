@@ -4,6 +4,8 @@ import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,7 +39,10 @@ public class MainWindowModel
 
     public MainWindowModel()
     {
-        bll = new BLLManager();
+        try {
+            bll = new BLLManager();
+        } catch (BLLException ex) {
+        }
 
         genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
