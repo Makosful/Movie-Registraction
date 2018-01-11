@@ -161,7 +161,6 @@ public class Rating {
      */
     private void setOnMouseEnteredHandler(Label label, GridPane gridPane)
     {
-        System.out.println("HEJ");
         label.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
