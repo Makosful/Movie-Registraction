@@ -42,7 +42,11 @@ public class EditMovieCategoryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     
-        m = new MainWindowModel();
+        try {
+            m = new MainWindowModel();
+        } catch (DALException ex) {
+            System.out.println(ex.getMessage());
+        }
   
         listViewAll.setItems(m.getAllCategories());
         try {
@@ -52,9 +56,9 @@ public class EditMovieCategoryController implements Initializable {
             listViewChosen.setItems(m.loadChosenMovieCategories(movie.get(0)));
             
         } catch (IOException ex) {
-            Logger.getLogger(EditMovieCategoryController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         } catch (DALException ex) {
-            Logger.getLogger(EditMovieCategoryController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
         
         

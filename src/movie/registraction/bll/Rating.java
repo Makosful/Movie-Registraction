@@ -64,14 +64,7 @@ public class Rating {
                 gridPane.setRowIndex(label, 0);
                 gridPane.getChildren().add(label);
                 
-                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                      Node node = (Node)e.getSource();
-                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
-                      
-                    }
-                });
+                setOnMouseEnteredHandler(label, gridPane);
                 
             }
             else if(i == wholeNumber+1 && half == true)
@@ -82,13 +75,7 @@ public class Rating {
                 gridPane.setRowIndex(label, 0);
                 gridPane.getChildren().add(label);
                 
-                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                      Node node = (Node)e.getSource();
-                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
-                    }
-                });
+                setOnMouseEnteredHandler(label, gridPane);
             }
             else
             {
@@ -98,18 +85,13 @@ public class Rating {
                 gridPane.setRowIndex(label, 0);
                 gridPane.getChildren().add(label);
                 
-                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                      Node node = (Node)e.getSource();
-                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
-                    }
-                });
+               setOnMouseEnteredHandler(label, gridPane);
             }
             
         }
         
     }
+    
     
     public void onMouseOver(GridPane gridPane, int starIndex){
         gridPane.getChildren().clear();
@@ -121,21 +103,8 @@ public class Rating {
                 gridPane.setColumnIndex(label, i);
                 gridPane.getChildren().add(label);
                 
-                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                      Node node = (Node)e.getSource();
-                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
-                    }
-                });
-            
-                gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                        gridPane.getChildren().clear();
-                        setRatingStars(gridPane);
-                    }
-                });
+                setOnMouseEnteredHandler(label, gridPane);
+                setOnMouseExitedHandler(gridPane);
                
            }else{
 
@@ -143,24 +112,36 @@ public class Rating {
                 gridPane.setColumnIndex(label, i);
                 gridPane.getChildren().add(label);
                 
+                setOnMouseEnteredHandler(label, gridPane);
+                setOnMouseExitedHandler(gridPane);
                 
-                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                      Node node = (Node)e.getSource();
-                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
-                    }
-                });
-                
-                gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                      gridPane.getChildren().clear();
-                      setRatingStars(gridPane);
-                    }
-                });
            }
        }
+    }
+    
+    
+    private void setOnMouseEnteredHandler(Label label, GridPane gridPane)
+    {
+        label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+              Node node = (Node)e.getSource();
+              onMouseOver(gridPane, gridPane.getColumnIndex(node));
+            }
+        });
+    
+    }
+    
+    
+    private void setOnMouseExitedHandler(GridPane gridPane)
+    {
+        gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+              gridPane.getChildren().clear();
+              setRatingStars(gridPane);
+            }
+        });
     }
          
 }
