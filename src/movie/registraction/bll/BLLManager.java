@@ -11,10 +11,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.layout.TilePane;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
-import movie.registraction.dal.MovieDAO;
 
 /**
  *
@@ -26,18 +24,15 @@ public class BLLManager
     OmdbSearch omdb;
 
     DALManager dal;
-    MovieDAO mDAO;
 
     public BLLManager() throws BLLException
     {
-        dal = new DALManager();
-        omdb = new OmdbSearch();
-
         try
         {
-            mDAO = new MovieDAO();
+            dal = new DALManager();
+            omdb = new OmdbSearch();
         }
-        catch (IOException ex)
+        catch (DALException ex)
         {
             throw new BLLException();
         }
@@ -135,45 +130,47 @@ public class BLLManager
             throw new BLLException();
         }
     }
+
     /**
-     *Closes the menu incase the context menu is open
+     * Closes the menu incase the context menu is open
      * or else the user clicks normally.
-     * @param contextMenu 
+     *
+     * @param contextMenu
      */
     public void closeMenuOrClick(ContextMenu contextMenu)
     {
-        if (!contextMenu.isShowing()) 
-        {
+        if (!contextMenu.isShowing())
             System.out.println("You clicked on the picture.");
-        }
-        else 
-        {
+        else
             contextMenu.hide();
-        }
     }
+
     /**
      * Closes the contextmenu.
-     * @param contextMenu 
+     *
+     * @param contextMenu
      */
     public void closeMenu(ContextMenu contextMenu)
     {
         contextMenu.hide();
     }
-    
+
     /**
-     *Checks whether contextmenu is open or not, if yes, it closes.
-     Incase user dobbleclicks several times, so it doesnt stack.
-     * @param contextMenu 
+     * Checks whether contextmenu is open or not, if yes, it closes.
+     * Incase user dobbleclicks several times, so it doesnt stack.
+     *
+     * @param contextMenu
      */
     public void contextMenuOpenOrNot(ContextMenu contextMenu)
     {
         // So the contextMenu doesnt stack.
-        if (contextMenu.isShowing()) 
+        if (contextMenu.isShowing())
         {
             closeMenu(contextMenu);
             System.out.println("closed menu");
         }
     }
+
     /**
      * Gets the list of movies in the library
      *
@@ -214,19 +211,7 @@ public class BLLManager
      */
     public void addMovie(List<String> movieMetaData) throws DALException
     {
-        try
-        {
-            int movieId = mDAO.addMovie(movieMetaData);
-            //TODO - den specifikke plad i det medsendte metadata kendes ikke endnu, dette er blot et eksempel
-            String[] metaMovieCategories = movieMetaData.get(99).split(" ");
-            for (String category : metaMovieCategories)
-                mDAO.addMovieCategory(movieId, category);
-
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
+        dal.addMovie(movieMetaData);
     }
 
 }

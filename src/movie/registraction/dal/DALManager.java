@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -12,8 +13,18 @@ import java.util.ArrayList;
 public class DALManager
 {
 
-    public DALManager()
+    MovieDAO mDAO;
+
+    public DALManager() throws DALException
     {
+        try
+        {
+            mDAO = new MovieDAO();
+        }
+        catch (IOException ex)
+        {
+            throw new DALException();
+        }
     }
 
     /**
@@ -153,5 +164,21 @@ public class DALManager
             if (file.getAbsolutePath().endsWith(filter.get(i)))
                 return true;
         return false;
+    }
+
+    public void addMovie(List<String> movieMetaData) throws DALException
+    {
+        try
+        {
+            int id = mDAO.addMovie(movieMetaData);
+
+            String[] metaMovieCategories = movieMetaData.get(99).split(" ");
+            for (String cat : metaMovieCategories)
+                mDAO.addMovieCategory(id, cat);
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
     }
 }
