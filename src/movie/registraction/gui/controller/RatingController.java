@@ -5,8 +5,11 @@
  */
 package movie.registraction.gui.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,8 +36,12 @@ public class RatingController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        r = new Rating();
-        r.initRating(7.5, "imdb", gridPaneRating);
+        try {
+            r = new Rating(7.5, "imdb", gridPaneRating);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
         
         
         

@@ -5,13 +5,13 @@
  */
 package movie.registraction.bll;
 
-import javafx.event.Event;
+import java.io.IOException;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import movie.registraction.be.Movie;
+import movie.registraction.dal.MovieDAO;
 
 /**
  *
@@ -21,9 +21,26 @@ public class Rating {
     
     private boolean half;
     private int wholeNumber;
- 
-
-    public void initRating(double rating, String ratingType, GridPane gridPane)
+    private MovieDAO mDAO;
+    
+    public Rating(double rating, String ratingType, GridPane gridPane) throws IOException
+    {
+        try {
+            mDAO = new MovieDAO();
+        } catch (IOException ex) {
+            throw new IOException();
+        }
+        
+        initRating(ratingType, rating);
+        setRatingStars(gridPane);
+    }
+    
+    /**
+     * 
+     * @param ratingType
+     * @param rating 
+     */
+    private void initRating(String ratingType, double rating)
     {
         if(ratingType.equals("imdb")){
             if(rating-Math.floor(rating) < 0.75){
@@ -46,11 +63,13 @@ public class Rating {
         {
             wholeNumber = (int) rating;
         }
-        
-        setRatingStars(gridPane);
     }
     
     
+    /**
+     * 
+     * @param gridPane 
+     */
     private void setRatingStars(GridPane gridPane)
     {
     
@@ -61,7 +80,6 @@ public class Rating {
 
                 Label label = new Label("*"+i);
                 gridPane.setColumnIndex(label, i-1);
-                gridPane.setRowIndex(label, 0);
                 gridPane.getChildren().add(label);
                 
                 setOnMouseEnteredHandler(label, gridPane);
@@ -72,7 +90,6 @@ public class Rating {
 
                 Label label = new Label("half"+i);
                 gridPane.setColumnIndex(label, i-1);
-                gridPane.setRowIndex(label, 0);
                 gridPane.getChildren().add(label);
                 
                 setOnMouseEnteredHandler(label, gridPane);
@@ -82,7 +99,6 @@ public class Rating {
                 
                 Label label = new Label("-"+i);
                 gridPane.setColumnIndex(label, i-1);
-                gridPane.setRowIndex(label, 0);
                 gridPane.getChildren().add(label);
                 
                setOnMouseEnteredHandler(label, gridPane);
@@ -92,7 +108,11 @@ public class Rating {
         
     }
     
-    
+    /**
+     * 
+     * @param gridPane
+     * @param starIndex 
+     */
     public void onMouseOver(GridPane gridPane, int starIndex){
         gridPane.getChildren().clear();
         for(int i = 0; i < 10; i++){
@@ -103,8 +123,10 @@ public class Rating {
                 gridPane.setColumnIndex(label, i);
                 gridPane.getChildren().add(label);
                 
+                saveRatingChangesHandler(label, gridPane);
                 setOnMouseEnteredHandler(label, gridPane);
                 setOnMouseExitedHandler(gridPane);
+                
                
            }else{
 
@@ -112,34 +134,58 @@ public class Rating {
                 gridPane.setColumnIndex(label, i);
                 gridPane.getChildren().add(label);
                 
+                saveRatingChangesHandler(label, gridPane);
                 setOnMouseEnteredHandler(label, gridPane);
                 setOnMouseExitedHandler(gridPane);
+                
                 
            }
        }
     }
     
-    
+    /**
+     * 
+     * @param label
+     * @param gridPane 
+     */
     private void setOnMouseEnteredHandler(Label label, GridPane gridPane)
     {
-        label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        label.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-              Node node = (Node)e.getSource();
-              onMouseOver(gridPane, gridPane.getColumnIndex(node));
+                Node node = (Node)e.getSource();
+                onMouseOver(gridPane, gridPane.getColumnIndex(node));
             }
-        });
-    
+        }); 
     }
     
-    
+    /**
+     * 
+     * @param gridPane 
+     */
     private void setOnMouseExitedHandler(GridPane gridPane)
     {
         gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-              gridPane.getChildren().clear();
-              setRatingStars(gridPane);
+                gridPane.getChildren().clear();
+                setRatingStars(gridPane);
+            }
+        });
+    }
+    
+    /**
+     * 
+     * @param label
+     * @param gridPane 
+     */
+    private void saveRatingChangesHandler(Label label, GridPane gridPane)
+    {
+        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                Node node = (Node)e.getSource();
+                System.out.println(gridPane.getColumnIndex(node));
             }
         });
     }
