@@ -30,6 +30,8 @@ public class RatingController implements Initializable {
     @FXML
     private GridPane gridPaneRating;
     private Rating r;
+    @FXML
+    private Label lblRating;
 
     /**
      * Initializes the controller class.
@@ -37,7 +39,7 @@ public class RatingController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            r = new Rating(7.5, "imdb", gridPaneRating);
+            r = new Rating(7.5, "imdb", gridPaneRating, lblRating);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }

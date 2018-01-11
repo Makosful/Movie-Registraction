@@ -328,6 +328,10 @@ public class MovieDAO {
             
      }
 
+    public void setPersonalRating(int movieId, Integer columnIndex) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
     
 }

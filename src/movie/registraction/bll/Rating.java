@@ -5,14 +5,20 @@
  */
 package movie.registraction.bll;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.MovieDAO;
 
 /**
@@ -24,9 +30,11 @@ public class Rating {
     private boolean half;
     private int wholeNumber;
     private MovieDAO mDAO;
+    private Label lblRating;
     List<Label> stars;
     List<Label> emptyStars;
-    public Rating(double rating, String ratingType, GridPane gridPane) throws IOException
+    
+    public Rating(double rating, String ratingType, GridPane gridPane, Label lblRating) throws IOException
     {
         try {
             mDAO = new MovieDAO();
@@ -36,24 +44,26 @@ public class Rating {
         
         stars = new ArrayList();
         emptyStars = new ArrayList();
+        this.lblRating = lblRating;
         
         
         for(int i = 0; i < 10; i++)
         {
             Label star = new Label("*");
-            saveRatingChangesHandler(star, gridPane);
+            saveRatingChangesHandler(star, gridPane, ratingType);
             setOnMouseEnteredHandler(star, gridPane);
             stars.add(star);
             
             
             Label emptyStar = new Label("0");
-            saveRatingChangesHandler(emptyStar, gridPane);
+            saveRatingChangesHandler(emptyStar, gridPane, ratingType);
             setOnMouseEnteredHandler(emptyStar, gridPane);
             emptyStars.add(emptyStar);
             
         }
         
-        setOnMouseExitedHandler(gridPane);
+        lblRating.setText(Double.toString(rating));
+        setOnMouseExitedHandler(gridPane, rating);
         initRating(ratingType, rating);
         setRatingStars(gridPane);
     }
@@ -135,6 +145,7 @@ public class Rating {
      * @param starIndex 
      */
     public void onMouseOver(GridPane gridPane, int starIndex){
+        lblRating.setText(Integer.toString(starIndex+1));
         gridPane.getChildren().clear();
         for(int i = 0; i < 10; i++){
            if(i <= starIndex){  
@@ -174,13 +185,14 @@ public class Rating {
      * 
      * @param gridPane 
      */
-    private void setOnMouseExitedHandler(GridPane gridPane)
+    private void setOnMouseExitedHandler(GridPane gridPane, double rating)
     {
         gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 gridPane.getChildren().clear();
                 setRatingStars(gridPane);
+                lblRating.setText(Double.toString(rating));
             }
         });
     }
@@ -190,13 +202,27 @@ public class Rating {
      * @param label
      * @param gridPane 
      */
-    private void saveRatingChangesHandler(Label label, GridPane gridPane)
+    private void saveRatingChangesHandler(Label label, GridPane gridPane, String ratingType)
     {
         label.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                Node node = (Node)e.getSource();
-                System.out.println(gridPane.getColumnIndex(node));
+                if(ratingType.equals("imdb"))
+                {
+                    try {
+                        Desktop.getDesktop().browse(new URI("https://www.imdb.com/registration/signin?u=http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0368226%2F"));
+                    } catch (URISyntaxException ex) {
+                        
+                    }  catch (IOException ex) {
+                       
+                    }
+                }
+                else
+                {
+                    Node node = (Node)e.getSource();
+                    int movieId = 1;
+                    mDAO.setPersonalRating(movieId, gridPane.getColumnIndex(node));
+                }
             }
         });
     }
