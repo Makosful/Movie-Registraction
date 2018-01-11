@@ -184,17 +184,11 @@ public class BLLManager
      *
      * @throws BLLException
      */
-    public ArrayList<String> getMovieList(ArrayList<String> filter) throws BLLException
+    public ArrayList<Path> getMovieList(ArrayList<String> filter) throws BLLException
     {
         try
         {
-            ArrayList<Path> moviePaths = dal.getMovieList(filter);
-            ArrayList<String> movieStrings = new ArrayList();
-
-            for (int i = 0; i < moviePaths.size(); i++)
-                movieStrings.add(moviePaths.get(i).toString());
-
-            return movieStrings;
+            return dal.getMovieList(filter);
         }
         catch (DALException ex)
         {
@@ -215,8 +209,8 @@ public class BLLManager
     {
         dal.addMovie(movieMetaData);
     }
-    
-        public ObservableList<Movie> getAllMovies() throws DALException
+
+    public ObservableList<Movie> getAllMovies() throws DALException
     {
         return dal.getAllMovies();
     }
