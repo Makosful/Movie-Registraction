@@ -10,13 +10,11 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.layout.TilePane;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
-import movie.registraction.dal.MovieDAO;
 
 /**
  *
@@ -29,19 +27,15 @@ public class BLLManager
 
     DALManager dal;
 
-    MovieTilePane mtPane;
-    
-    MovieDAO mDAO;
-
-    public BLLManager() throws BLLException
+    public BLLManager() throws BLLException, DALException
     {
-        dal = new DALManager();
-        omdb = new OmdbSearch();
-        mtPane = new MovieTilePane();
-        
-         try {
-            mDAO = new MovieDAO();
-        } catch (IOException ex) {
+        try
+        {
+            dal = new DALManager();
+            omdb = new OmdbSearch();
+        }
+        catch (DALException ex)
+        {
             throw new BLLException();
         }
     }
@@ -139,14 +133,44 @@ public class BLLManager
         }
     }
 
-    public void setPictures(TilePane tilePane, List<File> fileList, ContextMenu contextMenu)
+    /**
+     * Closes the menu incase the context menu is open
+     * or else the user clicks normally.
+     *
+     * @param contextMenu
+     */
+    public void closeMenuOrClick(ContextMenu contextMenu)
     {
-        mtPane.setPictures(tilePane, fileList, contextMenu);
+        if (!contextMenu.isShowing())
+            System.out.println("You clicked on the picture.");
+        else
+            contextMenu.hide();
     }
-    
+
+    /**
+     * Closes the contextmenu.
+     *
+     * @param contextMenu
+     */
     public void closeMenu(ContextMenu contextMenu)
     {
         contextMenu.hide();
+    }
+
+    /**
+     * Checks whether contextmenu is open or not, if yes, it closes.
+     * Incase user dobbleclicks several times, so it doesnt stack.
+     *
+     * @param contextMenu
+     */
+    public void contextMenuOpenOrNot(ContextMenu contextMenu)
+    {
+        // So the contextMenu doesnt stack.
+        if (contextMenu.isShowing())
+        {
+            closeMenu(contextMenu);
+            System.out.println("closed menu");
+        }
     }
 
     /**
@@ -154,15 +178,17 @@ public class BLLManager
      *
      * Return the list of movies in the library as a String ArrayList
      *
+     * @param filter
+     *
      * @return
      *
      * @throws BLLException
      */
-    public ArrayList<String> getMovieList() throws BLLException
+    public ArrayList<String> getMovieList(ArrayList<String> filter) throws BLLException
     {
         try
         {
-            ArrayList<Path> moviePaths = dal.getMovieList();
+            ArrayList<Path> moviePaths = dal.getMovieList(filter);
             ArrayList<String> movieStrings = new ArrayList();
 
             for (int i = 0; i < moviePaths.size(); i++)
@@ -175,28 +201,24 @@ public class BLLManager
             throw new BLLException();
         }
     }
-    
-    
+
     /**
-     * Adds a movie with the supplied metadata, the addmovie returns the inserted 
+     * Adds a movie with the supplied metadata, the addmovie returns the
+     * inserted
      * movie row id, which is used to inserting the movies categories
+     *
      * @param movieMetaData
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public void addMovie(List<String> movieMetaData) throws DALException
     {
-        try {
-           int movieId = mDAO.addMovie(movieMetaData);
-           //TODO - den specifikke plad i det medsendte metadata kendes ikke endnu, dette er blot et eksempel
-           String[] metaMovieCategories = movieMetaData.get(99).split(" ");
-           for(String category : metaMovieCategories)
-           {
-               mDAO.addMovieCategory(movieId, category);
-           }
-           
-        } catch (DALException ex) {
-            throw new DALException();
-        }
+        dal.addMovie(movieMetaData);
     }
-   
+    
+        public ObservableList<Movie> getAllMovies() throws DALException
+    {
+        return dal.getAllMovies();
+    }
+
 }

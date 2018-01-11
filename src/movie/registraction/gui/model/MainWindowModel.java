@@ -3,15 +3,15 @@ package movie.registraction.gui.model;
 import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import movie.registraction.be.Movie;
@@ -27,6 +27,9 @@ import movie.registraction.dal.DALException;
 public class MainWindowModel
 {
 
+    List<ImageView> imageViewList;
+    ImageView imageView;
+
     private BLLManager bll;
 
     private final ObservableList<JFXCheckBox> genres;
@@ -34,14 +37,26 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> others;
     private final ObservableList<String> movies;
     private final ObservableList<String> allCategories;
+
+    private final int IMAGE_HEIGHT;
+    private final int IMAGE_WIDTH;
+
+    private final ArrayList<String> extensionList;
+
     private changeCategories categories;
     private ContextMenu contextMenu;
 
-    public MainWindowModel()
+    public MainWindowModel() throws DALException
     {
-        try {
+        IMAGE_HEIGHT = 200;
+        IMAGE_WIDTH = 150;
+
+        try
+        {
             bll = new BLLManager();
-        } catch (BLLException ex) {
+        }
+        catch (BLLException ex)
+        {
         }
 
         genres = FXCollections.observableArrayList();
@@ -67,9 +82,19 @@ public class MainWindowModel
             years.add(cb);
         }
 
-        loadMovieList();
+        extensionList = new ArrayList();
+//        extensionList.add(".jpg");
+//        extensionList.add(".png");
+        extensionList.add(".mp4");
+        extensionList.add(".mpeg4");
+        loadMovieFromLibrary();
     }
 
+    /**
+     * Makes a search on movies titles
+     *
+     * @param text
+     */
     public void fxmlTitleSearch(String text)
     {
         // Replace all the whitespaces with plus signs to make it URL friendly
@@ -91,6 +116,10 @@ public class MainWindowModel
 
     }
 
+    /**
+     * Clears the filters.
+     * Not in use
+     */
     public void fxmlClearFilters()
     {
     }
@@ -119,8 +148,9 @@ public class MainWindowModel
     }
 
     /**
+     * Returns the list of CheckBoxes for the years
      *
-     * @return
+     * @return Returns the list CheckBoxes for the years
      */
     public ObservableList<JFXCheckBox> getYearList()
     {
@@ -128,8 +158,11 @@ public class MainWindowModel
     }
 
     /**
+     * Gets the list of Other options
      *
-     * @return
+     * Gets the list of CheckBoxes for the Other category
+     *
+     * @return Returns the list of Other Options
      */
     public ObservableList<JFXCheckBox> getOtherList()
     {
@@ -195,6 +228,7 @@ public class MainWindowModel
      * Gets the allready exsisting categories for a specific movie
      *
      * @param movie
+     *
      * @return Observable list of category strings
      */
     public ObservableList<String> loadChosenMovieCategories(Movie movie)
@@ -244,7 +278,7 @@ public class MainWindowModel
      *
      * Defaults to the Windows Videos library
      */
-    public void fxmlUploadFiles()
+    public void fxmlSetLibrary()
     {
         DirectoryChooser dc = new DirectoryChooser();
         File dir = dc.showDialog(null);
@@ -255,7 +289,7 @@ public class MainWindowModel
                 // Save this path to storage
                 String path = dir.getAbsolutePath();
                 bll.saveDirectory(path);
-                updateMovieList();
+                this.loadMovieFromLibrary();
 
             }
             catch (BLLException ex)
@@ -264,13 +298,34 @@ public class MainWindowModel
                 System.out.println(dir.getAbsolutePath());
             }
     }
-
+        
+    /**
+     * Setting the tile setup.
+     * @param tilePane
+     * @param fileList 
+     */
     public void setPictures(TilePane tilePane, List<File> fileList)
     {
+        imageViewList = new ArrayList();
         setupMenu(tilePane);
-        bll.setPictures(tilePane, fileList, contextMenu);
+        tilePane.setHgap(20);
+        tilePane.setPrefColumns(4);
+        for (File files : fileList)
+        {
+            imageView = new ImageView(files.toURI().toString());
+            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageViewList.add(imageView);
+
+            tilePane.getChildren().add(imageView);
+        }
     }
 
+    /**
+     * Sets up the contextmenu with the choices user get.
+     *
+     * @param tilePane
+     */
     private void setupMenu(TilePane tilePane)
     {
         contextMenu = new ContextMenu();
@@ -313,48 +368,115 @@ public class MainWindowModel
         contextMenu.getItems().addAll(test1, test2, test3);
     }
 
-    private void updateMovieList()
+    /**
+     * Closes the menu incase the context menu is open
+     * or else the user clicks normally.
+     *
+     * @param contextMenu
+     */
+    public void closeMenuOrClick(ContextMenu contextMenu)
     {
+        bll.closeMenuOrClick(contextMenu);
+    }
+
+    /**
+     * Closes the contextmenu.
+     *
+     * @param contextMenu
+     */
+    public void closeMenu(ContextMenu contextMenu)
+    {
+        contextMenu.hide();
+    }
+
+    /**
+     * Checks whether contextmenu is open or not, if yes, it closes.
+     * Incase user dobbleclicks several times, so it doesnt stack.
+     *
+     * @param contextMenu
+     */
+    public void contextMenuOpenOrNot(ContextMenu contextMenu)
+    {
+        bll.contextMenuOpenOrNot(contextMenu);
+    }
+
+    /**
+     * Loads the movies from the library
+     */
+    private void loadMovieFromLibrary()
+    {
+        String lib;
+
+        // First tries to get the file
         try
         {
-            movies.setAll(bll.getMovieList());
-            System.out.println("Successfully updated movie list");
-            for (String movy : movies)
-                System.out.println(movy);
+            lib = bll.loadDirectory("path.txt");
         }
         catch (BLLException ex)
         {
-            System.out.println("Failed to update movie list");
-            ex.printStackTrace();
+            // If the files doesn't exist, tell the user and back out of the method
+            System.out.println("Library has not been sat.");
+            return;
         }
-    }
 
-    private void loadMovieList()
-    {
+        // If file was found
         try
         {
-            String lib = bll.loadDirectory("path.txt");
-
+            // Make sure file isn't empty
             if (lib.isEmpty())
-                return;
-            else
             {
-                movies.setAll(bll.getMovieList());
-                System.out.println("Successfully added library");
-                for (String movy : movies)
-                    System.out.println(movy);
+                System.out.println("path.txt is corrupt. Set the library again.");
+                System.out.println("If that doesn't work, delete path.txt and try again");
+                return;
             }
+
+            // Load the files located at the library
+            movies.setAll(bll.getMovieList(extensionList));
+
+            // Tell the user the files have been added
+            System.out.println("Successfully added library");
+
+            // Show the user the full file path of the files in the console
+            movies.forEach((movy) ->
+            {
+                System.out.println(movy);
+            });
         }
         catch (BLLException ex)
         {
-            System.out.println("Failed to load library path");
-            //ex.printStackTrace();
+            System.out.println("Failed to load library");
         }
     }
 
+    /**
+     * Gets the movie list
+     *
+     * @return
+     */
     public ObservableList<String> getMovieList()
     {
         return movies;
+    }
+
+    /*
+     * Returns list of the imageviews. // The images the user puts in.
+     */
+    public List<ImageView> GetImageViewList()
+    {
+        return imageViewList;
+    }
+
+    /*
+     * Returns the contextmenu for the imageviews.
+     */
+    public ContextMenu getContextMenu()
+    {
+        return contextMenu;
+    }
+    
+        public ObservableList<Movie> getAllMovies() throws DALException
+    {
+        return bll.getAllMovies();
     }
 
 }
