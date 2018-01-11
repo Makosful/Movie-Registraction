@@ -39,7 +39,7 @@ public class RatingController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            r = new Rating(7.5, "imdb", gridPaneRating, lblRating);
+            r = new Rating(10, "personalRating", gridPaneRating, lblRating);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }

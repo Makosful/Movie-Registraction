@@ -328,8 +328,27 @@ public class MovieDAO {
             
      }
 
-    public void setPersonalRating(int movieId, Integer columnIndex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setPersonalRating(int movieId, int personalRating) throws DALException {
+       
+        try (Connection con = db.getConnection())
+        {
+
+            String sqlInsert = "UPDATE Movie "
+                             + "SET Movie.personalRating = ? "
+                             + "WHERE id = ?";
+
+            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+            preparedStatement.setInt(1, personalRating);
+            preparedStatement.setInt(2, movieId);
+            preparedStatement.executeUpdate();
+
+        
+            
+        }
+        catch (SQLException ex)
+        {
+            throw new DALException();
+        }
     }
 
 
