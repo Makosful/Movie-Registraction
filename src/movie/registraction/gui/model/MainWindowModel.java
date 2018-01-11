@@ -40,6 +40,8 @@ public class MainWindowModel
     private final int IMAGE_HEIGHT;
     private final int IMAGE_WIDTH;
         
+    private final ArrayList<String> extensionList;
+
     private changeCategories categories;
     private ContextMenu contextMenu;
 
@@ -47,10 +49,13 @@ public class MainWindowModel
     {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 150;
-        
-        try {
+
+        try
+        {
             bll = new BLLManager();
-        } catch (BLLException ex) {
+        }
+        catch (BLLException ex)
+        {
         }
 
         genres = FXCollections.observableArrayList();
@@ -76,6 +81,11 @@ public class MainWindowModel
             years.add(cb);
         }
 
+        extensionList = new ArrayList();
+//        extensionList.add(".jpg");
+//        extensionList.add(".png");
+        extensionList.add(".mp4");
+        extensionList.add(".mpeg4");
         loadMovieList();
     }
 
@@ -204,6 +214,7 @@ public class MainWindowModel
      * Gets the allready exsisting categories for a specific movie
      *
      * @param movie
+     *
      * @return Observable list of category strings
      */
     public ObservableList<String> loadChosenMovieCategories(Movie movie)
@@ -253,7 +264,7 @@ public class MainWindowModel
      *
      * Defaults to the Windows Videos library
      */
-    public void fxmlUploadFiles()
+    public void fxmlSetLibrary()
     {
         DirectoryChooser dc = new DirectoryChooser();
         File dir = dc.showDialog(null);
@@ -264,7 +275,7 @@ public class MainWindowModel
                 // Save this path to storage
                 String path = dir.getAbsolutePath();
                 bll.saveDirectory(path);
-                updateMovieList();
+                this.loadMovieList();
 
             }
             catch (BLLException ex)
@@ -364,22 +375,6 @@ public class MainWindowModel
         bll.contextMenuOpenOrNot(contextMenu);
     }
 
-    private void updateMovieList()
-    {
-        try
-        {
-            movies.setAll(bll.getMovieList());
-            System.out.println("Successfully updated movie list");
-            for (String movy : movies)
-                System.out.println(movy);
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Failed to update movie list");
-            ex.printStackTrace();
-        }
-    }
-
     private void loadMovieList()
     {
         try
@@ -387,19 +382,21 @@ public class MainWindowModel
             String lib = bll.loadDirectory("path.txt");
 
             if (lib.isEmpty())
-                return;
+            {
+            }
             else
             {
-                movies.setAll(bll.getMovieList());
+                movies.setAll(bll.getMovieList(extensionList));
                 System.out.println("Successfully added library");
-                for (String movy : movies)
+                movies.forEach((movy) ->
+                {
                     System.out.println(movy);
+                });
             }
         }
         catch (BLLException ex)
         {
             System.out.println("Failed to load library path");
-            //ex.printStackTrace();
         }
     }
 
