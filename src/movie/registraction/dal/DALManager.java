@@ -4,6 +4,8 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
+import movie.registraction.be.Movie;
 
 /**
  *
@@ -11,9 +13,18 @@ import java.util.ArrayList;
  */
 public class DALManager
 {
+    MovieDAO mDAO;
 
-    public DALManager()
+    public DALManager() throws DALException
     {
+        try
+        {
+            mDAO = new MovieDAO();
+        } 
+        catch (IOException ex) 
+        {
+            throw new DALException();
+        }
     }
 
     /**
@@ -153,5 +164,10 @@ public class DALManager
             if (file.getAbsolutePath().endsWith(filter.get(i)))
                 return true;
         return false;
+    }
+    
+    public ObservableList<Movie> getAllMovies() throws DALException
+    {
+      return mDAO.getAllMovies();
     }
 }

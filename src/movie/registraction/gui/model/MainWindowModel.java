@@ -45,7 +45,7 @@ public class MainWindowModel
     private changeCategories categories;
     private ContextMenu contextMenu;
 
-    public MainWindowModel()
+    public MainWindowModel() throws DALException
     {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 150;
@@ -286,7 +286,7 @@ public class MainWindowModel
     }
         
     // Setting the tile setup.
-    public void setPictures(TilePane tilePane, List<File> fileList)
+    public void setPictures(TilePane tilePane, List<File> fileList) throws DALException
     {
         imageViewList = new ArrayList();
         setupMenu(tilePane);
@@ -295,7 +295,6 @@ public class MainWindowModel
         for(File files : fileList)
         {
             imageView = new ImageView(files.toURI().toString());
-            
             imageView.setFitHeight(IMAGE_HEIGHT);
             imageView.setFitWidth(IMAGE_WIDTH);
             imageViewList.add(imageView);
@@ -417,6 +416,11 @@ public class MainWindowModel
     public ContextMenu getContextMenu()
     {
         return contextMenu;
+    }
+    
+        public ObservableList<Movie> getAllMovies() throws DALException
+    {
+        return bll.getAllMovies();
     }
 
 }

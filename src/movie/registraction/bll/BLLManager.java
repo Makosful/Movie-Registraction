@@ -10,8 +10,10 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.TilePane;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
 import movie.registraction.dal.MovieDAO;
@@ -28,7 +30,7 @@ public class BLLManager
     DALManager dal;
     MovieDAO mDAO;
 
-    public BLLManager() throws BLLException
+    public BLLManager() throws BLLException, DALException
     {
         dal = new DALManager();
         omdb = new OmdbSearch();
@@ -227,6 +229,11 @@ public class BLLManager
         {
             throw new DALException();
         }
+    }
+    
+        public ObservableList<Movie> getAllMovies() throws DALException
+    {
+        return dal.getAllMovies();
     }
 
 }
