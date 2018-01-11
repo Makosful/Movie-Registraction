@@ -1,0 +1,53 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 11, 2018, 2:24:04 PM
+    Author     : Storm
+*/
+.root {
+    -fx-background-color: #090a0c, linear-gradient(#38424b 0%, #22272c 100%);
+}
+
+.root:focused {
+    -fx-background-color: #487597;
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: #090a0c, linear-gradient(#a1a3a3 0%, #636667 100%), 
+        linear-gradient(#526570, #464a4e), 
+        radial-gradient(center 50% 50%, 
+        radius 100%, #666666, #a1a3a3);
+    -fx-background-radius: 5, 4, 4, 5;
+    -fx-background-insets: 0, 1, 1, 0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 5, 0, 0, 1);
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 5 10 5 10;
+}
+.button Text {
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 1), 1, 0, 0, 1);
+}
+
+.radio-button {
+    -fx-text-fill: white;
+}
+
+.check-box {
+    -fx-text-fill: white;
+}
+
+  /////////////////
+ // ID SPECIFIC //
+/////////////////
+
+#flpGenre, #flpYear, #flpOther {
+    -fx-background-color: #090a0c, linear-gradient(#38424b 0%, #22272c 100%);
+}
