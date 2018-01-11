@@ -5,6 +5,12 @@
  */
 package movie.registraction.bll;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import movie.registraction.be.Movie;
 
 /**
@@ -15,9 +21,9 @@ public class Rating {
     
     private boolean half;
     private int wholeNumber;
+ 
 
-
-    public void initRating(double rating, String ratingType)
+    public void initRating(double rating, String ratingType, GridPane gridPane)
     {
         if(ratingType.equals("imdb")){
             if(rating-Math.floor(rating) < 0.75){
@@ -41,41 +47,118 @@ public class Rating {
             wholeNumber = (int) rating;
         }
         
-        setRatingStars();
+        setRatingStars(gridPane);
     }
     
     
-    private void setRatingStars()
+    private void setRatingStars(GridPane gridPane)
     {
-  
+    
         for(int i = 1; i < 11; i++)
         {
             if(i <= wholeNumber)
             {
-                System.out.println("*"+i);
+
+                Label label = new Label("*"+i);
+                gridPane.setColumnIndex(label, i-1);
+                gridPane.setRowIndex(label, 0);
+                gridPane.getChildren().add(label);
+                
+                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                      Node node = (Node)e.getSource();
+                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
+                      
+                    }
+                });
+                
             }
             else if(i == wholeNumber+1 && half == true)
             {
-                System.out.println("half");
+
+                Label label = new Label("half"+i);
+                gridPane.setColumnIndex(label, i-1);
+                gridPane.setRowIndex(label, 0);
+                gridPane.getChildren().add(label);
+                
+                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                      Node node = (Node)e.getSource();
+                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
+                    }
+                });
             }
             else
             {
-                System.out.println("-"+i);
+                
+                Label label = new Label("-"+i);
+                gridPane.setColumnIndex(label, i-1);
+                gridPane.setRowIndex(label, 0);
+                gridPane.getChildren().add(label);
+                
+                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                      Node node = (Node)e.getSource();
+                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
+                    }
+                });
             }
             
         }
         
     }
     
-    private void onMouseOver(){
-        int thisIndex = 0;
+    public void onMouseOver(GridPane gridPane, int starIndex){
+        gridPane.getChildren().clear();
         for(int i = 0; i < 10; i++){
-           if(i <= thisIndex){
-              //star marked
-
+           if(i <= starIndex){  
+              
+         
+                Label label = new Label("++");
+                gridPane.setColumnIndex(label, i);
+                gridPane.getChildren().add(label);
+                
+                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                      Node node = (Node)e.getSource();
+                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
+                    }
+                });
+            
+                gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        gridPane.getChildren().clear();
+                        setRatingStars(gridPane);
+                    }
+                });
+               
            }else{
 
-               //star grey
+                Label label = new Label("0");
+                gridPane.setColumnIndex(label, i);
+                gridPane.getChildren().add(label);
+                
+                
+                label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                      Node node = (Node)e.getSource();
+                      onMouseOver(gridPane, gridPane.getColumnIndex(node));
+                    }
+                });
+                
+                gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                      gridPane.getChildren().clear();
+                      setRatingStars(gridPane);
+                    }
+                });
            }
        }
     }
