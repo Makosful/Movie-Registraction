@@ -63,7 +63,7 @@ public class Rating {
             
         }
         
-        lblRating.setText(Double.toString(rating));
+        
         setOnMouseExitedHandler(gridPane, rating);
         initRating(ratingType, rating);
         setRatingStars(gridPane);
@@ -186,7 +186,7 @@ public class Rating {
      * 
      * @param gridPane 
      */
-    private void setOnMouseExitedHandler(GridPane gridPane, double rating)
+    private void setOnMouseExitedHandler(GridPane gridPane, int rating)
     {
         gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
@@ -225,6 +225,8 @@ public class Rating {
                     int movieId = 1;
                     try {
                         mDAO.setPersonalRating(movieId, gridPane.getColumnIndex(node)+1);
+                        wholeNumber = gridPane.getColumnIndex(node)+1;
+                        setOnMouseExitedHandler(gridPane, wholeNumber);
                     } catch (DALException ex) {
                         System.out.println(ex.getMessage());
                     }
