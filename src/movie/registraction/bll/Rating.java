@@ -186,7 +186,7 @@ public class Rating {
      * 
      * @param gridPane 
      */
-    private void setOnMouseExitedHandler(GridPane gridPane, int rating)
+    private void setOnMouseExitedHandler(GridPane gridPane, double rating)
     {
         gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
