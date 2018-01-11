@@ -240,7 +240,6 @@ public class MainWindowController implements Initializable
                 chosenFile.toPath();
 
                 String fileName = chosenFile.getName();
-                String fileNameWithOutExt = fileName;
                 fileName = FilenameUtils.getBaseName(fileName);
                 System.out.println(fileName); //For debugging
             }

@@ -308,7 +308,7 @@ public class MainWindowModel
      * @param tilePane
      * @param fileList
      */
-    public void setPictures(TilePane tilePane, List<File> fileList)
+    public void setPictures(TilePane tilePane, List<File> fileList) throws DALException
     {
         imageViewList = new ArrayList();
         setupMenu(tilePane);
@@ -321,9 +321,10 @@ public class MainWindowModel
             imageView.setFitWidth(IMAGE_WIDTH);
             imageViewList.add(imageView);
 
-            tilePane.getChildren().add(imageView);
+            tilePane.getChildren().add(imageView); 
+            bll.imageIdMovieId(files, imageView);
         }
-    }
+        }
 
     /**
      * Sets up the contextmenu with the choices user get.
