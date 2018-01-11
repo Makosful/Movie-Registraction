@@ -25,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.gui.model.MainWindowModel;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -174,6 +175,14 @@ public class MainWindowController implements Initializable {
 
         // Checks if any files where chosen
         if (chosenFiles != null) {
+            for (File chosenFile : chosenFiles) {
+                chosenFile.toPath();
+                
+                String fileName = chosenFile.getName();
+                String fileNameWithOutExt = fileName;
+                fileName = FilenameUtils.getBaseName(fileName);
+                System.out.println(fileName); //For debugging
+            }
             // If valid files were chosen, add them as movies
             //List<File> addedFiles;
             model.setPictures(tilePane, chosenFiles);
