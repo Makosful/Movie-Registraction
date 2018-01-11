@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,6 +26,7 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -56,9 +59,6 @@ public class MainWindowController implements Initializable
     private JFXListView<JFXCheckBox> lstYear;
     @FXML
     private JFXListView<JFXCheckBox> lstOther;
-    //</editor-fold>
-
-    private MainWindowModel model;
     @FXML
     private AnchorPane anchorPane;
     @FXML
@@ -75,6 +75,10 @@ public class MainWindowController implements Initializable
     private TilePane tilePane;
     @FXML
     private Button btnSetLibrary;
+    //</editor-fold>
+
+    // Model
+    private MainWindowModel model;
 
     /**
      * Constructor for all intrents and purposes
@@ -87,8 +91,15 @@ public class MainWindowController implements Initializable
     {
         bindTileToScroll();
 
-        // Access the Model
-        model = new MainWindowModel();
+        try 
+        {
+            // Access the Model
+            model = new MainWindowModel();
+        } 
+        catch (DALException ex)
+        {
+            System.out.println(ex);
+        }
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
@@ -100,29 +111,52 @@ public class MainWindowController implements Initializable
         comboBoxSetup();
     }
 
+    /**
+     * Sets up the combo bozes
+     */
     private void comboBoxSetup()
     {
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
         comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars", "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
     }
 
+    /**
+     * TODO
+     */
     private void modalWindowSetup()
     {
         //TODO
     }
 
+    /**
+     * Searches for movies based on the title
+     *
+     * @param event
+     */
     @FXML
     private void titleSearch(ActionEvent event)
     {
         model.fxmlTitleSearch(txtTitleSearch.getText());
     }
 
+    /**
+     * Clears the filters
+     *
+     * @param event
+     */
     @FXML
     private void clearFilters(ActionEvent event)
     {
         model.fxmlClearFilters();
     }
 
+    /**
+     * Change the global categories
+     *
+     * @param event
+     *
+     * @throws IOException
+     */
     @FXML
     private void btnChangeCategories(ActionEvent event) throws IOException
     {
@@ -141,6 +175,14 @@ public class MainWindowController implements Initializable
 
     }
 
+    /**
+     * Change the category of a movie
+     *
+     * @param event
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
     @FXML
     private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException
     {
@@ -160,25 +202,31 @@ public class MainWindowController implements Initializable
 
     }
 
+    /**
+     * Adds files from outside the library to the program
+     *
+     * @param event
+     */
     @FXML
-    private void uploadFiles(ActionEvent event)
+    private void uploadFiles(ActionEvent event) throws DALException
     {
-        // model.fxmlUploadFiles();
         setPictures(); // Midlertidigt.
     }
 
-    private void setPictures()
+    /**
+     * Add comment
+     */
+    private void setPictures() throws DALException
     {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 
         // Defines what files it will look for
-        FileChooser.ExtensionFilter mp4Filter = new FileChooser.ExtensionFilter("MP4 Files", "*.mp4");
-        FileChooser.ExtensionFilter mpeg4Filter = new FileChooser.ExtensionFilter("MPEG4 Files", "*.mpeg4");
-        FileChooser.ExtensionFilter imgFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
+        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("MP4 Files", "*.mp4", ".mpeg4");
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
 
         // Adds the filters
-        fc.getExtensionFilters().addAll(mp4Filter, mpeg4Filter, imgFilter);
+        fc.getExtensionFilters().addAll(videoFilter, imageFilter);
 
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
@@ -191,16 +239,15 @@ public class MainWindowController implements Initializable
             model.setPictures(tilePane, chosenFiles);
             imageClick(tilePane, model.getContextMenu());
         }
-            
         else
         {
             // Otherwise return
             System.out.println("One or more invalid file(s) / None selected");
             return;
         }
-        }
+    }
 
-    /*
+    /**
      * Binds the TilePane to the ScrollPane, height n width.
      */
     private void bindTileToScroll()
@@ -208,37 +255,37 @@ public class MainWindowController implements Initializable
         tilePane.prefWidthProperty().bind(scrlFilterSearch.widthProperty());
         tilePane.prefHeightProperty().bind(scrlFilterSearch.heightProperty());
     }
-    
-        /*
-    Code so you can click or right click on an image and soemthing happens.
-    Mouse event.
-    */  
+
+    /**
+     * Code so you can click or right click on an image and soemthing happens.
+     * Mouse event.
+     */
     private void imageClick(TilePane tilePane, ContextMenu contextMenu)
     {
-        for(ImageView imageView : model.GetImageViewList())
-        {
-        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() 
-        {
-            @Override
-            public void handle(MouseEvent event) 
+        for (ImageView imageView : model.GetImageViewList())
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                MouseButton mouseButton = event.getButton();
-                if (mouseButton == MouseButton.PRIMARY) 
+                @Override
+                public void handle(MouseEvent event)
                 {
-                    model.closeMenuOrClick(contextMenu);
-                }
+                    MouseButton mouseButton = event.getButton();
+                    if (mouseButton == MouseButton.PRIMARY)
+                        model.closeMenuOrClick(contextMenu);
 
-                if (mouseButton == MouseButton.SECONDARY) 
-                {
-                    model.contextMenuOpenOrNot(contextMenu);
-                    contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
+                    if (mouseButton == MouseButton.SECONDARY)
+                    {
+                        model.contextMenuOpenOrNot(contextMenu);
+                        contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
+                    }
                 }
-            }
-
-        });
-        }
+            });
     }
 
+    /**
+     * Sets the library
+     *
+     * @param event
+     */
     @FXML
     private void setLibrary(ActionEvent event)
     {

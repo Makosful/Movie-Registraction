@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
+import java.util.List;
 
 /**
  *
@@ -20,8 +21,8 @@ public class DALManager
         try
         {
             mDAO = new MovieDAO();
-        } 
-        catch (IOException ex) 
+        }
+        catch (IOException ex)
         {
             throw new DALException();
         }
@@ -169,5 +170,29 @@ public class DALManager
     public ObservableList<Movie> getAllMovies() throws DALException
     {
       return mDAO.getAllMovies();
+    }
+    /**
+     * Adds a movie with the supplied metadata, the addmovie returns the
+     * inserted
+     * movie row id, which is used to inserting the movies categories
+     *
+     * @param movieMetaData
+     *
+     * @throws DALException
+     */
+    public void addMovie(List<String> movieMetaData) throws DALException
+    {
+        try
+        {
+            int id = mDAO.addMovie(movieMetaData);
+
+            String[] metaMovieCategories = movieMetaData.get(99).split(" ");
+            for (String cat : metaMovieCategories)
+                mDAO.addMovieCategory(id, cat);
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
     }
 }
