@@ -9,6 +9,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -298,11 +300,12 @@ public class MainWindowModel
                 System.out.println(dir.getAbsolutePath());
             }
     }
-        
+
     /**
      * Setting the tile setup.
+     *
      * @param tilePane
-     * @param fileList 
+     * @param fileList
      */
     public void setPictures(TilePane tilePane, List<File> fileList) throws DALException
     {
@@ -474,10 +477,73 @@ public class MainWindowModel
     {
         return contextMenu;
     }
-    
-        public ObservableList<Movie> getAllMovies() throws DALException
+
+    public ObservableList<Movie> getAllMovies() throws DALException
     {
         return bll.getAllMovies();
+    }
+
+    /**
+     * Gets the Genre list
+     *
+     * TODO Replace dummy data with actual data
+     *
+     * @return
+     */
+    public ObservableList<Node> getGenreNodes()
+    {
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+
+        for (int i = 0; i < 10; i++)
+        {
+            int j = i + 1;
+            Node node = new CheckBox("Test" + j);
+            nodes.add(node);
+        }
+
+        return nodes;
+    }
+
+    /**
+     * Gets the years list
+     *
+     * TODO Replace the dummy data with actual data
+     *
+     * @return
+     */
+    public ObservableList<Node> getYearNodes()
+    {
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+
+        for (int i = 0; i < 10; i++)
+        {
+            int j = i + 1;
+            Node node = new CheckBox("Test" + j);
+            nodes.add(node);
+        }
+
+        return nodes;
+    }
+
+    /**
+     * Gets the Other list
+     *
+     * TODO Replace the dummy data with actial data
+     *
+     * @return
+     */
+    public ObservableList<Node> getOtherNodes()
+    {
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+
+        for (int i = 0; i < 10; i++)
+        {
+            int j = i + 1;
+            Node node = new CheckBox("Test" + j);
+            nodes.add(node);
+        }
+
+        return nodes;
     }
 
 }
