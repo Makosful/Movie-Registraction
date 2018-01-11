@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import movie.registraction.be.Movie;
@@ -25,6 +26,8 @@ import movie.registraction.dal.DALException;
  */
 public class MainWindowModel
 {
+    List<ImageView> imageViewList;
+    ImageView imageView;
 
     private BLLManager bll;
 
@@ -33,12 +36,20 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> others;
     private final ObservableList<String> movies;
     private final ObservableList<String> allCategories;
+    
+    private final int IMAGE_HEIGHT;
+    private final int IMAGE_WIDTH;
+        
     private final ArrayList<String> extensionList;
+
     private changeCategories categories;
     private ContextMenu contextMenu;
 
     public MainWindowModel()
     {
+        IMAGE_HEIGHT = 200;
+        IMAGE_WIDTH = 150;
+
         try
         {
             bll = new BLLManager();
@@ -273,13 +284,29 @@ public class MainWindowModel
                 System.out.println(dir.getAbsolutePath());
             }
     }
-
+        
+    // Setting the tile setup.
     public void setPictures(TilePane tilePane, List<File> fileList)
     {
+        imageViewList = new ArrayList();
         setupMenu(tilePane);
-        bll.setPictures(tilePane, fileList, contextMenu);
+        tilePane.setHgap(20);
+        tilePane.setPrefColumns(4);
+        for(File files : fileList)
+        {
+            imageView = new ImageView(files.toURI().toString());
+            
+            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageViewList.add(imageView);
+            
+            tilePane.getChildren().add(imageView);
+        }
     }
-
+    /**
+     * Sets up the contextmenu with the choices user get.
+     * @param tilePane 
+     */
     private void setupMenu(TilePane tilePane)
     {
         contextMenu = new ContextMenu();
@@ -320,6 +347,32 @@ public class MainWindowModel
 //</editor-fold>
 
         contextMenu.getItems().addAll(test1, test2, test3);
+    }
+     /**
+     *Closes the menu incase the context menu is open
+     * or else the user clicks normally.
+     * @param contextMenu 
+     */
+    public void closeMenuOrClick(ContextMenu contextMenu)
+    {
+        bll.closeMenuOrClick(contextMenu);
+    }
+     /**
+     * Closes the contextmenu.
+     * @param contextMenu 
+     */
+    public void closeMenu(ContextMenu contextMenu)
+    {
+        contextMenu.hide();
+    }
+        /**
+     *Checks whether contextmenu is open or not, if yes, it closes.
+     Incase user dobbleclicks several times, so it doesnt stack.
+     * @param contextMenu 
+     */
+    public void contextMenuOpenOrNot(ContextMenu contextMenu)
+    {
+        bll.contextMenuOpenOrNot(contextMenu);
     }
 
     /**
@@ -373,6 +426,20 @@ public class MainWindowModel
     public ObservableList<String> getMovieList()
     {
         return movies;
+    }
+    /*
+    Returns list of the imageviews. // The images the user puts in.
+    */
+    public List<ImageView> GetImageViewList()
+    {
+     return imageViewList;   
+    }
+    /*
+    Returns the contextmenu for the imageviews.
+    */
+    public ContextMenu getContextMenu()
+    {
+        return contextMenu;
     }
 
 }

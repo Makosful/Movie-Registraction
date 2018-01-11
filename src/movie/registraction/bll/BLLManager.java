@@ -26,16 +26,12 @@ public class BLLManager
     OmdbSearch omdb;
 
     DALManager dal;
-
-    MovieTilePane mtPane;
-
     MovieDAO mDAO;
 
     public BLLManager() throws BLLException
     {
         dal = new DALManager();
         omdb = new OmdbSearch();
-        mtPane = new MovieTilePane();
 
         try
         {
@@ -139,17 +135,45 @@ public class BLLManager
             throw new BLLException();
         }
     }
-
-    public void setPictures(TilePane tilePane, List<File> fileList, ContextMenu contextMenu)
+    /**
+     *Closes the menu incase the context menu is open
+     * or else the user clicks normally.
+     * @param contextMenu 
+     */
+    public void closeMenuOrClick(ContextMenu contextMenu)
     {
-        mtPane.setPictures(tilePane, fileList, contextMenu);
+        if (!contextMenu.isShowing()) 
+        {
+            System.out.println("You clicked on the picture.");
+        }
+        else 
+        {
+            contextMenu.hide();
+        }
     }
-
+    /**
+     * Closes the contextmenu.
+     * @param contextMenu 
+     */
     public void closeMenu(ContextMenu contextMenu)
     {
         contextMenu.hide();
     }
-
+    
+    /**
+     *Checks whether contextmenu is open or not, if yes, it closes.
+     Incase user dobbleclicks several times, so it doesnt stack.
+     * @param contextMenu 
+     */
+    public void contextMenuOpenOrNot(ContextMenu contextMenu)
+    {
+        // So the contextMenu doesnt stack.
+        if (contextMenu.isShowing()) 
+        {
+            closeMenu(contextMenu);
+            System.out.println("closed menu");
+        }
+    }
     /**
      * Gets the list of movies in the library
      *
