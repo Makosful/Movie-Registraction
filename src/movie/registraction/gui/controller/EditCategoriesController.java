@@ -38,7 +38,11 @@ public class EditCategoriesController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        m = new MainWindowModel();
+        try {
+            m = new MainWindowModel();
+        } catch (DALException ex) {
+            Logger.getLogger(EditCategoriesController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         lstViewAllCategories.setItems(m.getAllCategories());
     }

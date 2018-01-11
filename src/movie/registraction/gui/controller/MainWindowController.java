@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,6 +26,7 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.apache.commons.io.FilenameUtils;
 
@@ -56,9 +59,6 @@ public class MainWindowController implements Initializable {
     private JFXListView<JFXCheckBox> lstYear;
     @FXML
     private JFXListView<JFXCheckBox> lstOther;
-    //</editor-fold>
-
-    private MainWindowModel model;
     @FXML
     private AnchorPane anchorPane;
     @FXML
@@ -75,6 +75,10 @@ public class MainWindowController implements Initializable {
     private TilePane tilePane;
     @FXML
     private Button btnSetLibrary;
+    //</editor-fold>
+
+    // Model
+    private MainWindowModel model;
 
     /**
      * Constructor for all intrents and purposes
@@ -86,8 +90,12 @@ public class MainWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         bindTileToScroll();
 
-        // Access the Model
-        model = new MainWindowModel();
+        try {
+            // Access the Model
+            model = new MainWindowModel();
+        } catch (DALException ex) {
+            System.out.println(ex);
+        }
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
@@ -99,25 +107,48 @@ public class MainWindowController implements Initializable {
         comboBoxSetup();
     }
 
+    /**
+     * Sets up the combo bozes
+     */
     private void comboBoxSetup() {
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
         comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars", "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
     }
 
+    /**
+     * TODO
+     */
     private void modalWindowSetup() {
         //TODO
     }
 
+    /**
+     * Searches for movies based on the title
+     *
+     * @param event
+     */
     @FXML
     private void titleSearch(ActionEvent event) {
         model.fxmlTitleSearch(txtTitleSearch.getText());
     }
 
+    /**
+     * Clears the filters
+     *
+     * @param event
+     */
     @FXML
     private void clearFilters(ActionEvent event) {
         model.fxmlClearFilters();
     }
 
+    /**
+     * Change the global categories
+     *
+     * @param event
+     *
+     * @throws IOException
+     */
     @FXML
     private void btnChangeCategories(ActionEvent event) throws IOException {
         File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
@@ -135,6 +166,14 @@ public class MainWindowController implements Initializable {
 
     }
 
+    /**
+     * Change the category of a movie
+     *
+     * @param event
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
     @FXML
     private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException {
 
@@ -153,13 +192,20 @@ public class MainWindowController implements Initializable {
 
     }
 
+    /**
+     * Adds files from outside the library to the program
+     *
+     * @param event
+     */
     @FXML
-    private void uploadFiles(ActionEvent event) {
-        // model.fxmlUploadFiles();
+    private void uploadFiles(ActionEvent event) throws DALException {
         setPictures(); // Midlertidigt.
     }
 
-    private void setPictures() {
+    /**
+     * Add comment
+     */
+    private void setPictures() throws DALException {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 
@@ -177,16 +223,12 @@ public class MainWindowController implements Initializable {
         if (chosenFiles != null) {
             for (File chosenFile : chosenFiles) {
                 chosenFile.toPath();
-                
+
                 String fileName = chosenFile.getName();
                 String fileNameWithOutExt = fileName;
                 fileName = FilenameUtils.getBaseName(fileName);
                 System.out.println(fileName); //For debugging
             }
-            // If valid files were chosen, add them as movies
-            //List<File> addedFiles;
-            model.setPictures(tilePane, chosenFiles);
-            imageClick(tilePane, model.getContextMenu());
         } else {
             // Otherwise return
             System.out.println("One or more invalid file(s) / None selected");
@@ -194,7 +236,7 @@ public class MainWindowController implements Initializable {
         }
     }
 
-    /*
+    /**
      * Binds the TilePane to the ScrollPane, height n width.
      */
     private void bindTileToScroll() {
@@ -202,9 +244,9 @@ public class MainWindowController implements Initializable {
         tilePane.prefHeightProperty().bind(scrlFilterSearch.heightProperty());
     }
 
-    /*
-    Code so you can click or right click on an image and soemthing happens.
-    Mouse event.
+    /**
+     * Code so you can click or right click on an image and soemthing happens.
+     * Mouse event.
      */
     private void imageClick(TilePane tilePane, ContextMenu contextMenu) {
         for (ImageView imageView : model.GetImageViewList()) {
@@ -225,6 +267,11 @@ public class MainWindowController implements Initializable {
         }
     }
 
+    /**
+     * Sets the library
+     *
+     * @param event
+     */
     @FXML
     private void setLibrary(ActionEvent event) {
         model.fxmlSetLibrary();
