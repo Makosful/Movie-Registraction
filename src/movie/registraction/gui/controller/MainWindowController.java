@@ -33,7 +33,8 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author Axl
  */
-public class MainWindowController implements Initializable {
+public class MainWindowController implements Initializable
+{
 
     //<editor-fold defaultstate="collapsed" desc="FXML Variables">
     @FXML
@@ -87,7 +88,8 @@ public class MainWindowController implements Initializable {
      * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb)
+    {
         bindTileToScroll();
 
         try
@@ -114,7 +116,8 @@ public class MainWindowController implements Initializable {
     /**
      * Sets up the combo bozes
      */
-    private void comboBoxSetup() {
+    private void comboBoxSetup()
+    {
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
         comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars", "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
     }
@@ -122,7 +125,8 @@ public class MainWindowController implements Initializable {
     /**
      * TODO
      */
-    private void modalWindowSetup() {
+    private void modalWindowSetup()
+    {
         //TODO
     }
 
@@ -132,7 +136,8 @@ public class MainWindowController implements Initializable {
      * @param event
      */
     @FXML
-    private void titleSearch(ActionEvent event) {
+    private void titleSearch(ActionEvent event)
+    {
         model.fxmlTitleSearch(txtTitleSearch.getText());
     }
 
@@ -142,7 +147,8 @@ public class MainWindowController implements Initializable {
      * @param event
      */
     @FXML
-    private void clearFilters(ActionEvent event) {
+    private void clearFilters(ActionEvent event)
+    {
         model.fxmlClearFilters();
     }
 
@@ -154,7 +160,8 @@ public class MainWindowController implements Initializable {
      * @throws IOException
      */
     @FXML
-    private void btnChangeCategories(ActionEvent event) throws IOException {
+    private void btnChangeCategories(ActionEvent event) throws IOException
+    {
         File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
         Parent root;
@@ -179,7 +186,8 @@ public class MainWindowController implements Initializable {
      * @throws IOException
      */
     @FXML
-    private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException {
+    private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException
+    {
 
         File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
@@ -202,14 +210,16 @@ public class MainWindowController implements Initializable {
      * @param event
      */
     @FXML
-    private void uploadFiles(ActionEvent event) throws DALException {
+    private void uploadFiles(ActionEvent event) throws DALException
+    {
         setPictures(); // Midlertidigt.
     }
 
     /**
      * Add comment
      */
-    private void setPictures() throws DALException {
+    private void setPictures() throws DALException
+    {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 
@@ -224,8 +234,9 @@ public class MainWindowController implements Initializable {
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
 
         // Checks if any files where chosen
-        if (chosenFiles != null) {
-            for (File chosenFile : chosenFiles) {
+        if (chosenFiles != null)
+            for (File chosenFile : chosenFiles)
+            {
                 chosenFile.toPath();
 
                 String fileName = chosenFile.getName();
@@ -233,7 +244,8 @@ public class MainWindowController implements Initializable {
                 fileName = FilenameUtils.getBaseName(fileName);
                 System.out.println(fileName); //For debugging
             }
-        } else {
+        else
+        {
             // Otherwise return
             System.out.println("One or more invalid file(s) / None selected");
             return;
@@ -243,7 +255,8 @@ public class MainWindowController implements Initializable {
     /**
      * Binds the TilePane to the ScrollPane, height n width.
      */
-    private void bindTileToScroll() {
+    private void bindTileToScroll()
+    {
         tilePane.prefWidthProperty().bind(scrlFilterSearch.widthProperty());
         tilePane.prefHeightProperty().bind(scrlFilterSearch.heightProperty());
     }
@@ -252,23 +265,25 @@ public class MainWindowController implements Initializable {
      * Code so you can click or right click on an image and soemthing happens.
      * Mouse event.
      */
-    private void imageClick(TilePane tilePane, ContextMenu contextMenu) {
-        for (ImageView imageView : model.GetImageViewList()) {
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    private void imageClick(TilePane tilePane, ContextMenu contextMenu)
+    {
+        for (ImageView imageView : model.GetImageViewList())
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent event) {
+                public void handle(MouseEvent event)
+                {
                     MouseButton mouseButton = event.getButton();
-                    if (mouseButton == MouseButton.PRIMARY) {
+                    if (mouseButton == MouseButton.PRIMARY)
                         model.closeMenuOrClick(contextMenu);
-                    }
 
-                    if (mouseButton == MouseButton.SECONDARY) {
+                    if (mouseButton == MouseButton.SECONDARY)
+                    {
                         model.contextMenuOpenOrNot(contextMenu);
                         contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
                     }
                 }
             });
-        }
     }
 
     /**
@@ -277,7 +292,8 @@ public class MainWindowController implements Initializable {
      * @param event
      */
     @FXML
-    private void setLibrary(ActionEvent event) {
+    private void setLibrary(ActionEvent event)
+    {
         model.fxmlSetLibrary();
     }
 }
