@@ -10,8 +10,6 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.TilePane;
 import movie.registraction.dal.DALException;
@@ -30,7 +28,7 @@ public class BLLManager
     DALManager dal;
 
     MovieTilePane mtPane;
-    
+
     MovieDAO mDAO;
 
     public BLLManager() throws BLLException
@@ -38,10 +36,13 @@ public class BLLManager
         dal = new DALManager();
         omdb = new OmdbSearch();
         mtPane = new MovieTilePane();
-        
-         try {
+
+        try
+        {
             mDAO = new MovieDAO();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             throw new BLLException();
         }
     }
@@ -143,7 +144,7 @@ public class BLLManager
     {
         mtPane.setPictures(tilePane, fileList, contextMenu);
     }
-    
+
     public void closeMenu(ContextMenu contextMenu)
     {
         contextMenu.hide();
@@ -154,15 +155,17 @@ public class BLLManager
      *
      * Return the list of movies in the library as a String ArrayList
      *
+     * @param filter
+     *
      * @return
      *
      * @throws BLLException
      */
-    public ArrayList<String> getMovieList() throws BLLException
+    public ArrayList<String> getMovieList(ArrayList<String> filter) throws BLLException
     {
         try
         {
-            ArrayList<Path> moviePaths = dal.getMovieList();
+            ArrayList<Path> moviePaths = dal.getMovieList(filter);
             ArrayList<String> movieStrings = new ArrayList();
 
             for (int i = 0; i < moviePaths.size(); i++)
@@ -175,28 +178,31 @@ public class BLLManager
             throw new BLLException();
         }
     }
-    
-    
+
     /**
-     * Adds a movie with the supplied metadata, the addmovie returns the inserted 
+     * Adds a movie with the supplied metadata, the addmovie returns the
+     * inserted
      * movie row id, which is used to inserting the movies categories
+     *
      * @param movieMetaData
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public void addMovie(List<String> movieMetaData) throws DALException
     {
-        try {
-           int movieId = mDAO.addMovie(movieMetaData);
-           //TODO - den specifikke plad i det medsendte metadata kendes ikke endnu, dette er blot et eksempel
-           String[] metaMovieCategories = movieMetaData.get(99).split(" ");
-           for(String category : metaMovieCategories)
-           {
-               mDAO.addMovieCategory(movieId, category);
-           }
-           
-        } catch (DALException ex) {
+        try
+        {
+            int movieId = mDAO.addMovie(movieMetaData);
+            //TODO - den specifikke plad i det medsendte metadata kendes ikke endnu, dette er blot et eksempel
+            String[] metaMovieCategories = movieMetaData.get(99).split(" ");
+            for (String category : metaMovieCategories)
+                mDAO.addMovieCategory(movieId, category);
+
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
-   
+
 }

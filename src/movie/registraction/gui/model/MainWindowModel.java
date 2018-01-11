@@ -3,9 +3,8 @@ package movie.registraction.gui.model;
 import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,14 +33,18 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> others;
     private final ObservableList<String> movies;
     private final ObservableList<String> allCategories;
+    private final ArrayList<String> extensionList;
     private changeCategories categories;
     private ContextMenu contextMenu;
 
     public MainWindowModel()
     {
-        try {
+        try
+        {
             bll = new BLLManager();
-        } catch (BLLException ex) {
+        }
+        catch (BLLException ex)
+        {
         }
 
         genres = FXCollections.observableArrayList();
@@ -67,6 +70,11 @@ public class MainWindowModel
             years.add(cb);
         }
 
+        extensionList = new ArrayList();
+//        extensionList.add(".jpg");
+//        extensionList.add(".png");
+        extensionList.add(".mp4");
+        extensionList.add(".mpeg4");
         loadMovieList();
     }
 
@@ -195,6 +203,7 @@ public class MainWindowModel
      * Gets the allready exsisting categories for a specific movie
      *
      * @param movie
+     *
      * @return Observable list of category strings
      */
     public ObservableList<String> loadChosenMovieCategories(Movie movie)
@@ -317,7 +326,7 @@ public class MainWindowModel
     {
         try
         {
-            movies.setAll(bll.getMovieList());
+            movies.setAll(bll.getMovieList(extensionList));
             System.out.println("Successfully updated movie list");
             for (String movy : movies)
                 System.out.println(movy);
@@ -336,19 +345,21 @@ public class MainWindowModel
             String lib = bll.loadDirectory("path.txt");
 
             if (lib.isEmpty())
-                return;
+            {
+            }
             else
             {
-                movies.setAll(bll.getMovieList());
+                movies.setAll(bll.getMovieList(extensionList));
                 System.out.println("Successfully added library");
-                for (String movy : movies)
+                movies.forEach((movy) ->
+                {
                     System.out.println(movy);
+                });
             }
         }
         catch (BLLException ex)
         {
             System.out.println("Failed to load library path");
-            //ex.printStackTrace();
         }
     }
 
