@@ -253,7 +253,7 @@ public class MainWindowModel
      *
      * Defaults to the Windows Videos library
      */
-    public void fxmlUploadFiles()
+    public void fxmlSetLibrary()
     {
         DirectoryChooser dc = new DirectoryChooser();
         File dir = dc.showDialog(null);
@@ -264,7 +264,7 @@ public class MainWindowModel
                 // Save this path to storage
                 String path = dir.getAbsolutePath();
                 bll.saveDirectory(path);
-                updateMovieList();
+                this.loadMovieList();
 
             }
             catch (BLLException ex)
@@ -320,22 +320,6 @@ public class MainWindowModel
 //</editor-fold>
 
         contextMenu.getItems().addAll(test1, test2, test3);
-    }
-
-    private void updateMovieList()
-    {
-        try
-        {
-            movies.setAll(bll.getMovieList(extensionList));
-            System.out.println("Successfully updated movie list");
-            for (String movy : movies)
-                System.out.println(movy);
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Failed to update movie list");
-            ex.printStackTrace();
-        }
     }
 
     private void loadMovieList()

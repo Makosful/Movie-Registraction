@@ -69,6 +69,8 @@ public class MainWindowController implements Initializable
     private RadioButton rBRating;
     @FXML
     private TilePane tilePane;
+    @FXML
+    private Button btnSetLibrary;
 
     /**
      * Constructor for all intrents and purposes
@@ -80,7 +82,7 @@ public class MainWindowController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         bindTileToScroll();
-        
+
         // Access the Model
         model = new MainWindowModel();
 
@@ -99,7 +101,7 @@ public class MainWindowController implements Initializable
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
         comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars", "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
     }
-    
+
     private void modalWindowSetup()
     {
         //TODO
@@ -132,7 +134,7 @@ public class MainWindowController implements Initializable
 
         stage.setScene(new Scene(root));
         stage.show();
-        
+
     }
 
     @FXML
@@ -157,20 +159,20 @@ public class MainWindowController implements Initializable
     @FXML
     private void uploadFiles(ActionEvent event)
     {
-       // model.fxmlUploadFiles();
+        // model.fxmlUploadFiles();
         setPictures(); // Midlertidigt.
     }
-    
+
     private void setPictures()
     {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
-        
+
         // Defines what files it will look for
         FileChooser.ExtensionFilter mp4Filter = new FileChooser.ExtensionFilter("MP4 Files", "*.mp4");
         FileChooser.ExtensionFilter mpeg4Filter = new FileChooser.ExtensionFilter("MPEG4 Files", "*.mpeg4");
         FileChooser.ExtensionFilter imgFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
-        
+
         // Adds the filters
         fc.getExtensionFilters().addAll(mp4Filter, mpeg4Filter, imgFilter);
 
@@ -179,11 +181,9 @@ public class MainWindowController implements Initializable
 
         // Checks if any files where chosen
         if (chosenFiles != null)
-        {
             // If valid files were chosen, add them as movies
             //List<File> addedFiles;
             model.setPictures(tilePane, chosenFiles);
-        }
         else
         {
             // Otherwise return
@@ -191,12 +191,19 @@ public class MainWindowController implements Initializable
             return;
         }
     }
+
     /*
-    Binds the TilePane to the ScrollPane, height n width.
-    */
+     * Binds the TilePane to the ScrollPane, height n width.
+     */
     private void bindTileToScroll()
     {
         tilePane.prefWidthProperty().bind(scrlFilterSearch.widthProperty());
         tilePane.prefHeightProperty().bind(scrlFilterSearch.heightProperty());
+    }
+
+    @FXML
+    private void setLibrary(ActionEvent event)
+    {
+        model.fxmlSetLibrary();
     }
 }
