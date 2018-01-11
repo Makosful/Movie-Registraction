@@ -166,6 +166,15 @@ public class DALManager
         return false;
     }
 
+    /**
+     * Adds a movie with the supplied metadata, the addmovie returns the
+     * inserted
+     * movie row id, which is used to inserting the movies categories
+     *
+     * @param movieMetaData
+     *
+     * @throws DALException
+     */
     public void addMovie(List<String> movieMetaData) throws DALException
     {
         try
