@@ -3,12 +3,15 @@ package movie.registraction.gui.model;
 import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
@@ -35,7 +38,7 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
-    private final ObservableList<String> movies;
+    private final ObservableList<Path> moviePaths;
     private final ObservableList<String> allCategories;
 
     private final int IMAGE_HEIGHT;
@@ -62,7 +65,7 @@ public class MainWindowModel
         genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
-        movies = FXCollections.observableArrayList();
+        moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
 
         try
@@ -298,13 +301,14 @@ public class MainWindowModel
                 System.out.println(dir.getAbsolutePath());
             }
     }
-        
+
     /**
      * Setting the tile setup.
+     *
      * @param tilePane
-     * @param fileList 
+     * @param fileList
      */
-    public void setPictures(TilePane tilePane, List<File> fileList)
+    public void setPictures(TilePane tilePane, List<File> fileList) throws DALException
     {
         imageViewList = new ArrayList();
         setupMenu(tilePane);
@@ -317,9 +321,10 @@ public class MainWindowModel
             imageView.setFitWidth(IMAGE_WIDTH);
             imageViewList.add(imageView);
 
-            tilePane.getChildren().add(imageView);
+            tilePane.getChildren().add(imageView); 
+            bll.imageIdMovieId(files, imageView);
         }
-    }
+        }
 
     /**
      * Sets up the contextmenu with the choices user get.
@@ -431,13 +436,13 @@ public class MainWindowModel
             }
 
             // Load the files located at the library
-            movies.setAll(bll.getMovieList(extensionList));
+            moviePaths.setAll(bll.getMovieList(extensionList));
 
             // Tell the user the files have been added
             System.out.println("Successfully added library");
 
             // Show the user the full file path of the files in the console
-            movies.forEach((movy) ->
+            moviePaths.forEach((movy) ->
             {
                 System.out.println(movy);
             });
@@ -453,9 +458,9 @@ public class MainWindowModel
      *
      * @return
      */
-    public ObservableList<String> getMovieList()
+    public ObservableList<Path> getMovieList()
     {
-        return movies;
+        return moviePaths;
     }
 
     /*
@@ -473,10 +478,73 @@ public class MainWindowModel
     {
         return contextMenu;
     }
-    
-        public ObservableList<Movie> getAllMovies() throws DALException
+
+    public ObservableList<Movie> getAllMovies() throws DALException
     {
         return bll.getAllMovies();
+    }
+
+    /**
+     * Gets the Genre list
+     *
+     * TODO Replace dummy data with actual data
+     *
+     * @return
+     */
+    public ObservableList<Node> getGenreNodes()
+    {
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+
+        for (int i = 0; i < 10; i++)
+        {
+            int j = i + 1;
+            Node node = new CheckBox("Test" + j);
+            nodes.add(node);
+        }
+
+        return nodes;
+    }
+
+    /**
+     * Gets the years list
+     *
+     * TODO Replace the dummy data with actual data
+     *
+     * @return
+     */
+    public ObservableList<Node> getYearNodes()
+    {
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+
+        for (int i = 0; i < 10; i++)
+        {
+            int j = i + 1;
+            Node node = new CheckBox("Test" + j);
+            nodes.add(node);
+        }
+
+        return nodes;
+    }
+
+    /**
+     * Gets the Other list
+     *
+     * TODO Replace the dummy data with actial data
+     *
+     * @return
+     */
+    public ObservableList<Node> getOtherNodes()
+    {
+        ObservableList<Node> nodes = FXCollections.observableArrayList();
+
+        for (int i = 0; i < 10; i++)
+        {
+            int j = i + 1;
+            Node node = new CheckBox("Test" + j);
+            nodes.add(node);
+        }
+
+        return nodes;
     }
 
 }

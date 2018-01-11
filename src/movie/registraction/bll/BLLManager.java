@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.image.ImageView;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
@@ -184,17 +185,11 @@ public class BLLManager
      *
      * @throws BLLException
      */
-    public ArrayList<String> getMovieList(ArrayList<String> filter) throws BLLException
+    public ArrayList<Path> getMovieList(ArrayList<String> filter) throws BLLException
     {
         try
         {
-            ArrayList<Path> moviePaths = dal.getMovieList(filter);
-            ArrayList<String> movieStrings = new ArrayList();
-
-            for (int i = 0; i < moviePaths.size(); i++)
-                movieStrings.add(moviePaths.get(i).toString());
-
-            return movieStrings;
+            return dal.getMovieList(filter);
         }
         catch (DALException ex)
         {
@@ -215,10 +210,37 @@ public class BLLManager
     {
         dal.addMovie(movieMetaData);
     }
-    
-        public ObservableList<Movie> getAllMovies() throws DALException
+
+    public ObservableList<Movie> getAllMovies() throws DALException
     {
         return dal.getAllMovies();
+    }
+        
+    public void imageIdMovieId(File files, ImageView imageView) throws DALException
+    {
+        for (Movie movie : getAllMovies()) 
+        {
+            // Removing the dot and text after, so only the text is in the string.
+            String fileName = files.getName().split("\\.")[0];
+            
+            if (movie.getMovieTitle().equalsIgnoreCase(fileName)) 
+            {
+                // Changing integer to string, as imageview requires string.
+                String idToString = Integer.toString(movie.getId());
+                imageView.setId(idToString);
+                if (Integer.parseInt(imageView.getId()) == movie.getId()) 
+                {
+                    System.out.println("workeeeeeeeed");
+                    System.out.println(movie.getFileImg());
+                    System.out.println(movie.getPersonalRating());
+                    System.out.println(movie.getYear());
+                }
+            }
+            else 
+            {
+                System.out.println("nopeeeee");
+            }
+        }
     }
 
 }

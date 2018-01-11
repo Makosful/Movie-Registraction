@@ -8,8 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -22,12 +20,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -53,12 +53,7 @@ public class MainWindowController implements Initializable
     private TitledPane acdOther;
     @FXML
     private Accordion acdPanes;
-    @FXML
     private JFXListView<JFXCheckBox> lstGenre;
-    @FXML
-    private JFXListView<JFXCheckBox> lstYear;
-    @FXML
-    private JFXListView<JFXCheckBox> lstOther;
     @FXML
     private AnchorPane anchorPane;
     @FXML
@@ -79,6 +74,12 @@ public class MainWindowController implements Initializable
 
     // Model
     private MainWindowModel model;
+    @FXML
+    private FlowPane flpGenre;
+    @FXML
+    private FlowPane flpYear;
+    @FXML
+    private FlowPane flpOther;
 
     /**
      * Constructor for all intrents and purposes
@@ -91,11 +92,11 @@ public class MainWindowController implements Initializable
     {
         bindTileToScroll();
 
-        try 
+        try
         {
             // Access the Model
             model = new MainWindowModel();
-        } 
+        }
         catch (DALException ex)
         {
             System.out.println(ex);
@@ -103,12 +104,13 @@ public class MainWindowController implements Initializable
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        lstGenre.setItems(model.getGenreList());
-        lstYear.setItems(model.getYearList());
-        lstOther.setItems(model.getOtherList());
+        flpGenre.getChildren().setAll(model.getGenreNodes());
+        flpYear.getChildren().setAll(model.getYearNodes());
+        flpOther.getChildren().setAll(model.getOtherNodes());
 
         //Initializing methods
         comboBoxSetup();
+
     }
 
     /**
@@ -233,12 +235,14 @@ public class MainWindowController implements Initializable
 
         // Checks if any files where chosen
         if (chosenFiles != null)
-        {
-            // If valid files were chosen, add them as movies
-            //List<File> addedFiles;
-            model.setPictures(tilePane, chosenFiles);
-            imageClick(tilePane, model.getContextMenu());
-        }
+            for (File chosenFile : chosenFiles)
+            {
+                chosenFile.toPath();
+
+                String fileName = chosenFile.getName();
+                fileName = FilenameUtils.getBaseName(fileName);
+                System.out.println(fileName); //For debugging
+            }
         else
         {
             // Otherwise return
