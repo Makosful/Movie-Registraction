@@ -4,9 +4,9 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
-import java.util.List;
 
 /**
  *
@@ -169,7 +169,7 @@ public class DALManager
     
     public ObservableList<Movie> getAllMovies() throws DALException
     {
-      return mDAO.getAllMovies();
+        return mDAO.getAllMovies();
     }
     /**
      * Adds a movie with the supplied metadata, the addmovie returns the
