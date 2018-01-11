@@ -375,28 +375,51 @@ public class MainWindowModel
         bll.contextMenuOpenOrNot(contextMenu);
     }
 
+    /**
+     *
+     */
     private void loadMovieList()
     {
+        String lib;
+
+        // First tries to get the file
         try
         {
-            String lib = bll.loadDirectory("path.txt");
-
-            if (lib.isEmpty())
-            {
-            }
-            else
-            {
-                movies.setAll(bll.getMovieList(extensionList));
-                System.out.println("Successfully added library");
-                movies.forEach((movy) ->
-                {
-                    System.out.println(movy);
-                });
-            }
+            lib = bll.loadDirectory("path.txt");
         }
         catch (BLLException ex)
         {
-            System.out.println("Failed to load library path");
+            // If the files doesn't exist, tell the user and back out of the method
+            System.out.println("Library has not been sat.");
+            return;
+        }
+
+        // If file was found
+        try
+        {
+            // Make sure file isn't empty
+            if (lib.isEmpty())
+            {
+                System.out.println("path.txt is corrupt. Set the library again.");
+                System.out.println("If that doesn't work, delete path.txt and try again");
+                return;
+            }
+
+            // Load the files located at the library
+            movies.setAll(bll.getMovieList(extensionList));
+
+            // Tell the user the files have been added
+            System.out.println("Successfully added library");
+
+            // Show the user the full file path of the files in the console
+            movies.forEach((movy) ->
+            {
+                System.out.println(movy);
+            });
+        }
+        catch (BLLException ex)
+        {
+
         }
     }
 
