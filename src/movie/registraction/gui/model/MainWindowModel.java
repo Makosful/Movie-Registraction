@@ -325,7 +325,7 @@ public class MainWindowModel
             imageViewList.add(imageView);
 
             tilePane.getChildren().add(imageView);
-//            bll.imageIdMovieId(files, imageView);
+        bll.imageIdMovieId(file, imageView);
 //        }
     }
 
