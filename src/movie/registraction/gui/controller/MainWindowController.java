@@ -232,16 +232,18 @@ public class MainWindowController implements Initializable
 
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
+        
+        model.setupTileAndImageList(tilePane);
 
         // Checks if any files where chosen
         if (chosenFiles != null)
             for (File chosenFile : chosenFiles)
             {
                 chosenFile.toPath();
-
                 String fileName = chosenFile.getName();
                 fileName = FilenameUtils.getBaseName(fileName);
                 model.setPictures(tilePane, chosenFile);
+                imageClick(tilePane, model.getContextMenu());
                 System.out.println(fileName); //For debugging
             }
         else
