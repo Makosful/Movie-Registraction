@@ -36,7 +36,6 @@ public class changeCategories
     {
         try
         {
-            movie = new Movie();
             mDAO = new MovieDAO();
             removeCategory = new ArrayList();
             removeMovieCategory = new ArrayList();
@@ -55,6 +54,7 @@ public class changeCategories
      */
     public ObservableList<String> loadChosenMovieCategories(Movie movie)
     {
+        this.movie = movie;
         chosenMovieCategories.addAll(movie.getCategories());
         return chosenMovieCategories;
     }
