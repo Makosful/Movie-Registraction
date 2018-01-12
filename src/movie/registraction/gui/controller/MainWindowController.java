@@ -111,7 +111,6 @@ public class MainWindowController implements Initializable
 
         //Initializing methods
         comboBoxSetup();
-
     }
 
     /**
@@ -202,7 +201,6 @@ public class MainWindowController implements Initializable
 
         stage.setScene(new Scene(root));
         stage.show();
-
     }
 
     /**
