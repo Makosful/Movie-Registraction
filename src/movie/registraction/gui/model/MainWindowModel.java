@@ -110,7 +110,12 @@ public class MainWindowModel
         {
             searchLink = bll.getOmdbTitleResult(text);
 
-            System.out.println(bll.getSearchResult(searchLink));
+            String searchResult = bll.getSearchResult(searchLink);
+
+            System.out.println(searchResult);
+
+            for (String string : bll.getSearchMetaData(searchLink))
+                System.out.println(string);
         }
         catch (BLLException ex)
         {
@@ -287,7 +292,6 @@ public class MainWindowModel
         File dir = dc.showDialog(null);
 
         if (dir.exists())
-        {
             try
             {
                 // Save this path to storage
@@ -301,7 +305,6 @@ public class MainWindowModel
                 System.out.println("Could not save path");
                 System.out.println(dir.getAbsolutePath());
             }
-        }
     }
 
     /**
@@ -309,6 +312,7 @@ public class MainWindowModel
      *
      * @param tilePane
      * @param fileList
+     *
      * @throws movie.registraction.dal.DALException
      */
     public void setPictures(TilePane tilePane, File file) throws DALException
@@ -321,6 +325,12 @@ public class MainWindowModel
         tilePane.getChildren().add(imageView);
         bll.imageIdMovieId(file, imageView);
     }
+
+    /**
+     * TODO
+     *
+     * @param tilePane
+     */
     public void setupTileAndImageList(TilePane tilePane)
     {
         imageViewList = new ArrayList();
@@ -328,6 +338,7 @@ public class MainWindowModel
         tilePane.setHgap(20);
         tilePane.setPrefColumns(4);
     }
+
     /**
      * Sets up the contextmenu with the choices user get.
      *
@@ -465,7 +476,7 @@ public class MainWindowModel
         return moviePaths;
     }
 
-    /*
+    /**
      * Returns list of the imageviews. // The images the user puts in.
      */
     public List<ImageView> GetImageViewList()
@@ -473,7 +484,7 @@ public class MainWindowModel
         return imageViewList;
     }
 
-    /*
+    /**
      * Returns the contextmenu for the imageviews.
      */
     public ContextMenu getContextMenu()

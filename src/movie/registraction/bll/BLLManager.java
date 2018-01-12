@@ -215,20 +215,20 @@ public class BLLManager
     {
         return dal.getAllMovies();
     }
-        
+
     public void imageIdMovieId(File files, ImageView imageView) throws DALException
     {
-        for (Movie movie : getAllMovies()) 
+        for (Movie movie : getAllMovies())
         {
             // Removing the dot and text after, so only the text is in the string.
             String fileName = files.getName().split("\\.")[0];
-            
-            if (movie.getMovieTitle().equalsIgnoreCase(fileName)) 
+
+            if (movie.getMovieTitle().equalsIgnoreCase(fileName))
             {
                 // Changing integer to string, as imageview requires string.
                 String idToString = Integer.toString(movie.getId());
                 imageView.setId(idToString);
-                if (Integer.parseInt(imageView.getId()) == movie.getId()) 
+                if (Integer.parseInt(imageView.getId()) == movie.getId())
                 {
                     System.out.println("workeeeeeeeed");
                     System.out.println(movie.getFileImg());
@@ -236,11 +236,21 @@ public class BLLManager
                     System.out.println(movie.getYear());
                 }
             }
-            else 
-            {
+            else
                 System.out.println("nopeeeee");
-            }
         }
+    }
+
+    public String[] getSearchMetaData(URL searchLink) throws BLLException
+    {
+        String searchResult = this.getSearchResult(searchLink);
+        searchResult = searchResult.replace("{", "")
+                .replace("}", "")
+                .replace("[", "")
+                .replace("]", "");
+        String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+        return meta;
     }
 
 }
