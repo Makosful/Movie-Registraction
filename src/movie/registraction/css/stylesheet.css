@@ -58,11 +58,19 @@ and open the template in the editor.
     -fx-border-color: transparent;
 }
 
+.context-menu .label {
+    -fx-text-fill: black;
+}
+
 /*
 ID SPECIFIC
 */
 
 #flpGenre, #flpYear, #flpOther {
     -fx-background-color: #090a0c, linear-gradient(#38424b 0%, #22272c 100%);
+    -fx-border-color: transparent;
+}
+#tilePane {
+    -fx-background-color: #7e7e7e, linear-gradient(#7e7e7e 0%, #38424b 100%);
     -fx-border-color: transparent;
 }
