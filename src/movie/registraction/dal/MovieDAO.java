@@ -271,7 +271,9 @@ public class MovieDAO {
             movie.setFilePath(rs.getString("filePath"));
             movie.setFileImg(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));
-            movie.setCategories(rs.getString("categoryName"));
+            if(rs.getString("categoryName") != null){
+                movie.setCategories(rs.getString("categoryName"));
+            }
 
             return movie;
         
