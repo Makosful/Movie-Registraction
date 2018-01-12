@@ -351,6 +351,30 @@ public class MovieDAO {
         }
     }
 
+    
+    /**
+     * Remove a specific movie and its categories depending in the movie id
+     * @param movieId
+     * @throws DALException 
+     */
+    public void removeMovie(int movieId) throws DALException
+    {
+        try (Connection con = db.getConnection())
+        {
 
+            String sql = "DELETE Movie FROM Movie "
+                         + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                         + "WHERE Movie.id = ?";
+
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, movieId);
+            preparedStatement.execute();
+
+        }
+        catch (SQLException ex)
+        {
+            throw new DALException();
+        }
+    }
     
 }
