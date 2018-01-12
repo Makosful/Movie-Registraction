@@ -206,7 +206,7 @@ public class BLLManager
      *
      * @throws DALException
      */
-    public void addMovie(List<String> movieMetaData) throws DALException
+    public void addMovie(String[] movieMetaData) throws DALException
     {
         dal.addMovie(movieMetaData);
     }
@@ -247,7 +247,8 @@ public class BLLManager
         searchResult = searchResult.replace("{", "")
                 .replace("}", "")
                 .replace("[", "")
-                .replace("]", "");
+                .replace("]", "")
+                .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
         return meta;
