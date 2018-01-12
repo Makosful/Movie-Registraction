@@ -70,7 +70,8 @@ public class Rating {
     }
     
     /**
-     * 
+     * Depending on the type of rating, set the whole number. If its a imdb rating, 
+     * it is possible to have half a star.
      * @param ratingType
      * @param rating 
      */
@@ -78,15 +79,11 @@ public class Rating {
     {
         if(ratingType.equals("imdb")){
             if(rating-Math.floor(rating) < 0.75){
-
-
                 if(rating-Math.floor(rating) > 0.25)
                 {
                     half = true;
                 }
-
                 wholeNumber = (int) Math.floor(rating); 
-
             }
             else
             {
@@ -101,7 +98,7 @@ public class Rating {
     
     
     /**
-     * 
+     * Sets the gridpanes nodes as stars according to the rating. 
      * @param gridPane 
      */
     private void setRatingStars(GridPane gridPane)
@@ -111,16 +108,11 @@ public class Rating {
         {
             if(i <= wholeNumber)
             {
-
                 gridPane.setColumnIndex(stars.get(i-1), i-1);
-                gridPane.getChildren().add(stars.get(i-1));
-                
-                
-                
+                gridPane.getChildren().add(stars.get(i-1)); 
             }
             else if(i == wholeNumber+1 && half == true)
             {
-
                 Label label = new Label("half"+i);
                 gridPane.setColumnIndex(label, i-1);
                 gridPane.getChildren().add(label);
@@ -129,11 +121,8 @@ public class Rating {
             }
             else
             {  
-              
                 gridPane.setColumnIndex(emptyStars.get(i-1), i-1);
                 gridPane.getChildren().add(emptyStars.get(i-1));
-                
-
             }
             
         }
@@ -141,7 +130,8 @@ public class Rating {
     }
     
     /**
-     * 
+     * Add method to when the user moves the mouse over the gridpane. Depending
+     * on which star the users mouse is over the gridpanes nodes are changed correspondingly.
      * @param gridPane
      * @param starIndex 
      */
@@ -150,18 +140,11 @@ public class Rating {
         gridPane.getChildren().clear();
         for(int i = 0; i < 10; i++){
            if(i <= starIndex){  
-              
                 gridPane.setColumnIndex(stars.get(i), i);
                 gridPane.getChildren().add(stars.get(i));
-                
-
-               
            }else{
-
-         
                 gridPane.setColumnIndex(emptyStars.get(i), i);
-                gridPane.getChildren().add(emptyStars.get(i));
-                
+                gridPane.getChildren().add(emptyStars.get(i));   
            }
        }
     }
