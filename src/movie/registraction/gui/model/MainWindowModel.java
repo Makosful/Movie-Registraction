@@ -17,11 +17,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.changeCategories;
 import movie.registraction.dal.DALException;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -311,29 +313,63 @@ public class MainWindowModel
      * @param fileList
      * @throws movie.registraction.dal.DALException
      */
-    public void setPictures(TilePane tilePane, File file) throws DALException
+    public void chooseFile(TilePane tilePane) throws DALException
     {
-        imageView = new ImageView(file.toURI().toString());
+                // Creates a new FileChooser object
+        FileChooser fc = new FileChooser();
+
+        // Defines what files it will look for
+        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Video Files", "*.mp4", ".mpeg4");
+        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
+
+        // Adds the filters
+        fc.getExtensionFilters().addAll(videoFilter, imageFilter);
+
+        // Opens the FileChooser and saves the results in a list
+        List<File> chosenFiles = fc.showOpenMultipleDialog(null);
+        
+        // Setting the context menu up.
+        setupContextMenu(tilePane);
+        // Setting up the arrayList for ImageViews.
+        imageViewList();
+
+        // Checks if any files where chosen
+        if (chosenFiles != null)
+            for (File chosenFile : chosenFiles)
+            {
+                chosenFile.toPath();
+                String fileName = chosenFile.getName();
+                fileName = FilenameUtils.getBaseName(fileName);
+                setPictures(tilePane, chosenFile);
+                System.out.println(fileName); //For debugging
+            }
+        else
+        {
+            // Otherwise return
+            System.out.println("One or more invalid file(s) / None selected");
+            return;
+        }
+    }
+    public void setPictures(TilePane tilePane, File chosenFile) throws DALException
+    {
+        imageView = new ImageView(chosenFile.toURI().toString());
         imageView.setFitHeight(IMAGE_HEIGHT);
         imageView.setFitWidth(IMAGE_WIDTH);
         imageViewList.add(imageView);
 
         tilePane.getChildren().add(imageView);
-        bll.imageIdMovieId(file, imageView);
+        bll.imageIdMovieId(chosenFile, imageView);
     }
-    public void setupTileAndImageList(TilePane tilePane)
+    public void imageViewList()
     {
         imageViewList = new ArrayList();
-        setupMenu(tilePane);
-        tilePane.setHgap(20);
-        tilePane.setPrefColumns(4);
     }
     /**
      * Sets up the contextmenu with the choices user get.
      *
      * @param tilePane
      */
-    private void setupMenu(TilePane tilePane)
+    private void setupContextMenu(TilePane tilePane)
     {
         contextMenu = new ContextMenu();
         MenuItem test1 = new MenuItem("1");
