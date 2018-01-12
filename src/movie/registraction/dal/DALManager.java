@@ -1,13 +1,11 @@
 package movie.registraction.dal;
 
 import java.io.*;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -208,25 +206,34 @@ public class DALManager
      *
      * @throws movie.registraction.dal.DALException
      */
-    public void m(Path root) throws DALException
+    public void directoryWatcher(Path root) throws DALException
     {
-        try
+        try (WatchService watcher = FileSystems.getDefault().newWatchService())
         {
-            WatchService watchService = root.getFileSystem().newWatchService();
+            Map<WatchKey, Path> keyMap = new HashMap<>();
+            keyMap.put(root.register(watcher,
+                                     StandardWatchEventKinds.ENTRY_CREATE,
+                                     StandardWatchEventKinds.ENTRY_DELETE,
+                                     StandardWatchEventKinds.ENTRY_MODIFY),
+                       root);
 
-            Files.walkFileTree(root, new SimpleFileVisitor<Path>()
-                       {
-                           @Override
-                           public FileVisitResult preVisitDirectory(
-                                   Path dir,
-                                   BasicFileAttributes attrs) throws IOException
-                           {
-                               dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-                               return FileVisitResult.CONTINUE;
-                           }
-                       });
+            WatchKey key;
+
+            do
+            {
+                key = watcher.take();
+                Path eventDir = keyMap.get(key);
+
+                for (WatchEvent<?> event : key.pollEvents())
+                {
+                    WatchEvent.Kind<?> kind = event.kind();
+                    Path eventPath = (Path) event.context();
+                    System.out.println(eventDir + ": " + kind + ": " + eventPath);
+                }
+            }
+            while (key.reset());
         }
-        catch (IOException ex)
+        catch (IOException | InterruptedException ex)
         {
             throw new DALException();
         }
