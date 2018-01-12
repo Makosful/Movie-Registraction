@@ -9,7 +9,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
@@ -206,7 +205,7 @@ public class BLLManager
      *
      * @throws DALException
      */
-    public void addMovie(List<String> movieMetaData) throws DALException
+    public void addMovie(String[] movieMetaData) throws DALException
     {
         dal.addMovie(movieMetaData);
     }
@@ -268,9 +267,22 @@ public class BLLManager
         searchResult = searchResult.replace("{", "")
                 .replace("}", "")
                 .replace("[", "")
-                .replace("]", "");
+                .replace("]", "")
+                .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
+        for(int i = 0; i < meta.length; i++)
+        {
+           //remove ":"
+           meta[i] = meta[i].substring(meta[i].lastIndexOf(":")+1);
+           
+           //remove minutes
+           if(i == 4)
+           {
+               meta[i] = meta[i].substring(0, meta[i].lastIndexOf(" "));
+           }
+        }
+        
         return meta;
     }
 }
