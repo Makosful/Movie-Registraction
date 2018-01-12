@@ -145,7 +145,7 @@ public class Rating {
      * @param gridPane
      * @param starIndex 
      */
-    public void onMouseOver(GridPane gridPane, int starIndex){
+    private void onMouseOver(GridPane gridPane, int starIndex){
         lblRating.setText(Integer.toString(starIndex+1));
         gridPane.getChildren().clear();
         for(int i = 0; i < 10; i++){
@@ -167,7 +167,8 @@ public class Rating {
     }
     
     /**
-     * 
+     * Add evenhandler to when the user moves the mouse over the gridpane to 
+     * set a new score
      * @param label
      * @param gridPane 
      */
@@ -183,8 +184,10 @@ public class Rating {
     }
     
     /**
-     * 
+     * Add evenhandler to when the user moves the mouse away from the gridpane or the rating has 
+     * been changed, clear the nodes in gridpane and set the score
      * @param gridPane 
+     * @param rating 
      */
     private void setOnMouseExitedHandler(GridPane gridPane, double rating)
     {
@@ -199,9 +202,11 @@ public class Rating {
     }
     
     /**
-     * 
+     * If the rating is for imdb the method links to imdb rating. Else it sends 
+     * the new rating to the db and resets the rating with the new score.
      * @param label
      * @param gridPane 
+     * @param ratingType 
      */
     private void saveRatingChangesHandler(Label label, GridPane gridPane, String ratingType)
     {
