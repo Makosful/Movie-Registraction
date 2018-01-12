@@ -222,12 +222,13 @@ public class BLLManager
         {
             // Removing the dot and text after, so only the text is in the string.
             String fileName = files.getName().split("\\.")[0];
-            
+            // If database movie title matches chosenfile name.
             if (movie.getMovieTitle().equalsIgnoreCase(fileName)) 
             {
                 // Changing integer to string, as imageview requires string.
                 String idToString = Integer.toString(movie.getId());
                 imageView.setId(idToString);
+                //  Finding the ID that belongs to the movie.
                 if (Integer.parseInt(imageView.getId()) == movie.getId()) 
                 {
                     System.out.println("workeeeeeeeed");
@@ -238,9 +239,23 @@ public class BLLManager
             }
             else 
             {
+                System.out.println("ELSE WE CREATE DATA IN DATABASE. WAITING FOR CODE!!!!!");
                 System.out.println("nopeeeee");
             }
         }
     }
-
+    
+    public Movie getMovieIdMatch(ImageView imageView) throws DALException
+    {
+        Movie movieMatch = null;
+        
+            for (Movie movie : getAllMovies()) 
+            {
+                if (Integer.parseInt(imageView.getId()) == movie.getId()) 
+                {
+                   return movieMatch = movie;
+                }
+            }
+            return movieMatch;
+    }
 }

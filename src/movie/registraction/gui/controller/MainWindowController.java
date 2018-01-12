@@ -25,6 +25,7 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.apache.commons.io.FilenameUtils;
@@ -239,23 +240,29 @@ public class MainWindowController implements Initializable
      */
     private void imageClick(TilePane tilePane, ContextMenu contextMenu)
     {
-        for (ImageView imageView : model.GetImageViewList())
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+        
+        for (ImageView imageView : model.GetImageViewList()) 
+        {
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() 
             {
                 @Override
-                public void handle(MouseEvent event)
+                public void handle(MouseEvent event) 
                 {
                     MouseButton mouseButton = event.getButton();
-                    if (mouseButton == MouseButton.PRIMARY)
+                    if (mouseButton == MouseButton.PRIMARY) 
+                    {
+                        model.getMovieData(imageView);
                         model.closeMenuOrClick(contextMenu);
+                    }
 
-                    if (mouseButton == MouseButton.SECONDARY)
+                    if (mouseButton == MouseButton.SECONDARY) 
                     {
                         model.contextMenuOpenOrNot(contextMenu);
                         contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
                     }
                 }
             });
+        }
     }
 
     /**

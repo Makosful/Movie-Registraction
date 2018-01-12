@@ -33,8 +33,7 @@ public class MainWindowModel
 {
 
     List<ImageView> imageViewList;
-    ImageView imageView;
-
+    
     private BLLManager bll;
 
     private final ObservableList<JFXCheckBox> genres;
@@ -352,7 +351,7 @@ public class MainWindowModel
     }
     public void setPictures(TilePane tilePane, File chosenFile) throws DALException
     {
-        imageView = new ImageView(chosenFile.toURI().toString());
+        ImageView imageView = new ImageView(chosenFile.toURI().toString());
         imageView.setFitHeight(IMAGE_HEIGHT);
         imageView.setFitWidth(IMAGE_WIDTH);
         imageViewList.add(imageView);
@@ -583,6 +582,36 @@ public class MainWindowModel
         }
 
         return nodes;
+    }
+    /**
+     * Tries to match ids of image and movie.
+     * @param imageView
+     * @return 
+     */
+    public Movie getMovieIdMatch(ImageView imageView)
+    {
+        Movie idMatchMovie = null;
+        try 
+        {
+            idMatchMovie = bll.getMovieIdMatch(imageView);
+        } 
+        catch (DALException ex) 
+        {
+            System.out.println("Failed to find ID");
+        }
+        return idMatchMovie;
+    }
+    
+    public void getMovieData(ImageView imageView)
+    {
+        Movie matchedMovie = null;
+        if (getMovieIdMatch(imageView) != null)
+        {
+            matchedMovie = getMovieIdMatch(imageView);
+            System.out.println(matchedMovie.getId());
+            System.out.println(matchedMovie.getFilePath());
+            // Code to be added.
+        }
     }
 
 }
