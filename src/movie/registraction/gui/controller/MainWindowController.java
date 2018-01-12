@@ -91,7 +91,7 @@ public class MainWindowController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        bindTileToScroll();
+        SetupTilePane();
 
         try
         {
@@ -128,7 +128,7 @@ public class MainWindowController implements Initializable
      */
     private void modalWindowSetup()
     {
-        //TODO
+        
     }
 
     /**
@@ -228,10 +228,12 @@ public class MainWindowController implements Initializable
     /**
      * Binds the TilePane to the ScrollPane, height n width.
      */
-    private void bindTileToScroll()
+    private void SetupTilePane()
     {
         tilePane.prefWidthProperty().bind(scrlFilterSearch.widthProperty());
         tilePane.prefHeightProperty().bind(scrlFilterSearch.heightProperty());
+        tilePane.setHgap(20);
+        tilePane.setVgap(20);
     }
 
     /**

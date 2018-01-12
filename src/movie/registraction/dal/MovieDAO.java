@@ -284,7 +284,7 @@ public class MovieDAO {
       * @return
       * @throws DALException 
       */
-     public int addMovie(List<String> movieMetaData) throws DALException
+     public int addMovie(String[] movieMetaData) throws DALException
      {
       
             
@@ -297,14 +297,14 @@ public class MovieDAO {
                                  + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 
                 PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, movieMetaData.get(0));
-                preparedStatement.setString(2, movieMetaData.get(1));
-                preparedStatement.setString(3, movieMetaData.get(2));
+                preparedStatement.setString(1, movieMetaData[0]);
+                preparedStatement.setString(2, movieMetaData[1]);
+                preparedStatement.setString(3, movieMetaData[2]);
                 preparedStatement.setDate(4, null);
-                preparedStatement.setDouble(5, Double.parseDouble(movieMetaData.get(3)));
-                preparedStatement.setDouble(6, Double.parseDouble(movieMetaData.get(4)));
-                preparedStatement.setInt(7, Integer.parseInt(movieMetaData.get(5)));
-                preparedStatement.setInt(8, Integer.parseInt(movieMetaData.get(6)));
+                preparedStatement.setDouble(5, Double.parseDouble(movieMetaData[3]));
+                preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[4]));
+                preparedStatement.setInt(7, Integer.parseInt(movieMetaData[5]));
+                preparedStatement.setInt(8, Integer.parseInt(movieMetaData[6]));
                 
                 preparedStatement.executeUpdate();
 
