@@ -82,9 +82,9 @@ public class EditMovieCategoryController implements Initializable {
 
     @FXML
     private void btnSave(ActionEvent event) {
-            m.saveMovieCategories();
-            Stage stage = (Stage) btnSave.getScene().getWindow();
-            stage.close();
+        m.saveMovieCategories();
+        Stage stage = (Stage) btnSave.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
