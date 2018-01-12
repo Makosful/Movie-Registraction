@@ -224,7 +224,7 @@ public class MainWindowController implements Initializable
         FileChooser fc = new FileChooser();
 
         // Defines what files it will look for
-        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("MP4 Files", "*.mp4", ".mpeg4");
+        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Video Files", "*.mp4", ".mpeg4");
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
 
         // Adds the filters
