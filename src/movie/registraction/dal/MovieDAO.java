@@ -319,12 +319,7 @@ public class MovieDAO {
             catch (SQLException ex)
             {
                 throw new DALException();
-            }
-            
-            
-            
-            
-            
+            }    
      }
 
     public void setPersonalRating(int movieId, int personalRating) throws DALException {
