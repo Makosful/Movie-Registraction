@@ -33,7 +33,7 @@ public class MainWindowModel
 {
 
     List<ImageView> imageViewList;
-    
+
     private BLLManager bll;
 
     private final ObservableList<JFXCheckBox> genres;
@@ -509,6 +509,8 @@ public class MainWindowModel
 
     /**
      * Returns list of the imageviews. // The images the user puts in.
+     *
+     * @return
      */
     public List<ImageView> GetImageViewList()
     {
@@ -517,6 +519,8 @@ public class MainWindowModel
 
     /**
      * Returns the contextmenu for the imageviews.
+     *
+     * @return
      */
     public ContextMenu getContextMenu()
     {
@@ -590,25 +594,28 @@ public class MainWindowModel
 
         return nodes;
     }
+
     /**
      * Tries to match ids of image and movie.
+     *
      * @param imageView
-     * @return 
+     *
+     * @return
      */
     public Movie getMovieIdMatch(ImageView imageView)
     {
         Movie idMatchMovie = null;
-        try 
+        try
         {
             idMatchMovie = bll.getMovieIdMatch(imageView);
-        } 
-        catch (DALException ex) 
+        }
+        catch (DALException ex)
         {
             System.out.println("Failed to find ID");
         }
         return idMatchMovie;
     }
-    
+
     public void getMovieData(ImageView imageView)
     {
         Movie matchedMovie = null;
