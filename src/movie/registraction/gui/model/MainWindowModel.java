@@ -111,7 +111,12 @@ public class MainWindowModel
         {
             searchLink = bll.getOmdbTitleResult(text);
 
-            System.out.println(bll.getSearchResult(searchLink));
+            String searchResult = bll.getSearchResult(searchLink);
+
+            System.out.println(searchResult);
+
+            for (String string : bll.getSearchMetaData(searchLink))
+                System.out.println(string);
         }
         catch (BLLException ex)
         {
@@ -288,7 +293,6 @@ public class MainWindowModel
         File dir = dc.showDialog(null);
 
         if (dir.exists())
-        {
             try
             {
                 // Save this path to storage
@@ -302,7 +306,6 @@ public class MainWindowModel
                 System.out.println("Could not save path");
                 System.out.println(dir.getAbsolutePath());
             }
-        }
     }
 
     /**
@@ -310,11 +313,12 @@ public class MainWindowModel
      *
      * @param tilePane
      * @param fileList
+     *
      * @throws movie.registraction.dal.DALException
      */
     public void chooseFile(TilePane tilePane) throws DALException
     {
-                // Creates a new FileChooser object
+        // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 
         // Defines what files it will look for
@@ -326,7 +330,7 @@ public class MainWindowModel
 
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
-        
+
         // Setting the context menu up.
         setupContextMenu(tilePane);
         // Setting up the arrayList for ImageViews.
@@ -349,6 +353,7 @@ public class MainWindowModel
             return;
         }
     }
+
     public void setPictures(TilePane tilePane, File chosenFile) throws DALException
     {
         ImageView imageView = new ImageView(chosenFile.toURI().toString());
@@ -359,10 +364,12 @@ public class MainWindowModel
         tilePane.getChildren().add(imageView);
         bll.imageIdMovieId(chosenFile, imageView);
     }
+
     public void imageViewList()
     {
         imageViewList = new ArrayList();
     }
+
     /**
      * Sets up the contextmenu with the choices user get.
      *
@@ -500,7 +507,7 @@ public class MainWindowModel
         return moviePaths;
     }
 
-    /*
+    /**
      * Returns list of the imageviews. // The images the user puts in.
      */
     public List<ImageView> GetImageViewList()
@@ -508,7 +515,7 @@ public class MainWindowModel
         return imageViewList;
     }
 
-    /*
+    /**
      * Returns the contextmenu for the imageviews.
      */
     public ContextMenu getContextMenu()

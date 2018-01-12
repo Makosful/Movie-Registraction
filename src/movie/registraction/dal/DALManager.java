@@ -1,8 +1,11 @@
 package movie.registraction.dal;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -14,6 +17,7 @@ import movie.registraction.be.Movie;
  */
 public class DALManager
 {
+
     MovieDAO mDAO;
 
     public DALManager() throws DALException
@@ -166,11 +170,12 @@ public class DALManager
                 return true;
         return false;
     }
-    
+
     public ObservableList<Movie> getAllMovies() throws DALException
     {
         return mDAO.getAllMovies();
     }
+
     /**
      * Adds a movie with the supplied metadata, the addmovie returns the
      * inserted
@@ -191,6 +196,37 @@ public class DALManager
                 mDAO.addMovieCategory(id, cat);
         }
         catch (DALException ex)
+        {
+            throw new DALException();
+        }
+    }
+
+    /**
+     * Add a change listener to a folder and all sub folders
+     *
+     * @param root The root folder to watch
+     *
+     * @throws movie.registraction.dal.DALException
+     */
+    public void m(Path root) throws DALException
+    {
+        try
+        {
+            WatchService watchService = root.getFileSystem().newWatchService();
+
+            Files.walkFileTree(root, new SimpleFileVisitor<Path>()
+                       {
+                           @Override
+                           public FileVisitResult preVisitDirectory(
+                                   Path dir,
+                                   BasicFileAttributes attrs) throws IOException
+                           {
+                               dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+                               return FileVisitResult.CONTINUE;
+                           }
+                       });
+        }
+        catch (IOException ex)
         {
             throw new DALException();
         }
