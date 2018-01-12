@@ -13,8 +13,10 @@ import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
@@ -31,6 +33,8 @@ public class EditCategoriesController implements Initializable
     MainWindowModel m;
     @FXML
     private ListView<String> lstViewAllCategories;
+    @FXML
+    private Button btnSave;
 
     /**
      * Initializes the controller class.
@@ -64,6 +68,8 @@ public class EditCategoriesController implements Initializable
     {
 
         m.saveCategories();
+        Stage stage = (Stage) btnSave.getScene().getWindow();
+        stage.close();
     }
 
 }

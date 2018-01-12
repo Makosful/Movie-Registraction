@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane id="AnchorPane" prefHeight="422.0" prefWidth="547.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.EditMovieCategoryController">
     <children>
-        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
       <ListView fx:id="listViewAll" layoutX="36.0" layoutY="109.0" prefHeight="242.0" prefWidth="200.0" />
       <ListView fx:id="listViewChosen" layoutX="305.0" layoutY="111.0" prefHeight="242.0" prefWidth="200.0" />
-      <Button layoutX="464.0" layoutY="373.0" mnemonicParsing="false" onAction="#btnSave" text="Save" />
+      <Button fx:id="btnSave" layoutX="464.0" layoutY="373.0" mnemonicParsing="false" onAction="#btnSave" text="Save" />
       <Button layoutX="305.0" layoutY="74.0" mnemonicParsing="false" onAction="#btnRemoveCat" text="Remove category" />
     </children>
 </AnchorPane>

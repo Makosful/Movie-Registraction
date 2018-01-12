@@ -36,7 +36,6 @@ public class changeCategories
     {
         try
         {
-            movie = new Movie();
             mDAO = new MovieDAO();
             removeCategory = new ArrayList();
             removeMovieCategory = new ArrayList();
@@ -55,6 +54,7 @@ public class changeCategories
      */
     public ObservableList<String> loadChosenMovieCategories(Movie movie)
     {
+        this.movie = movie;
         chosenMovieCategories.addAll(movie.getCategories());
         return chosenMovieCategories;
     }
@@ -122,7 +122,7 @@ public class changeCategories
 
         for (String cat : removeMovieCategory){
             try {
-                mDAO.removeMovieCategory(1, cat);
+                mDAO.removeMovieCategory(5, cat);
             } catch (DALException ex) {
                 throw new DALException();
             }
@@ -130,7 +130,7 @@ public class changeCategories
         
         for (String cat : chosenMovieCategories){
             try {
-                mDAO.addMovieCategory(1, cat);
+                mDAO.addMovieCategory(5, cat);
             } catch (DALException ex) {
                 throw new DALException();
             }

@@ -17,8 +17,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.MovieDAO;
@@ -38,6 +40,8 @@ public class EditMovieCategoryController implements Initializable {
     private ListView<String> listViewAll;
     @FXML
     private ListView<String> listViewChosen;
+    @FXML
+    private Button btnSave;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -78,7 +82,9 @@ public class EditMovieCategoryController implements Initializable {
 
     @FXML
     private void btnSave(ActionEvent event) {
-            m.saveMovieCategories();
+        m.saveMovieCategories();
+        Stage stage = (Stage) btnSave.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

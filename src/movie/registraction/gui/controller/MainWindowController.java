@@ -212,46 +212,16 @@ public class MainWindowController implements Initializable
     @FXML
     private void uploadFiles(ActionEvent event) throws DALException
     {
-        setPictures(); // Midlertidigt.
+        setChosenFilesWithPicture();
     }
 
     /**
-     * Add comment
+     * Setting the movie files and picture.
      */
-    private void setPictures() throws DALException
+    private void setChosenFilesWithPicture() throws DALException
     {
-        // Creates a new FileChooser object
-        FileChooser fc = new FileChooser();
-
-        // Defines what files it will look for
-        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Video Files", "*.mp4", ".mpeg4");
-        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
-
-        // Adds the filters
-        fc.getExtensionFilters().addAll(videoFilter, imageFilter);
-
-        // Opens the FileChooser and saves the results in a list
-        List<File> chosenFiles = fc.showOpenMultipleDialog(null);
-        
-        model.setupTileAndImageList(tilePane);
-
-        // Checks if any files where chosen
-        if (chosenFiles != null)
-            for (File chosenFile : chosenFiles)
-            {
-                chosenFile.toPath();
-                String fileName = chosenFile.getName();
-                fileName = FilenameUtils.getBaseName(fileName);
-                model.setPictures(tilePane, chosenFile);
-                imageClick(tilePane, model.getContextMenu());
-                System.out.println(fileName); //For debugging
-            }
-        else
-        {
-            // Otherwise return
-            System.out.println("One or more invalid file(s) / None selected");
-            return;
-        }
+        model.chooseFile(tilePane);
+        imageClick(tilePane, model.getContextMenu());
     }
 
     /**
