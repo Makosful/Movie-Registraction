@@ -116,7 +116,10 @@ public class MainWindowModel
             System.out.println(searchResult);
 
             for (String string : bll.getSearchMetaData(searchLink))
+            {
                 System.out.println(string);
+            }
+                
         }
         catch (BLLException ex)
         {
