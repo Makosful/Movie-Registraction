@@ -322,6 +322,12 @@ public class MovieDAO {
             }    
      }
 
+    /**
+     * Sets the users rating for a specific movie in the database
+     * @param movieId
+     * @param personalRating
+     * @throws DALException 
+     */
     public void setPersonalRating(int movieId, int personalRating) throws DALException {
        
         try (Connection con = db.getConnection())
