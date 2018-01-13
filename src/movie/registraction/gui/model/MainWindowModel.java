@@ -6,8 +6,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -218,7 +216,11 @@ public class MainWindowModel
      */
     public void saveCategories()
     {
-        categories.saveCategories();
+        try {
+            categories.saveCategories();
+        } catch (DALException ex) {
+            System.out.println("Could not save categories");
+        }
 
     }
 
@@ -616,5 +618,6 @@ public class MainWindowModel
             // Code to be added.
         }
     }
+
 
 }

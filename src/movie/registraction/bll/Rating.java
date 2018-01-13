@@ -11,17 +11,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
-import movie.registraction.dal.MovieDAO;
+
 
 /**
  *
@@ -66,7 +63,7 @@ public class Rating {
         }
         
         
-        setOnMouseExitedHandler(gridPane, rating);
+        setOnMouseExitedHandler(gridPane);
         initRating(ratingType, rating);
         setRatingStars(gridPane);
     }
@@ -129,6 +126,8 @@ public class Rating {
             
         }
         
+        lblRating.setText(Integer.toString(wholeNumber));
+        
     }
     
     /**
@@ -174,14 +173,13 @@ public class Rating {
      * @param gridPane 
      * @param rating 
      */
-    private void setOnMouseExitedHandler(GridPane gridPane, double rating)
+    private void setOnMouseExitedHandler(GridPane gridPane)
     {
         gridPane.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 gridPane.getChildren().clear();
                 setRatingStars(gridPane);
-                lblRating.setText(Double.toString(rating));
             }
         });
     }
@@ -218,7 +216,7 @@ public class Rating {
                     } catch (DALException ex) {
                     }
                     wholeNumber = gridPane.getColumnIndex(node)+1;
-                    setOnMouseExitedHandler(gridPane, wholeNumber); 
+                    setOnMouseExitedHandler(gridPane); 
                 }
             }
         });
