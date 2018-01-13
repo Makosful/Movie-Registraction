@@ -274,22 +274,45 @@ public class BLLManager
         
         for(int i = 0; i < meta.length; i++)
         {
+           if(meta[i].contains("Title:"))
+           {
+               meta[0] = meta[i];
+           }
+           
+           else if(meta[i].contains("Year:")){
+               meta[1] = meta[i];
+           }
+           //remove "min" after number of minutes
+           else if(meta[i].contains("Runtime:"))
+           {
+               meta[2] = meta[i].substring(0, meta[i].lastIndexOf(" "));
+           }
+                    
+           else if(meta[i].contains("imdbRating:"))
+           {
+               meta[3] = meta[i];
+           }
+           //Poster
+           else if(meta[i].contains("Poster:"))
+           {
+               meta[4] = meta[i];
+           }
+           
+           else if(meta[i].contains("Genre:"))
+           {
+               meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
+               meta[5] = meta[i].replace(",", "");
+           }
             
-           //remove minutes
-           if(i == 4)
-           {
-               meta[i] = meta[i].substring(0, meta[i].lastIndexOf(" "));
-           }
-           else if(i == 5)
-           {
-               meta[i] = searchResult.substring(searchResult.lastIndexOf("Genre"), searchResult.lastIndexOf("Director"));
-               meta[i] = meta[i].replace(",", "");
-           }
-           //remove metadata title until ":" appears and one index after
-           meta[i] = meta[i].substring(meta[i].lastIndexOf(":")+1);       
         
         }
-        
-        return meta;
+        String[] metaData = new String[6];
+        for(int i = 0; i < metaData.length; i++)
+        {
+            //remove metadata title until ":" appears and one index after
+            metaData[i] = meta[i].substring(meta[i].lastIndexOf(":")+1);   
+            
+        }
+        return metaData;
     }
 }

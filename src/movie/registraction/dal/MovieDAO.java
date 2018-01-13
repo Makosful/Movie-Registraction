@@ -303,8 +303,8 @@ public class MovieDAO {
                 preparedStatement.setDate(4, null);
                 preparedStatement.setDouble(5, Double.parseDouble(movieMetaData[3]));
                 preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[4]));
-                preparedStatement.setInt(7, Integer.parseInt(movieMetaData[5]));
-                preparedStatement.setInt(8, Integer.parseInt(movieMetaData[6]));
+                preparedStatement.setInt(7, Integer.parseInt(movieMetaData[2]));
+                preparedStatement.setInt(8, Integer.parseInt(movieMetaData[4]));
                 
                 preparedStatement.executeUpdate();
 
