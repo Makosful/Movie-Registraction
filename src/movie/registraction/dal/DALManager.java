@@ -4,7 +4,10 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -234,6 +237,88 @@ public class DALManager
         }
         catch (IOException | InterruptedException ex)
         {
+            throw new DALException();
+        }
+    }
+
+    /**
+     * Sends the given category and specific movieid to MovieDAO where it is removed in the db 
+     * @param movieid
+     * @param category
+     * @throws DALException 
+     */
+    public void removeMovieCategory(int movieid, String category) throws DALException {
+        try {
+            mDAO.removeMovieCategory(movieid, category);
+        } catch (DALException ex) {
+            throw new DALException();
+        }
+    }
+
+    /**
+     * Sends the given category and specific movieid to MovieDAO
+     * where it is added to the db 
+     * @param movieid
+     * @param category
+     * @throws DALException 
+     */
+    public void addMovieCategory(int movieid, String category) throws DALException {
+        try {
+            mDAO.addMovieCategory(movieid, category);
+        } catch (DALException ex) {
+            throw new DALException();
+        }
+    }
+
+    /**
+     * gets all categories from the database and MovieDAO and retur
+     * @return
+     * @throws DALException 
+     */
+    public List<String> getAllCategories() throws DALException {
+        try {
+           return mDAO.getAllCategories();
+        } catch (DALException ex) {
+            throw new DALException();
+        }
+
+    }
+
+    /**
+     * Sends the given category to MovieDAO where it is removed in the db 
+     * @param cat
+     * @throws DALException 
+     */
+    public void removeCategory(String cat) throws DALException {
+        try {
+            mDAO.removeCategory(cat);
+        } catch (DALException ex) {
+            throw new DALException();
+        }
+    }
+
+    /**
+     * Sends the given category to MovieDAO where it is added to the db 
+     * @param cat
+     * @throws DALException 
+     */
+    public void addCategory(String cat) throws DALException {
+        try {
+            mDAO.addCategory(cat);
+        } catch (DALException ex) {
+            throw new DALException();
+        }
+    }
+    /**
+     * Sends the personal rating and movie id to MovieDAO to update personalrating
+     * @param movieId
+     * @param rating
+     * @throws DALException 
+     */
+    public void setPersonalRating(int movieId, int rating) throws DALException {
+        try {
+            mDAO.setPersonalRating(movieId, rating);
+        } catch (DALException ex) {
             throw new DALException();
         }
     }

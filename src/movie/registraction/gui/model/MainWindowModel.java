@@ -71,13 +71,8 @@ public class MainWindowModel
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
 
-        try
-        {
-            categories = new ChangeCategories();
-        }
-        catch (BLLException ex)
-        {
-        }
+        categories = new ChangeCategories();
+
 
         for (int i = 0; i < 10; i++)
         {
@@ -223,14 +218,7 @@ public class MainWindowModel
      */
     public void saveCategories()
     {
-        try
-        {
-            categories.saveCategories();
-        }
-        catch (DALException ex)
-        {
-            System.out.println("Could not save the category changes");
-        }
+        categories.saveCategories();
 
     }
 

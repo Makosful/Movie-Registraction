@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
+import movie.registraction.dal.DALManager;
 import movie.registraction.dal.MovieDAO;
 
 /**
@@ -30,19 +31,20 @@ public class Rating {
     
     private boolean half;
     private int wholeNumber;
-    private MovieDAO mDAO;
+    private DALManager dal;
     private Label lblRating;
     List<Label> stars;
     List<Label> emptyStars;
     
-    public Rating(double rating, String ratingType, GridPane gridPane, Label lblRating) throws IOException
+    public Rating(double rating, String ratingType, GridPane gridPane, Label lblRating) throws DALException 
     {
+
         try {
-            mDAO = new MovieDAO();
-        } catch (IOException ex) {
-            throw new IOException();
+            dal = new DALManager();
+        } catch (DALException ex) {
+            throw new DALException();
         }
-        
+
         stars = new ArrayList();
         emptyStars = new ArrayList();
         this.lblRating = lblRating;
@@ -212,12 +214,11 @@ public class Rating {
                     //Test movie id
                     int movieId = 1;
                     try {
-                        mDAO.setPersonalRating(movieId, gridPane.getColumnIndex(node)+1);
-                        wholeNumber = gridPane.getColumnIndex(node)+1;
-                        setOnMouseExitedHandler(gridPane, wholeNumber);
+                        dal.setPersonalRating(movieId, gridPane.getColumnIndex(node)+1);
                     } catch (DALException ex) {
-                        System.out.println(ex.getMessage());
                     }
+                    wholeNumber = gridPane.getColumnIndex(node)+1;
+                    setOnMouseExitedHandler(gridPane, wholeNumber); 
                 }
             }
         });
