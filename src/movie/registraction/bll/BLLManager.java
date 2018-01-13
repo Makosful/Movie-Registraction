@@ -197,10 +197,7 @@ public class BLLManager
     }
 
     /**
-     * Adds a movie with the supplied metadata, the addmovie returns the
-     * inserted
-     * movie row id, which is used to inserting the movies categories
-     *
+     * Sends metadata to dataaccess layer to insert a movie
      * @param movieMetaData
      *
      * @throws DALException
@@ -261,6 +258,13 @@ public class BLLManager
             return movieMatch;
     }
 
+    
+    /**
+     * Formats the metadata from searchresult, so its ready to be put in the db
+     * @param searchLink
+     * @return
+     * @throws BLLException 
+     */
     public String[] getSearchMetaData(URL searchLink) throws BLLException
     {
         String searchResult = this.getSearchResult(searchLink);
@@ -274,11 +278,12 @@ public class BLLManager
         
         for(int i = 0; i < meta.length; i++)
         {
+           //get title
            if(meta[i].contains("Title:"))
            {
                meta[0] = meta[i];
            }
-           
+           //get year
            else if(meta[i].contains("Year:")){
                meta[1] = meta[i];
            }
@@ -287,7 +292,7 @@ public class BLLManager
            {
                meta[2] = meta[i].substring(0, meta[i].lastIndexOf(" "));
            }
-                    
+           //get imdb rating
            else if(meta[i].contains("imdbRating:"))
            {
                meta[3] = meta[i];
@@ -297,7 +302,7 @@ public class BLLManager
            {
                meta[4] = meta[i];
            }
-           
+           //get all the categories by using substring with genre and director as start and end index
            else if(meta[i].contains("Genre:"))
            {
                meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
@@ -306,6 +311,8 @@ public class BLLManager
             
         
         }
+        
+        //new array to hold final result
         String[] metaData = new String[6];
         for(int i = 0; i < metaData.length; i++)
         {

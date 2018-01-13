@@ -6,6 +6,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -110,19 +112,16 @@ public class MainWindowModel
         try
         {
             searchLink = bll.getOmdbTitleResult(text);
-
-            String searchResult = bll.getSearchResult(searchLink);
             
-            for (String string : bll.getSearchMetaData(searchLink))
-            {
-                System.out.println(string);
-                
-            }
+            String[] metaData = bll.getSearchMetaData(searchLink);
+            bll.addMovie(metaData);
                 
         }
         catch (BLLException ex)
         {
             System.out.println("Could not get search result");
+        } catch (DALException ex) {
+            System.out.println("Could not add the movie in the database");
         }
 
     }
