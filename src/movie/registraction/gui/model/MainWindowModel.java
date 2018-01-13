@@ -23,7 +23,7 @@ import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
-import movie.registraction.bll.changeCategories;
+import movie.registraction.bll.ChangeCategories;
 import movie.registraction.dal.DALException;
 import org.apache.commons.io.FilenameUtils;
 
@@ -49,7 +49,7 @@ public class MainWindowModel
 
     private final ArrayList<String> extensionList;
 
-    private changeCategories categories;
+    private ChangeCategories categories;
     private ContextMenu contextMenu;
 
     public MainWindowModel() throws DALException
@@ -73,7 +73,7 @@ public class MainWindowModel
 
         try
         {
-            categories = new changeCategories();
+            categories = new ChangeCategories();
         }
         catch (BLLException ex)
         {

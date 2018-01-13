@@ -22,7 +22,7 @@ import movie.registraction.dal.MovieDAO;
  *
  * @author B
  */
-public class changeCategories
+public class ChangeCategories
 {
 
     private Movie movie;
@@ -32,7 +32,7 @@ public class changeCategories
     ObservableList<String> categories = FXCollections.observableArrayList();
     ObservableList<String> chosenMovieCategories = FXCollections.observableArrayList();
 
-    public changeCategories() throws BLLException
+    public ChangeCategories() throws BLLException
     {
         try
         {
