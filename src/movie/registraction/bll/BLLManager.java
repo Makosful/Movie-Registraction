@@ -264,23 +264,30 @@ public class BLLManager
     public String[] getSearchMetaData(URL searchLink) throws BLLException
     {
         String searchResult = this.getSearchResult(searchLink);
+        
         searchResult = searchResult.replace("{", "")
                 .replace("}", "")
                 .replace("[", "")
                 .replace("]", "")
                 .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
+        
         for(int i = 0; i < meta.length; i++)
         {
-           //remove ":"
-           meta[i] = meta[i].substring(meta[i].lastIndexOf(":")+1);
-           
+            
            //remove minutes
            if(i == 4)
            {
                meta[i] = meta[i].substring(0, meta[i].lastIndexOf(" "));
            }
+           else if(i == 5)
+           {
+               meta[i] = searchResult.substring(searchResult.lastIndexOf("Genre"), searchResult.lastIndexOf("Director"));
+               meta[i] = meta[i].replace(",", "");
+           }
+           //remove metadata title until ":" appears and one index after
+           meta[i] = meta[i].substring(meta[i].lastIndexOf(":")+1);       
+        
         }
         
         return meta;

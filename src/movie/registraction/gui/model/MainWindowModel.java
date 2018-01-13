@@ -112,12 +112,11 @@ public class MainWindowModel
             searchLink = bll.getOmdbTitleResult(text);
 
             String searchResult = bll.getSearchResult(searchLink);
-
-            System.out.println(searchResult);
-
+            
             for (String string : bll.getSearchMetaData(searchLink))
             {
                 System.out.println(string);
+                
             }
                 
         }
@@ -467,7 +466,7 @@ public class MainWindowModel
         catch (BLLException ex)
         {
             // If the files doesn't exist, tell the user and back out of the method
-            System.out.println("Library has not been sat.");
+            System.out.println("Library has not been set.");
             return;
         }
 

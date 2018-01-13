@@ -189,7 +189,7 @@ public class DALManager
         {
             int id = mDAO.addMovie(movieMetaData);
 
-            String[] metaMovieCategories = movieMetaData[99].split(" ");
+            String[] metaMovieCategories = movieMetaData[5].split(" ");
             for (String cat : metaMovieCategories)
                 mDAO.addMovieCategory(id, cat);
         }
