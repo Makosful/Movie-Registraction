@@ -19,6 +19,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import movie.registraction.bll.Rating;
+import movie.registraction.dal.DALException;
 
 /**
  * FXML Controller class
@@ -40,8 +41,8 @@ public class RatingController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             r = new Rating(10, "personalRating", gridPaneRating, lblRating);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+        } catch (DALException ex) {
+           
         }
         
         
