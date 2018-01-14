@@ -493,6 +493,14 @@ public class MainWindowModel
         }
     }
 
+
+    /**
+    * Sets up a new rating instance with the given values
+    * @param rating
+    * @param ratingType
+    * @param gridPaneRating
+    * @param lblRating 
+    */
     public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating)
     {
         try {
