@@ -32,6 +32,8 @@ public class Rating {
     private Label lblRating;
     List<Label> stars;
     List<Label> emptyStars;
+    private Label lblHalf;
+    
     
     public Rating(double rating, String ratingType, GridPane gridPane, Label lblRating) throws DALException 
     {
@@ -47,6 +49,7 @@ public class Rating {
         this.lblRating = lblRating;
         
         
+        lblHalf = new Label("half");
         for(int i = 0; i < 10; i++)
         {
             Label star = new Label("*");
@@ -112,11 +115,9 @@ public class Rating {
             }
             else if(i == wholeNumber+1 && half == true)
             {
-                Label label = new Label("half");
-                gridPane.setColumnIndex(label, i-1);
-                gridPane.getChildren().add(label);
-                
-                setOnMouseEnteredHandler(label, gridPane);
+                gridPane.setColumnIndex(lblHalf, i-1);
+                gridPane.getChildren().add(lblHalf);
+                setOnMouseEnteredHandler(lblHalf, gridPane);
             }
             else
             {  
