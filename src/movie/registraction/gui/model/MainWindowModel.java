@@ -6,6 +6,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,8 +15,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -22,6 +26,7 @@ import movie.registraction.be.Movie;
 import movie.registraction.bll.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.ChangeCategories;
+import movie.registraction.bll.Rating;
 import movie.registraction.dal.DALException;
 import org.apache.commons.io.FilenameUtils;
 
@@ -488,6 +493,14 @@ public class MainWindowModel
         }
     }
 
+    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating)
+    {
+        try {
+            Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
+        } catch (DALException ex) {
+            System.out.println("Could not create new rating");
+        }
+    }
     /**
      * Gets the movie list
      *

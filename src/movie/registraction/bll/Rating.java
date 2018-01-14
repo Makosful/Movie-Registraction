@@ -112,7 +112,7 @@ public class Rating {
             }
             else if(i == wholeNumber+1 && half == true)
             {
-                Label label = new Label("half"+i);
+                Label label = new Label("half");
                 gridPane.setColumnIndex(label, i-1);
                 gridPane.getChildren().add(label);
                 
