@@ -278,49 +278,47 @@ public class MovieDAO {
      }
      
      
-     /**
-      * Add a new movie to the database
-      * @param movieMetaData
-      * @return
-      * @throws DALException 
-      */
-     public int addMovie(String[] movieMetaData) throws DALException
-     {
-      
-            
-            try (Connection con = db.getConnection())
-            {
-                int id;
-                java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
-                String sqlInsert = "INSERT INTO Movie "
-                                 + "(name, filePath, imgPath, lastView, personalRating, imdbRating, year, movieLength) "
-                                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                
-                PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, movieMetaData[0]);
-                preparedStatement.setString(2, "path");
-                preparedStatement.setString(3, movieMetaData[4]);
-                preparedStatement.setDate(4, null);
-                preparedStatement.setDouble(5, 0);
-                preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[3]));
-                preparedStatement.setInt(7, Integer.parseInt(movieMetaData[1]));
-                preparedStatement.setInt(8, Integer.parseInt(movieMetaData[2]));
-                
-                preparedStatement.executeUpdate();
+    /**
+     * Add a new movie to the database
+     * @param movieMetaData
+     * @return
+     * @throws DALException 
+     */
+    public int addMovie(String[] movieMetaData) throws DALException
+    {            
+       try (Connection con = db.getConnection())
+       {
+           int id;
+           
+           String sqlInsert = "INSERT INTO Movie "
+                            + "(name, filePath, imgPath, lastView, personalRating, imdbRating, year, movieLength) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-                ResultSet rsi = preparedStatement.getGeneratedKeys();
+           PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+           preparedStatement.setString(1, movieMetaData[0]);
+           preparedStatement.setString(2, "path");
+           preparedStatement.setString(3, movieMetaData[4]);
+           preparedStatement.setDate(4, null);
+           preparedStatement.setDouble(5, 0);
+           preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[3]));
+           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[1]));
+           preparedStatement.setInt(8, Integer.parseInt(movieMetaData[2]));
 
-                rsi.next();
+           preparedStatement.executeUpdate();
 
-                id = rsi.getInt(1);
+           ResultSet rsi = preparedStatement.getGeneratedKeys();
 
-                return id;
-            }
-            catch (SQLException ex)
-            {
-                throw new DALException();
-            }    
-     }
+           rsi.next();
+
+           id = rsi.getInt(1);
+
+           return id;
+       }
+       catch (SQLException ex)
+       {
+           throw new DALException();
+       }    
+    }
 
     /**
      * Sets the users rating for a specific movie in the database
@@ -370,6 +368,29 @@ public class MovieDAO {
             preparedStatement.setInt(1, movieId);
             preparedStatement.execute();
 
+        }
+        catch (SQLException ex)
+        {
+            throw new DALException();
+        }
+    }
+    
+    
+    
+    public void setLastView(int movieId) throws DALException
+    { 
+        
+        try (Connection con = db.getConnection())
+        {
+            String sqlInsert = "UPDATE Movie "
+                             + "SET Movie.lastView = GETDATE() "
+                             + "WHERE id = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+            preparedStatement.setInt(1, movieId);
+            preparedStatement.executeUpdate();
+
+        
+            
         }
         catch (SQLException ex)
         {
