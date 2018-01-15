@@ -13,9 +13,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
@@ -24,16 +26,16 @@ import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.changeCategories;
 import movie.registraction.dal.DALException;
 import org.apache.commons.io.FilenameUtils;
+import org.controlsfx.control.PopOver;
 
 /**
  *
  * @author Axl
  */
-public class MainWindowModel
-{
+public class MainWindowModel {
 
     List<ImageView> imageViewList;
-    
+
     private BLLManager bll;
 
     private final ObservableList<JFXCheckBox> genres;
@@ -50,17 +52,15 @@ public class MainWindowModel
     private changeCategories categories;
     private ContextMenu contextMenu;
 
-    public MainWindowModel() throws DALException
-    {
+    private PopOver pop;
+
+    public MainWindowModel() throws DALException {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 150;
 
-        try
-        {
+        try {
             bll = new BLLManager();
-        }
-        catch (BLLException ex)
-        {
+        } catch (BLLException ex) {
         }
 
         genres = FXCollections.observableArrayList();
@@ -69,16 +69,12 @@ public class MainWindowModel
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
 
-        try
-        {
+        try {
             categories = new changeCategories();
-        }
-        catch (BLLException ex)
-        {
+        } catch (BLLException ex) {
         }
 
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             int y = 1990;
             int y2 = y + i;
 
@@ -99,41 +95,34 @@ public class MainWindowModel
      *
      * @param text
      */
-    public void fxmlTitleSearch(String text)
-    {
+    public void fxmlTitleSearch(String text) {
         // Replace all the whitespaces with plus signs to make it URL friendly
         text = text.replaceAll(" ", "+");
 
         // Uses the API url + our fixed search index to display us all the
         // metadata of the movie searched for - if possible.
         URL searchLink;
-        try
-        {
+        try {
             searchLink = bll.getOmdbTitleResult(text);
 
             String searchResult = bll.getSearchResult(searchLink);
 
             System.out.println(searchResult);
 
-            for (String string : bll.getSearchMetaData(searchLink))
-            {
+            for (String string : bll.getSearchMetaData(searchLink)) {
                 System.out.println(string);
             }
-                
-        }
-        catch (BLLException ex)
-        {
+
+        } catch (BLLException ex) {
             System.out.println("Could not get search result");
         }
 
     }
 
     /**
-     * Clears the filters.
-     * Not in use
+     * Clears the filters. Not in use
      */
-    public void fxmlClearFilters()
-    {
+    public void fxmlClearFilters() {
     }
 
     /**
@@ -141,18 +130,13 @@ public class MainWindowModel
      *
      * @return Observablelist of checkboxes
      */
-    public ObservableList<JFXCheckBox> getGenreList()
-    {
-        try
-        {
-            for (String category : categories.allCategories())
-            {
+    public ObservableList<JFXCheckBox> getGenreList() {
+        try {
+            for (String category : categories.allCategories()) {
                 JFXCheckBox cb = new JFXCheckBox(category);
                 genres.add(cb);
             }
-        }
-        catch (DALException ex)
-        {
+        } catch (DALException ex) {
             System.out.println("Could not get the list of categories");
         }
 
@@ -164,8 +148,7 @@ public class MainWindowModel
      *
      * @return Returns the list CheckBoxes for the years
      */
-    public ObservableList<JFXCheckBox> getYearList()
-    {
+    public ObservableList<JFXCheckBox> getYearList() {
         return years;
     }
 
@@ -176,8 +159,7 @@ public class MainWindowModel
      *
      * @return Returns the list of Other Options
      */
-    public ObservableList<JFXCheckBox> getOtherList()
-    {
+    public ObservableList<JFXCheckBox> getOtherList() {
         return others;
     }
 
@@ -187,14 +169,10 @@ public class MainWindowModel
      * @return
      *
      */
-    public ObservableList<String> getAllCategories()
-    {
-        try
-        {
+    public ObservableList<String> getAllCategories() {
+        try {
             allCategories.addAll(categories.allCategories());
-        }
-        catch (DALException ex)
-        {
+        } catch (DALException ex) {
             System.out.println("Could not get the list of categories");
         }
         return allCategories;
@@ -205,8 +183,7 @@ public class MainWindowModel
      *
      * @param category
      */
-    public void addChosenCategory(String category)
-    {
+    public void addChosenCategory(String category) {
         categories.addChosenCategory(category);
     }
 
@@ -215,22 +192,17 @@ public class MainWindowModel
      *
      * @param category
      */
-    public void removeChosenCategory(String category)
-    {
+    public void removeChosenCategory(String category) {
         categories.removeChosenCategory(category);
     }
 
     /**
      * Save the category changes in changeCategories class
      */
-    public void saveCategories()
-    {
-        try
-        {
+    public void saveCategories() {
+        try {
             categories.saveCategories();
-        }
-        catch (DALException ex)
-        {
+        } catch (DALException ex) {
             System.out.println("Could not save the category changes");
         }
 
@@ -243,8 +215,7 @@ public class MainWindowModel
      *
      * @return Observable list of category strings
      */
-    public ObservableList<String> loadChosenMovieCategories(Movie movie)
-    {
+    public ObservableList<String> loadChosenMovieCategories(Movie movie) {
         return categories.loadChosenMovieCategories(movie);
     }
 
@@ -254,8 +225,7 @@ public class MainWindowModel
      *
      * @param category
      */
-    public void addChosenMovieCategory(String category)
-    {
+    public void addChosenMovieCategory(String category) {
         categories.addChosenMovieCategory(category);
     }
 
@@ -265,22 +235,17 @@ public class MainWindowModel
      *
      * @param category
      */
-    public void removeChosenMovieCategory(String category)
-    {
+    public void removeChosenMovieCategory(String category) {
         categories.removeChosenMovieCategory(category);
     }
 
     /**
      * Save the movie category changes in changeCategories class
      */
-    public void saveMovieCategories()
-    {
-        try
-        {
+    public void saveMovieCategories() {
+        try {
             categories.saveMovieCategories();
-        }
-        catch (DALException ex)
-        {
+        } catch (DALException ex) {
             System.out.println("Could not save the movie categories");
         }
     }
@@ -290,25 +255,22 @@ public class MainWindowModel
      *
      * Defaults to the Windows Videos library
      */
-    public void fxmlSetLibrary()
-    {
+    public void fxmlSetLibrary() {
         DirectoryChooser dc = new DirectoryChooser();
         File dir = dc.showDialog(null);
 
-        if (dir.exists())
-            try
-            {
+        if (dir.exists()) {
+            try {
                 // Save this path to storage
                 String path = dir.getAbsolutePath();
                 bll.saveDirectory(path);
                 this.loadMovieFromLibrary();
 
-            }
-            catch (BLLException ex)
-            {
+            } catch (BLLException ex) {
                 System.out.println("Could not save path");
                 System.out.println(dir.getAbsolutePath());
             }
+        }
     }
 
     /**
@@ -319,8 +281,7 @@ public class MainWindowModel
      *
      * @throws movie.registraction.dal.DALException
      */
-    public void chooseFile(TilePane tilePane) throws DALException
-    {
+    public void chooseFile(TilePane tilePane) throws DALException {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 
@@ -340,25 +301,22 @@ public class MainWindowModel
         imageViewList();
 
         // Checks if any files where chosen
-        if (chosenFiles != null)
-            for (File chosenFile : chosenFiles)
-            {
+        if (chosenFiles != null) {
+            for (File chosenFile : chosenFiles) {
                 chosenFile.toPath();
                 String fileName = chosenFile.getName();
                 fileName = FilenameUtils.getBaseName(fileName);
                 setPictures(tilePane, chosenFile);
                 System.out.println(fileName); //For debugging
             }
-        else
-        {
+        } else {
             // Otherwise return
             System.out.println("One or more invalid file(s) / None selected");
             return;
         }
     }
 
-    public void setPictures(TilePane tilePane, File chosenFile) throws DALException
-    {
+    public void setPictures(TilePane tilePane, File chosenFile) throws DALException {
         ImageView imageView = new ImageView(chosenFile.toURI().toString());
         imageView.setFitHeight(IMAGE_HEIGHT);
         imageView.setFitWidth(IMAGE_WIDTH);
@@ -368,8 +326,7 @@ public class MainWindowModel
         bll.imageIdMovieId(chosenFile, imageView);
     }
 
-    public void imageViewList()
-    {
+    public void imageViewList() {
         imageViewList = new ArrayList();
     }
 
@@ -377,40 +334,34 @@ public class MainWindowModel
      * Sets up the contextmenu with the choices user get.
      *
      * @param tilePane
+     *
      */
-    private void setupContextMenu(TilePane tilePane)
-    {
+    private void setupContextMenu(TilePane tilePane) {
         contextMenu = new ContextMenu();
         MenuItem test1 = new MenuItem("1");
         MenuItem test2 = new MenuItem("2");
         MenuItem test3 = new MenuItem("3");
 
         //<editor-fold defaultstate="collapsed" desc="setOnAction">
-        test1.setOnAction(new EventHandler<ActionEvent>()
-        {
+        test1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event)
-            {
+            public void handle(ActionEvent event) {
                 System.out.println("1");
                 bll.closeMenu(contextMenu);
             }
         });
 
-        test2.setOnAction(new EventHandler<ActionEvent>()
-        {
+        test2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event)
-            {
+            public void handle(ActionEvent event) {
                 System.out.println("2");
                 bll.closeMenu(contextMenu);
             }
         });
 
-        test3.setOnAction(new EventHandler<ActionEvent>()
-        {
+        test3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event)
-            {
+            public void handle(ActionEvent event) {
                 System.out.println("3");
                 bll.closeMenu(contextMenu);
             }
@@ -421,13 +372,12 @@ public class MainWindowModel
     }
 
     /**
-     * Closes the menu incase the context menu is open
-     * or else the user clicks normally.
+     * Closes the menu incase the context menu is open or else the user clicks
+     * normally.
      *
      * @param contextMenu
      */
-    public void closeMenuOrClick(ContextMenu contextMenu)
-    {
+    public void closeMenuOrClick(ContextMenu contextMenu) {
         bll.closeMenuOrClick(contextMenu);
     }
 
@@ -436,47 +386,39 @@ public class MainWindowModel
      *
      * @param contextMenu
      */
-    public void closeMenu(ContextMenu contextMenu)
-    {
+    public void closeMenu(ContextMenu contextMenu) {
         contextMenu.hide();
     }
 
     /**
-     * Checks whether contextmenu is open or not, if yes, it closes.
-     * Incase user dobbleclicks several times, so it doesnt stack.
+     * Checks whether contextmenu is open or not, if yes, it closes. Incase user
+     * dobbleclicks several times, so it doesnt stack.
      *
      * @param contextMenu
      */
-    public void contextMenuOpenOrNot(ContextMenu contextMenu)
-    {
+    public void contextMenuOpenOrNot(ContextMenu contextMenu) {
         bll.contextMenuOpenOrNot(contextMenu);
     }
 
     /**
      * Loads the movies from the library
      */
-    private void loadMovieFromLibrary()
-    {
+    private void loadMovieFromLibrary() {
         String lib;
 
         // First tries to get the file
-        try
-        {
+        try {
             lib = bll.loadDirectory("path.txt");
-        }
-        catch (BLLException ex)
-        {
+        } catch (BLLException ex) {
             // If the files doesn't exist, tell the user and back out of the method
             System.out.println("Library has not been sat.");
             return;
         }
 
         // If file was found
-        try
-        {
+        try {
             // Make sure file isn't empty
-            if (lib.isEmpty())
-            {
+            if (lib.isEmpty()) {
                 System.out.println("path.txt is corrupt. Set the library again.");
                 System.out.println("If that doesn't work, delete path.txt and try again");
                 return;
@@ -489,13 +431,11 @@ public class MainWindowModel
             System.out.println("Successfully added library");
 
             // Show the user the full file path of the files in the console
-            moviePaths.forEach((movy) ->
-            {
+            moviePaths.forEach((movy)
+                    -> {
                 System.out.println(movy);
             });
-        }
-        catch (BLLException ex)
-        {
+        } catch (BLLException ex) {
             System.out.println("Failed to load library");
         }
     }
@@ -505,29 +445,25 @@ public class MainWindowModel
      *
      * @return
      */
-    public ObservableList<Path> getMovieList()
-    {
+    public ObservableList<Path> getMovieList() {
         return moviePaths;
     }
 
     /**
      * Returns list of the imageviews. // The images the user puts in.
      */
-    public List<ImageView> GetImageViewList()
-    {
+    public List<ImageView> GetImageViewList() {
         return imageViewList;
     }
 
     /**
      * Returns the contextmenu for the imageviews.
      */
-    public ContextMenu getContextMenu()
-    {
+    public ContextMenu getContextMenu() {
         return contextMenu;
     }
 
-    public ObservableList<Movie> getAllMovies() throws DALException
-    {
+    public ObservableList<Movie> getAllMovies() throws DALException {
         return bll.getAllMovies();
     }
 
@@ -538,12 +474,10 @@ public class MainWindowModel
      *
      * @return
      */
-    public ObservableList<Node> getGenreNodes()
-    {
+    public ObservableList<Node> getGenreNodes() {
         ObservableList<Node> nodes = FXCollections.observableArrayList();
 
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             int j = i + 1;
             Node node = new CheckBox("Test" + j);
             nodes.add(node);
@@ -559,12 +493,10 @@ public class MainWindowModel
      *
      * @return
      */
-    public ObservableList<Node> getYearNodes()
-    {
+    public ObservableList<Node> getYearNodes() {
         ObservableList<Node> nodes = FXCollections.observableArrayList();
 
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             int j = i + 1;
             Node node = new CheckBox("Test" + j);
             nodes.add(node);
@@ -580,12 +512,10 @@ public class MainWindowModel
      *
      * @return
      */
-    public ObservableList<Node> getOtherNodes()
-    {
+    public ObservableList<Node> getOtherNodes() {
         ObservableList<Node> nodes = FXCollections.observableArrayList();
 
-        for (int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             int j = i + 1;
             Node node = new CheckBox("Test" + j);
             nodes.add(node);
@@ -593,30 +523,26 @@ public class MainWindowModel
 
         return nodes;
     }
+
     /**
      * Tries to match ids of image and movie.
+     *
      * @param imageView
-     * @return 
+     * @return
      */
-    public Movie getMovieIdMatch(ImageView imageView)
-    {
+    public Movie getMovieIdMatch(ImageView imageView) {
         Movie idMatchMovie = null;
-        try 
-        {
+        try {
             idMatchMovie = bll.getMovieIdMatch(imageView);
-        } 
-        catch (DALException ex) 
-        {
+        } catch (DALException ex) {
             System.out.println("Failed to find ID");
         }
         return idMatchMovie;
     }
-    
-    public void getMovieData(ImageView imageView)
-    {
+
+    public void getMovieData(ImageView imageView) {
         Movie matchedMovie = null;
-        if (getMovieIdMatch(imageView) != null)
-        {
+        if (getMovieIdMatch(imageView) != null) {
             matchedMovie = getMovieIdMatch(imageView);
             System.out.println(matchedMovie.getId());
             System.out.println(matchedMovie.getFilePath());
@@ -624,4 +550,38 @@ public class MainWindowModel
         }
     }
 
+    private void SetupPopOver() throws DALException {
+        for (Movie movie : bll.getAllMovies()) {
+
+            String listConverted = "";
+
+            for (String genre : movie.getCategories()) {
+                listConverted += genre + " ";
+            }
+
+            listConverted = listConverted.trim();
+
+            Label lblMovieTitle = null;
+            Label lblMovieGenres = null;
+            Label lblMovieRating = null;
+            Label lblMovieYear = null;
+            Label lblMovieLength = null;
+            Label lblMovieLastSeen = null;
+
+            lblMovieTitle.setText("Title: " + movie.getMovieTitle());
+            lblMovieGenres.setText("Genres: " + listConverted);
+            lblMovieLength.setText("Length: " + movie.getMovieLength() + "mins.");
+            lblMovieRating.setText("IMDB Rating: " + movie.getImdbRating() + "Personal rating: " + movie.getPersonalRating());
+            lblMovieYear.setText("Year: " + movie.getYear());
+            lblMovieLastSeen.setText("Last viewed on: " + movie.getLastView());
+
+            VBox vbox = new VBox(lblMovieTitle, lblMovieRating, lblMovieGenres, lblMovieYear, lblMovieLength, lblMovieLastSeen);
+
+            pop = new PopOver(vbox);
+        }
+    }
+
+    public PopOver getPop() {
+        return pop;
+    }
 }

@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,7 +30,6 @@ import javafx.stage.Stage;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -253,6 +254,8 @@ public class MainWindowController implements Initializable
                     {
                         model.getMovieData(imageView);
                         model.closeMenuOrClick(contextMenu);
+                        
+                        model.getPop();
                     }
 
                     if (mouseButton == MouseButton.SECONDARY) 
