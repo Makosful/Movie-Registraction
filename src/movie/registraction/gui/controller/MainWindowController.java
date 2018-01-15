@@ -111,6 +111,8 @@ public class MainWindowController implements Initializable
 
         //Initializing methods
         comboBoxSetup();
+        
+        model.findOldAndBadMovies();
     }
 
     /**

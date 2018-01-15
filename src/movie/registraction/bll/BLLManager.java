@@ -334,12 +334,11 @@ public class BLLManager
             Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
             for(Movie m : getAllMovies())
             {
-                System.out.println(m.getLastView());
-                System.out.println(m.getPersonalRating());
-                
-                if(m.getLastView() != null && m.getPersonalRating() < 6)
-                {
-                    System.out.println(m.getMovieTitle()); 
+                if(m.getLastView() != null){
+                    if(m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6)
+                    {
+                        System.out.println(m.getMovieTitle()); 
+                    }
                 }
                 
             }
