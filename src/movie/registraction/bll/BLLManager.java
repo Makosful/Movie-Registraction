@@ -298,7 +298,7 @@ public class BLLManager
                 .replace("]", "")
                 .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
+        System.out.println(searchResult);
         for (int i = 0; i < meta.length; i++)
         //get title
         {
@@ -332,10 +332,15 @@ public class BLLManager
                 meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
                 meta[5] = meta[i].replace(",", "");
             }
+            //imdb id
+            else if(meta[i].contains("imdbID:"))
+            {
+                meta[6] = meta[i];
+            }
         }
 
         //new array to hold final result
-        String[] metaData = new String[6];
+        String[] metaData = new String[7];
         for (int i = 0; i < metaData.length; i++)
         //remove metadata title until ":" appears and one index after
         {
