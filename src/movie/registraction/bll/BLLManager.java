@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
+import java.sql.Date;
 import java.util.ArrayList;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
@@ -333,5 +334,25 @@ public class BLLManager
     public String splitDot(String stringToSplit)
     {
         return stringToSplit = stringToSplit.split("\\.")[0];
+    }
+    
+    public void findOldAndBadMovies() throws DALException
+    {
+        try {
+            Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
+            for(Movie m : getAllMovies())
+            {
+                System.out.println(m.getLastView());
+                System.out.println(m.getPersonalRating());
+                
+                if(m.getLastView() != null && m.getPersonalRating() < 6)
+                {
+                    System.out.println(m.getMovieTitle()); 
+                }
+                
+            }
+        } catch (DALException ex) {
+            throw new DALException();
+        }
     }
 }

@@ -645,5 +645,13 @@ public class MainWindowModel
         }
     }
 
+    public void findOldAndBadMovies() {
+        try {
+            bll.findOldAndBadMovies();
+        } catch (DALException ex) {
+            System.out.println("Could not execute the check of old and low rated movies");
+        }
+    }
+
 
 }

@@ -267,7 +267,9 @@ public class MovieDAO {
             movie.setMovieYear(rs.getInt("year"));
             movie.setPersonalRating(rs.getDouble("personalRating"));
             movie.setImdbRating(rs.getDouble("imdbRating"));
-            movie.setLastView(rs.getString("lastView"));
+            if(rs.getDate("lastView") != null){
+                movie.setLastView(rs.getDate("lastView"));
+            }
             movie.setFilePath(rs.getString("filePath"));
             movie.setFileImg(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));
@@ -294,18 +296,17 @@ public class MovieDAO {
            int id;
            
            String sqlInsert = "INSERT INTO Movie "
-                            + "(name, filePath, imgPath, lastView, personalRating, imdbRating, year, movieLength) "
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                            + "(name, filePath, imgPath, personalRating, imdbRating, year, movieLength) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
            preparedStatement.setString(1, movieMetaData[0]);
            preparedStatement.setString(2, "path");
            preparedStatement.setString(3, movieMetaData[4]);
-           preparedStatement.setDate(4, null);
-           preparedStatement.setDouble(5, 0);
-           preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[3]));
-           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[1]));
-           preparedStatement.setInt(8, Integer.parseInt(movieMetaData[2]));
+           preparedStatement.setDouble(4, -1);
+           preparedStatement.setDouble(5, Double.parseDouble(movieMetaData[3]));
+           preparedStatement.setInt(6, Integer.parseInt(movieMetaData[1]));
+           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[2]));
 
            preparedStatement.executeUpdate();
 
