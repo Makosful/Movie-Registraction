@@ -8,17 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
@@ -28,7 +24,6 @@ import movie.registraction.bll.ChangeCategories;
 import movie.registraction.bll.Rating;
 import movie.registraction.dal.DALException;
 import org.apache.commons.io.FilenameUtils;
-import org.controlsfx.control.PopOver;
 
 /**
  *
@@ -53,7 +48,6 @@ public class MainWindowModel
     private final ArrayList<String> extensionList;
 
     private ChangeCategories categories;
-    private ContextMenu contextMenu;
 
     public MainWindowModel() throws DALException
     {
@@ -333,8 +327,6 @@ public class MainWindowModel
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
 
-        // Setting the context menu up.
-        setupContextMenu(tilePane);
         // Setting up the arrayList for ImageViews.
         imageViewList();
 
@@ -377,53 +369,6 @@ public class MainWindowModel
     public void imageViewList()
     {
         imageViewList = new ArrayList();
-    }
-
-    /**
-     * Sets up the contextmenu with the choices user get.
-     *
-     * @param tilePane
-     */
-    private void setupContextMenu(TilePane tilePane)
-    {
-        contextMenu = new ContextMenu();
-        MenuItem test1 = new MenuItem("1");
-        MenuItem test2 = new MenuItem("2");
-        MenuItem test3 = new MenuItem("3");
-
-        //<editor-fold defaultstate="collapsed" desc="setOnAction">
-        test1.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                System.out.println("1");
-                bll.closeMenu(contextMenu);
-            }
-        });
-
-        test2.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                System.out.println("2");
-                bll.closeMenu(contextMenu);
-            }
-        });
-
-        test3.setOnAction(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                System.out.println("3");
-                bll.closeMenu(contextMenu);
-            }
-        });
-//</editor-fold>
-
-        contextMenu.getItems().addAll(test1, test2, test3);
     }
 
     /**
@@ -546,16 +491,6 @@ public class MainWindowModel
         return imageViewList;
     }
 
-    /**
-     * Returns the contextmenu for the imageviews.
-     *
-     * @return
-     */
-    public ContextMenu getContextMenu()
-    {
-        return contextMenu;
-    }
-
     public ObservableList<Movie> getAllMovies() throws DALException
     {
         return bll.getAllMovies();
@@ -655,14 +590,6 @@ public class MainWindowModel
         {
             System.out.println("Could not execute the check of old and low rated movies");
         }
-    }
-    
-    public void setPopOver(TilePane tilePane, VBox vBox)
-    {
-        PopOver popOver = new PopOver(vBox);
-        popOver.setContentNode(vBox);
-        
-        popOver.show(tilePane);
     }
     
      public Movie getMovieInfo(ImageView imageView)
