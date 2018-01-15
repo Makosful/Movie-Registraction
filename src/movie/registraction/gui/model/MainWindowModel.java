@@ -337,6 +337,9 @@ public class MainWindowModel
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
                 fxmlTitleSearch(nameOfMovie);
+                // disse udkommenteret linjer er klar, så at der ik kan tilføjes flere af samme film. Dog kræver det, at man loader filmene fra DB med det samme, når man åbner programmet.
+                // if(!bll.movieAlreadyExisting(nameOfMovie))
+                //{
                 String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
                 imgPath = "https:" + imgPath;
 
@@ -346,6 +349,10 @@ public class MainWindowModel
                 setPictures(tilePane, chosenFile, imgPath);
                 System.out.println(fileName); //For debugging
             }
+            //else
+            // {
+            //    System.out.println("Move has already been added!!!!!!");
+            //}
         }
         else
         {
