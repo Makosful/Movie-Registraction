@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -77,12 +78,12 @@ public class MainWindowController implements Initializable
     private FlowPane flpYear;
     @FXML
     private FlowPane flpOther;
-    
+
     VBox vBox;
-    Pane popPane;
+    Hyperlink imdbURL;
     PopOver popOver;
     ContextMenu contextMenu;
-    
+
     //<editor-fold defaultstate="collapsed" desc="Labels">
     Label labelMovieTitle;
     Label labelGenre;
@@ -91,12 +92,10 @@ public class MainWindowController implements Initializable
     Label labelPersonalRating;
     Label labelMovieLength;
     Label labelLastView;
-//</editor-fold>
-    
-    
+    //</editor-fold>
 
     /**
-     * Constructor for all intrents and purposes
+     * Constructor for all intents and purposes
      *
      * @param url
      * @param rb
@@ -125,7 +124,7 @@ public class MainWindowController implements Initializable
 
         //Initializing methods
         comboBoxSetup();
-        
+
         model.findOldAndBadMovies();
     }
 
@@ -143,7 +142,7 @@ public class MainWindowController implements Initializable
      */
     private void modalWindowSetup()
     {
-        
+
     }
 
     /**
@@ -249,26 +248,26 @@ public class MainWindowController implements Initializable
         tilePane.setHgap(20);
         tilePane.setVgap(20);
     }
-    
+
     private void vBoxAndLabelSetup(Movie movie, MouseEvent event)
-    {       
+    {
         String genreCategories = null;
-        for(int i = 0;i<movie.getCategories().size();i++)
+        for (int i = 0; i < movie.getCategories().size(); i++)
         {
-            if(genreCategories == null)
+            if (genreCategories == null)
             {
                 genreCategories = movie.getCategories().get(i);
             }
             else
             {
-            genreCategories += "\n" + movie.getCategories().get(i);
-            System.out.println(genreCategories);
+                genreCategories += "\n" + movie.getCategories().get(i);
+                System.out.println(genreCategories);
             }
         }
-        
+
         //<editor-fold defaultstate="collapsed" desc="Label And One VBox">
         labelMovieTitle = new Label();
-        labelPersonalRating= new Label();
+        labelPersonalRating = new Label();
         labelMovieLength = new Label();
         labelLastView = new Label();
         labelImdbRating = new Label();
@@ -276,10 +275,12 @@ public class MainWindowController implements Initializable
         labelYear = new Label();
         vBox = new VBox();
         //</editor-fold>
-        
+
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
         labelMovieTitle.setText("Title: " + movie.getMovieTitle());
         labelMovieTitle.setStyle("-fx-text-fill: black");
+        labelGenre.setText("Genres: " + genreCategories);
+        labelGenre.setStyle("-fx-text-fill: black");
         labelYear.setText("Release year: " + movie.getYear());
         labelYear.setStyle("-fx-text-fill: black");
         labelImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
@@ -288,10 +289,12 @@ public class MainWindowController implements Initializable
         labelPersonalRating.setStyle("-fx-text-fill: black");
         labelLastView.setText("Last viewed on: " + movie.getLastView());
         labelLastView.setStyle("-fx-text-fill: black");
-        labelGenre.setText("Genres: " + genreCategories);
-        labelGenre.setStyle("-fx-text-fill: black");
-//</editor-fold>
         
+        //HYPERLINK
+        imdbURL.setText("http://www.imdb.com/title/" + movie.getImdbLink());
+        //imdbURL.setStyle("-fx-text-fill: black");
+        //</editor-fold>
+
         //<editor-fold defaultstate="collapsed" desc="addToVbox">
         vBox.getChildren().add(labelMovieTitle);
         vBox.getChildren().add(labelGenre);
@@ -299,47 +302,63 @@ public class MainWindowController implements Initializable
         vBox.getChildren().add(labelImdbRating);
         vBox.getChildren().add(labelPersonalRating);
         vBox.getChildren().add(labelLastView);
-        
+        vBox.getChildren().add(imdbURL);
+
         //</editor-fold>
         
-        if (popOver == null) 
+        GridPane popGrid = new GridPane();
+
+        popGrid.setPadding(new Insets(20));
+        popGrid.setHgap(10);
+        popGrid.setVgap(5); //irrelevant
+
+        popGrid.add(labelMovieTitle, 0, 0);
+        popGrid.add(labelGenre, 0, 1);
+        popGrid.add(labelYear, 0, 2);
+        popGrid.add(labelImdbRating, 0, 3);
+        popGrid.add(labelPersonalRating, 0, 4);
+        popGrid.add(labelLastView, 0, 5);
+        popGrid.add(imdbURL, 0, 6);
+
+        if (popOver == null)
         {
-            popOver = new PopOver(vBox);
+            popOver = new PopOver(popGrid); //WOLOLO (change to vBox)
             popOver.show(tilePane, event.getScreenX(), event.getScreenY());
         }
-        if (popOver.isShowing()) 
+        if (popOver.isShowing())
         {
             popOver.hide();
-        }   
-        if(!popOver.isShowing())
+        }
+        if (!popOver.isShowing())
         {
-            popOver = new PopOver(vBox);
+            popOver = new PopOver(popGrid); //WOLOLO (change to vBox)
             popOver.show(tilePane, event.getScreenX(), event.getScreenY());
         }
     }
+
     /**
-     * Code so you can click or right click on an image and soemthing happens.
+     * Code so you can click or right click on an image and something happens.
      * Mouse event.
      */
     private void imageClick(ContextMenu contextMenu)
     {
-        
-        for (ImageView imageView : model.GetImageViewList()) 
+
+        for (ImageView imageView : model.GetImageViewList())
         {
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() 
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
-                public void handle(MouseEvent event) 
+                public void handle(MouseEvent event)
                 {
                     MouseButton mouseButton = event.getButton();
-                    if (mouseButton == MouseButton.PRIMARY) 
+                    if (mouseButton == MouseButton.PRIMARY)
                     {
                         model.closeMenuOrClick(contextMenu);
                         Movie movie = model.getMovieInfo(imageView);
                         vBoxAndLabelSetup(movie, event);
                     }
 
-                    if (mouseButton == MouseButton.SECONDARY) 
+                    if (mouseButton == MouseButton.SECONDARY)
                     {
                         model.contextMenuOpenOrNot(contextMenu);
                         contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
@@ -359,8 +378,8 @@ public class MainWindowController implements Initializable
     {
         model.fxmlSetLibrary();
     }
-    
-     /**
+
+    /**
      * Sets up the contextmenu with the choices user get.
      *
      * @param tilePane
