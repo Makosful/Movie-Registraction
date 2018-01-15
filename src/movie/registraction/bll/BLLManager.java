@@ -23,8 +23,10 @@ import movie.registraction.dal.DALManager;
 public class BLLManager
 {
 
+    // Same Layer objects
     OmdbSearch omdb;
 
+    // DAL Layer manager
     DALManager dal;
 
     public BLLManager() throws BLLException, DALException
@@ -67,7 +69,9 @@ public class BLLManager
             String inputLine;
             String res = "";
             while ((inputLine = buffRead.readLine()) != null)
+            {
                 res += inputLine + "\n";
+            }
 
             return res;
         }
@@ -88,6 +92,7 @@ public class BLLManager
     public void openFileInNative(File file) throws BLLException
     {
         if (Desktop.isDesktopSupported())
+        {
             try
             {
                 Desktop.getDesktop().open(file);
@@ -96,8 +101,11 @@ public class BLLManager
             {
                 throw new BLLException();
             }
+        }
         else
+        {
             throw new UnsupportedOperationException("This feature is not supported on your platform");
+        }
     }
 
     /**
@@ -121,6 +129,15 @@ public class BLLManager
         }
     }
 
+    /**
+     * Loads the saved library directory
+     *
+     * @param path
+     *
+     * @return
+     *
+     * @throws BLLException
+     */
     public String loadDirectory(String path) throws BLLException
     {
         try
@@ -142,9 +159,13 @@ public class BLLManager
     public void closeMenuOrClick(ContextMenu contextMenu)
     {
         if (!contextMenu.isShowing())
+        {
             System.out.println("You clicked on the picture.");
+        }
         else
+        {
             contextMenu.hide();
+        }
     }
 
     /**
@@ -198,6 +219,7 @@ public class BLLManager
 
     /**
      * Sends metadata to dataaccess layer to insert a movie
+     *
      * @param movieMetaData
      *
      * @throws DALException
@@ -218,16 +240,16 @@ public class BLLManager
         {
             // Removing the dot and text after, so only the text is in the string.
             String fileName = files.getName().split("\\.")[0];
-            
+
             // If database movie title matches chosenfile name.
-            if (movie.getMovieTitle().equalsIgnoreCase(fileName)) 
+            if (movie.getMovieTitle().equalsIgnoreCase(fileName))
             {
                 // Changing integer to string, as imageview requires string.
                 String idToString = Integer.toString(movie.getId());
                 imageView.setId(idToString);
 
                 //  Finding the ID that belongs to the movie.
-                if (Integer.parseInt(imageView.getId()) == movie.getId()) 
+                if (Integer.parseInt(imageView.getId()) == movie.getId())
                 {
                     System.out.println("workeeeeeeeed");
                     System.out.println(movie.getFileImg());
@@ -236,89 +258,89 @@ public class BLLManager
                 }
             }
 
-            else 
+            else
             {
                 System.out.println("ELSE WE CREATE DATA IN DATABASE. WAITING FOR CODE!!!!!");
                 System.out.println("nopeeeee");
             }
         }
     }
-    
+
     public Movie getMovieIdMatch(ImageView imageView) throws DALException
     {
         Movie movieMatch = null;
-        
-            for (Movie movie : getAllMovies()) 
+
+        for (Movie movie : getAllMovies())
+        {
+            if (Integer.parseInt(imageView.getId()) == movie.getId())
             {
-                if (Integer.parseInt(imageView.getId()) == movie.getId()) 
-                {
-                   return movieMatch = movie;
-                }
+                return movieMatch = movie;
             }
-            return movieMatch;
+        }
+        return movieMatch;
     }
 
-    
     /**
      * Formats the metadata from searchresult, so its ready to be put in the db
+     *
      * @param searchLink
+     *
      * @return
-     * @throws BLLException 
+     *
+     * @throws BLLException
      */
     public String[] getSearchMetaData(URL searchLink) throws BLLException
     {
         String searchResult = this.getSearchResult(searchLink);
-        
+
         searchResult = searchResult.replace("{", "")
                 .replace("}", "")
                 .replace("[", "")
                 .replace("]", "")
                 .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-        
-        for(int i = 0; i < meta.length; i++)
+
+        for (int i = 0; i < meta.length; i++)
+        //get title
         {
-           //get title
-           if(meta[i].contains("Title:"))
-           {
-               meta[0] = meta[i];
-           }
-           //get year
-           else if(meta[i].contains("Year:")){
-               meta[1] = meta[i];
-           }
-           //remove "min" after number of minutes
-           else if(meta[i].contains("Runtime:"))
-           {
-               meta[2] = meta[i].substring(0, meta[i].lastIndexOf(" "));
-           }
-           //get imdb rating
-           else if(meta[i].contains("imdbRating:"))
-           {
-               meta[3] = meta[i];
-           }
-           //Poster
-           else if(meta[i].contains("Poster:"))
-           {
-               meta[4] = meta[i];
-           }
-           //get all the categories by using substring with genre and director as start and end index
-           else if(meta[i].contains("Genre:"))
-           {
-               meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
-               meta[5] = meta[i].replace(",", "");
-           }
-            
-        
+            if (meta[i].contains("Title:"))
+            {
+                meta[0] = meta[i];
+            }
+            //get year
+            else if (meta[i].contains("Year:"))
+            {
+                meta[1] = meta[i];
+            }
+            //remove "min" after number of minutes
+            else if (meta[i].contains("Runtime:"))
+            {
+                meta[2] = meta[i].substring(0, meta[i].lastIndexOf(" "));
+            }
+            //get imdb rating
+            else if (meta[i].contains("imdbRating:"))
+            {
+                meta[3] = meta[i];
+            }
+            //Poster
+            else if (meta[i].contains("Poster:"))
+            {
+                meta[4] = meta[i];
+            }
+            //get all the categories by using substring with genre and director as start and end index
+            else if (meta[i].contains("Genre:"))
+            {
+                meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
+                meta[5] = meta[i].replace(",", "");
+            }
         }
-        
+
         //new array to hold final result
         String[] metaData = new String[6];
-        for(int i = 0; i < metaData.length; i++)
+        for (int i = 0; i < metaData.length; i++)
+        //remove metadata title until ":" appears and one index after
         {
-            //remove metadata title until ":" appears and one index after
-            metaData[i] = meta[i].substring(meta[i].lastIndexOf(":")+1);   
-            
+            metaData[i] = meta[i].substring(meta[i].lastIndexOf(":") + 1);
         }
         return metaData;
     }

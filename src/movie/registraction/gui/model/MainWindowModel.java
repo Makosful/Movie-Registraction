@@ -6,8 +6,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -76,7 +74,6 @@ public class MainWindowModel
 
         categories = new ChangeCategories();
 
-
         for (int i = 0; i < 10; i++)
         {
             int y = 1990;
@@ -87,8 +84,8 @@ public class MainWindowModel
         }
 
         extensionList = new ArrayList();
-//        extensionList.add(".jpg");
-//        extensionList.add(".png");
+        extensionList.add(".jpg");
+        extensionList.add(".png");
         extensionList.add(".mp4");
         extensionList.add(".mpeg4");
         loadMovieFromLibrary();
@@ -110,15 +107,17 @@ public class MainWindowModel
         try
         {
             searchLink = bll.getOmdbTitleResult(text);
-            
+
             String[] metaData = bll.getSearchMetaData(searchLink);
             bll.addMovie(metaData);
-                
+
         }
         catch (BLLException ex)
         {
             System.out.println("Could not get search result");
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             System.out.println("Could not add the movie in the database");
         }
 
@@ -221,9 +220,12 @@ public class MainWindowModel
      */
     public void saveCategories()
     {
-        try {
+        try
+        {
             categories.saveCategories();
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             System.out.println("Could not save categories");
         }
 
@@ -289,6 +291,7 @@ public class MainWindowModel
         File dir = dc.showDialog(null);
 
         if (dir.exists())
+        {
             try
             {
                 // Save this path to storage
@@ -302,6 +305,7 @@ public class MainWindowModel
                 System.out.println("Could not save path");
                 System.out.println(dir.getAbsolutePath());
             }
+        }
     }
 
     /**
@@ -334,6 +338,7 @@ public class MainWindowModel
 
         // Checks if any files where chosen
         if (chosenFiles != null)
+        {
             for (File chosenFile : chosenFiles)
             {
                 chosenFile.toPath();
@@ -342,6 +347,7 @@ public class MainWindowModel
                 setPictures(tilePane, chosenFile);
                 System.out.println(fileName); //For debugging
             }
+        }
         else
         {
             // Otherwise return
@@ -484,7 +490,7 @@ public class MainWindowModel
             // Show the user the full file path of the files in the console
             moviePaths.forEach((movy) ->
             {
-                System.out.println(movy);
+                //System.out.println(movy);
             });
         }
         catch (BLLException ex)
@@ -493,22 +499,26 @@ public class MainWindowModel
         }
     }
 
-
     /**
-    * Sets up a new rating instance with the given values
-    * @param rating
-    * @param ratingType
-    * @param gridPaneRating
-    * @param lblRating 
-    */
+     * Sets up a new rating instance with the given values
+     *
+     * @param rating
+     * @param ratingType
+     * @param gridPaneRating
+     * @param lblRating
+     */
     public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating)
     {
-        try {
+        try
+        {
             Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             System.out.println("Could not create new rating");
         }
     }
+
     /**
      * Gets the movie list
      *
@@ -639,6 +649,5 @@ public class MainWindowModel
             // Code to be added.
         }
     }
-
 
 }
