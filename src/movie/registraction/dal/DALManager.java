@@ -205,6 +205,10 @@ public class DALManager
     {
         String config = file.getAbsolutePath().substring(1);
 
+        /**
+         * This has been hardcoded because I couldn't find another way to make
+         * it skip these folders, should it encounter any of them.
+         */
         if (file.getAbsolutePath().contains("$"))
         {
             return true;
