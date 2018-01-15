@@ -358,8 +358,7 @@ public class MainWindowController implements Initializable
                     {
                         model.closeMenuOrClick(contextMenu);
                         Movie movie = model.getMovieInfo(imageView);
-                        //vbox bugged
-                        //vBoxAndLabelSetup(movie, event);
+                        vBoxAndLabelSetup(movie, event);
                         System.out.println(imageView.getId());
                         System.out.println(movie.getMovieTitle());
                     }
