@@ -10,7 +10,11 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
 import movie.registraction.be.Movie;
@@ -345,7 +349,18 @@ public class BLLManager
                 if(m.getLastView() != null){
                     if(m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6)
                     {
-                        System.out.println(m.getMovieTitle()); 
+                        Alert alert = new Alert(AlertType.WARNING, 
+                        "Det er over 2 år siden du sidst har set "+m.getMovieTitle()+","
+                        + " og du har givet den en rating på "+m.getPersonalRating()
+                        +" , har du lyst til at slette den?", 
+                        ButtonType.YES, ButtonType.NO);
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.YES){
+                            // ... user chose YES
+                        } else {
+                            // ... user chose NO or closed the dialog
+                        }
                     }
                 }
                 
