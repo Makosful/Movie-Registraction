@@ -331,10 +331,17 @@ public class BLLManager
     public void findOldAndBadMovies() throws DALException
     {
         try {
-            Date oneYearBefore = new Date(System.currentTimeMillis() - (365 * 24 * 60 * 60 * 1000));
+            Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
             for(Movie m : getAllMovies())
             {
-                if(m.getLastView().before(oneYearBefore))
+                System.out.println(m.getLastView());
+                System.out.println(m.getPersonalRating());
+                
+                if(m.getLastView() != null && m.getPersonalRating() < 6)
+                {
+                    System.out.println(m.getMovieTitle()); 
+                }
+                
             }
         } catch (DALException ex) {
             throw new DALException();
