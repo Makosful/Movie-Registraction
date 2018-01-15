@@ -207,6 +207,7 @@ public class MovieDAO {
                         + "Movie.year, "
                         + "Movie.lastView,"
                         + "Movie.movieLength, "
+                        + "Movie.imdbLink, "
                         + "Category.name AS categoryName "
                         + "FROM Movie "
                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "

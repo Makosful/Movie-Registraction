@@ -24,7 +24,17 @@ public class Movie {
     private String filePath;    
     private int movieLength; //Minutes
     private Date lastView;
+    private String imdbLink;
 
+    public String getImdbLink()
+    {
+        return imdbLink;
+    }
+
+    public void setImdbLink(String imdbLink)
+    {
+        this.imdbLink = imdbLink;
+    }
     List<String> categories;
 
     public Movie() {
