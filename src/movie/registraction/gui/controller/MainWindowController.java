@@ -82,6 +82,7 @@ public class MainWindowController implements Initializable
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
+//    GridPane popGrid;
     ContextMenu contextMenu;
 
     //<editor-fold defaultstate="collapsed" desc="Labels">
@@ -309,19 +310,19 @@ public class MainWindowController implements Initializable
 
         //</editor-fold>
         
-        GridPane popGrid = new GridPane();
-
-        popGrid.setPadding(new Insets(20));
-        popGrid.setHgap(10);
-        popGrid.setVgap(5); //irrelevant
-
-        popGrid.add(labelMovieTitle, 0, 0);
-        popGrid.add(labelGenre, 0, 1);
-        popGrid.add(labelYear, 0, 2);
-        popGrid.add(labelImdbRating, 0, 3);
-        popGrid.add(labelPersonalRating, 0, 4);
-        popGrid.add(labelLastView, 0, 5);
-        popGrid.add(imdbURL, 0, 6);
+//        GridPane popGrid = new GridPane();
+//
+//        popGrid.setPadding(new Insets(20));
+//        popGrid.setHgap(10);
+//        popGrid.setVgap(5); //irrelevant
+//
+//        popGrid.add(labelMovieTitle, 0, 0);
+//        popGrid.add(labelGenre, 0, 1);
+//        popGrid.add(labelYear, 0, 2);
+//        popGrid.add(labelImdbRating, 0, 3);
+//        popGrid.add(labelPersonalRating, 0, 4);
+//        popGrid.add(labelLastView, 0, 5);
+//        popGrid.add(imdbURL, 0, 6);
 
         if (popOver == null)
         {
