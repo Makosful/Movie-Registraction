@@ -264,7 +264,7 @@ public class MovieDAO {
             movie.setMovieYear(rs.getInt("year"));
             movie.setPersonalRating(rs.getDouble("personalRating"));
             movie.setImdbRating(rs.getDouble("imdbRating"));
-            movie.setLastView(rs.getString("lastView"));
+            movie.setLastView(rs.getDate("lastView"));
             movie.setFilePath(rs.getString("filePath"));
             movie.setFileImg(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));

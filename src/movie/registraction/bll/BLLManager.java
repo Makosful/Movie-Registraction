@@ -8,7 +8,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
@@ -321,5 +325,19 @@ public class BLLManager
             
         }
         return metaData;
+    }
+    
+    
+    public void findOldAndBadMovies() throws DALException
+    {
+        try {
+            Date oneYearBefore = new Date(System.currentTimeMillis() - (365 * 24 * 60 * 60 * 1000));
+            for(Movie m : getAllMovies())
+            {
+                if(m.getLastView().before(oneYearBefore))
+            }
+        } catch (DALException ex) {
+            throw new DALException();
+        }
     }
 }

@@ -5,6 +5,7 @@
  */
 package movie.registraction.be;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class Movie {
     private String imgPath; //Movie poster
     private String filePath;    
     private int movieLength; //Minutes
-    private String lastView;
+    private Date lastView;
 
     List<String> categories;
 
@@ -124,11 +125,11 @@ public class Movie {
         return imgPath;
     }
 
-    public String getLastView() {
+    public Date getLastView() {
         return lastView;
     }
 
-    public void setLastView(String lastView) {
+    public void setLastView(Date lastView) {
         this.lastView = lastView;
     }
     
