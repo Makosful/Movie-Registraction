@@ -272,6 +272,7 @@ public class MovieDAO {
             movie.setFilePath(rs.getString("filePath"));
             movie.setFileImg(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));
+            movie.setImdbLink(rs.getString("imdbLink"));
             movie.setCategories(rs.getString("categoryName"));
             
 
