@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,13 +22,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
-import org.apache.commons.io.FilenameUtils;
+import org.controlsfx.control.PopOver;
 
 /**
  *
@@ -82,6 +80,22 @@ public class MainWindowController implements Initializable
     private FlowPane flpYear;
     @FXML
     private FlowPane flpOther;
+    
+    VBox vBox;
+    PopOver popOver;
+    ContextMenu contextMenu;
+    
+    //<editor-fold defaultstate="collapsed" desc="Labels">
+    Label labelMovieTitle;
+    Label labelGenre;
+    Label labelYear;
+    Label labelImdbRating;
+    Label labelPersonalRating;
+    Label labelMovieLength;
+    Label labelLastView;
+//</editor-fold>
+    
+    
 
     /**
      * Constructor for all intrents and purposes
@@ -223,7 +237,8 @@ public class MainWindowController implements Initializable
     private void setChosenFilesWithPicture() throws DALException
     {
         model.chooseFile(tilePane);
-        imageClick(tilePane, model.getContextMenu());
+        setupContextMenu(tilePane);
+        imageClick(tilePane, contextMenu);
     }
 
     /**
@@ -236,7 +251,67 @@ public class MainWindowController implements Initializable
         tilePane.setHgap(20);
         tilePane.setVgap(20);
     }
-
+    
+    private void vBoxAndLabelSetup(Movie movie, MouseEvent event)
+    {       
+        String genreCategories = null;
+        for(int i = 0;i<movie.getCategories().size();i++)
+        {
+            if(genreCategories == null)
+            {
+                genreCategories = movie.getCategories().get(i);
+            }
+            else
+            {
+            genreCategories += "\n" + movie.getCategories().get(i);
+            System.out.println(genreCategories);
+            }
+        }
+        
+        //<editor-fold defaultstate="collapsed" desc="Label And One VBox">
+        labelMovieTitle = new Label();
+        labelPersonalRating= new Label();
+        labelMovieLength = new Label();
+        labelLastView = new Label();
+        labelImdbRating = new Label();
+        labelGenre = new Label();
+        labelYear = new Label();
+        vBox = new VBox();
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="labelSetText">
+        labelMovieTitle.setText(movie.getMovieTitle());
+        labelYear.setText("" + movie.getYear());
+        labelImdbRating.setText("" + movie.getImdbRating());
+        labelPersonalRating.setText("" + movie.getPersonalRating());
+        labelLastView.setText("" + movie.getLastView());
+        labelGenre.setText(genreCategories);
+//</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="addToVbox">
+        vBox.getChildren().add(labelMovieTitle);
+        vBox.getChildren().add(labelGenre);
+        vBox.getChildren().add(labelYear);
+        vBox.getChildren().add(labelImdbRating);
+        vBox.getChildren().add(labelPersonalRating);
+        vBox.getChildren().add(labelLastView);
+        //</editor-fold>
+        
+        if (popOver == null) 
+        {
+            popOver = new PopOver(vBox);
+            popOver.show(tilePane, event.getScreenX(), event.getScreenY());
+        }
+        if (popOver.isShowing()) 
+        {
+            popOver.hide();
+        }   
+        if(!popOver.isShowing())
+        {
+            popOver = new PopOver(vBox);
+            popOver.show(tilePane, event.getScreenX(), event.getScreenY());
+        }
+    }
     /**
      * Code so you can click or right click on an image and soemthing happens.
      * Mouse event.
@@ -256,14 +331,7 @@ public class MainWindowController implements Initializable
                     {
                         model.closeMenuOrClick(contextMenu);
                         Movie movie = model.getMovieInfo(imageView);
-                        System.out.println(movie.getImdbRating());
-                        Label label = new Label();
-                        label.setText(movie.getMovieTitle());
-                        tilePane.getChildren().add(label);
-                        VBox vBox = new VBox();
-                        vBox.getChildren().add(label);
-                        
-                        model.setPopOver(tilePane, vBox);
+                        vBoxAndLabelSetup(movie, event);
                     }
 
                     if (mouseButton == MouseButton.SECONDARY) 
@@ -285,5 +353,52 @@ public class MainWindowController implements Initializable
     private void setLibrary(ActionEvent event)
     {
         model.fxmlSetLibrary();
+    }
+    
+     /**
+     * Sets up the contextmenu with the choices user get.
+     *
+     * @param tilePane
+     */
+    private void setupContextMenu(TilePane tilePane)
+    {
+        contextMenu = new ContextMenu();
+        MenuItem test1 = new MenuItem("1");
+        MenuItem test2 = new MenuItem("2");
+        MenuItem test3 = new MenuItem("3");
+
+        //<editor-fold defaultstate="collapsed" desc="setOnAction">
+        test1.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                System.out.println("1");
+                contextMenu.hide();
+            }
+        });
+
+        test2.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                System.out.println("2");
+                contextMenu.hide();
+            }
+        });
+
+        test3.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                System.out.println("3");
+                contextMenu.hide();
+            }
+        });
+//</editor-fold>
+
+        contextMenu.getItems().addAll(test1, test2, test3);
     }
 }
