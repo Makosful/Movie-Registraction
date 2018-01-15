@@ -18,10 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
@@ -82,6 +79,7 @@ public class MainWindowController implements Initializable
     private FlowPane flpOther;
     
     VBox vBox;
+    Pane popPane;
     PopOver popOver;
     ContextMenu contextMenu;
     
@@ -131,7 +129,7 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Sets up the combo bozes
+     * Sets up the combo boxes
      */
     private void comboBoxSetup()
     {
@@ -280,12 +278,18 @@ public class MainWindowController implements Initializable
         //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
-        labelMovieTitle.setText(movie.getMovieTitle());
-        labelYear.setText("" + movie.getYear());
-        labelImdbRating.setText("" + movie.getImdbRating());
-        labelPersonalRating.setText("" + movie.getPersonalRating());
-        labelLastView.setText("" + movie.getLastView());
-        labelGenre.setText(genreCategories);
+        labelMovieTitle.setText("Title: " + movie.getMovieTitle());
+        labelMovieTitle.setStyle("-fx-text-fill: black");
+        labelYear.setText("Release year: " + movie.getYear());
+        labelYear.setStyle("-fx-text-fill: black");
+        labelImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
+        labelImdbRating.setStyle("-fx-text-fill: black");
+        labelPersonalRating.setText("Personal rating: " + movie.getPersonalRating());
+        labelPersonalRating.setStyle("-fx-text-fill: black");
+        labelLastView.setText("Last viewed on: " + movie.getLastView());
+        labelLastView.setStyle("-fx-text-fill: black");
+        labelGenre.setText("Genres: " + genreCategories);
+        labelGenre.setStyle("-fx-text-fill: black");
 //</editor-fold>
         
         //<editor-fold defaultstate="collapsed" desc="addToVbox">
@@ -295,6 +299,7 @@ public class MainWindowController implements Initializable
         vBox.getChildren().add(labelImdbRating);
         vBox.getChildren().add(labelPersonalRating);
         vBox.getChildren().add(labelLastView);
+        
         //</editor-fold>
         
         if (popOver == null) 
