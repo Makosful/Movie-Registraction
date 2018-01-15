@@ -360,9 +360,10 @@ public class MovieDAO {
     {
         try (Connection con = db.getConnection())
         {
+            System.out.println(movieId);
 
             String sql = "DELETE Movie FROM Movie "
-                         + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
                          + "WHERE Movie.id = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(sql);
