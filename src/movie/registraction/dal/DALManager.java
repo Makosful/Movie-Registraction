@@ -2,12 +2,9 @@ package movie.registraction.dal;
 
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -97,11 +94,41 @@ public class DALManager
     public ArrayList<Path> getMovieList(ArrayList<String> filter) throws DALException
     {
         ArrayList<Path> list = new ArrayList();
+        ArrayList<Path> folders = new ArrayList();
 
         Path startPath = Paths.get(this.loadDirectory("path.txt"));
 
         fileTreeSearch(startPath, list, filter);
+        findFolders(startPath, folders);
+
+        this.directoryWatcher(folders);
+
         return list;
+    }
+
+    private void findFolders(Path startPath, ArrayList<Path> folders) throws DALException
+    {
+        try
+        {
+            Files.walkFileTree(
+                    startPath,
+                    new SimpleFileVisitor<Path>()
+            {
+                @Override
+                public FileVisitResult preVisitDirectory(
+                        Path dir,
+                        BasicFileAttributes attrs)
+                        throws IOException
+                {
+                    return FileVisitResult.CONTINUE;
+                }
+
+            });
+        }
+        catch (IOException ex)
+        {
+            throw new DALException();
+        }
     }
 
     /**
@@ -122,15 +149,25 @@ public class DALManager
         File[] flist = directory.listFiles();
 
         for (File file : flist)
+        {
             if (file == null)
+            {
                 break;
+            }
             else if (systemFilter(file))
             {
+                // Do nothing
             }
             else if (file.isDirectory())
+            {
+                System.out.println("Going into folder");
                 fileTreeSearch(file.toPath(), list, filter);
+            }
             else if (positiveFilter(file, filter))
+            {
                 list.add(file.toPath());
+            }
+        }
     }
 
     /**
@@ -148,26 +185,44 @@ public class DALManager
         String config = file.getAbsolutePath().substring(1);
 
         if (file.getAbsolutePath().contains("$"))
+        {
             return true;
+        }
         else if (config.equalsIgnoreCase(":\\Config.Msi"))
+        {
             return true;
+        }
         else if (config.equalsIgnoreCase(":\\DeliveryOptimization"))
+        {
             return true;
+        }
         else if (config.equalsIgnoreCase(":\\Recovery"))
+        {
             return true;
+        }
         else if (config.equalsIgnoreCase(":\\System Volume Information"))
+        {
             return true;
+        }
         else if (config.equalsIgnoreCase(":\\WindowsApps"))
+        {
             return true;
+        }
         else
+        {
             return false;
+        }
     }
 
     private boolean positiveFilter(File file, ArrayList<String> filter)
     {
         for (int i = 0; i < filter.size(); i++)
+        {
             if (file.getAbsolutePath().endsWith(filter.get(i)))
+            {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -193,7 +248,9 @@ public class DALManager
 
             String[] metaMovieCategories = movieMetaData[5].split(" ");
             for (String cat : metaMovieCategories)
+            {
                 mDAO.addMovieCategory(id, cat);
+            }
         }
         catch (DALException ex)
         {
@@ -204,121 +261,140 @@ public class DALManager
     /**
      * Add a change listener to a folder and all sub folders
      *
-     * @param root The root folder to watch
+     * @param root    The root folder to watch
+     * @param folders
      *
      * @throws movie.registraction.dal.DALException
      */
-    public void directoryWatcher(Path root) throws DALException
+    public void directoryWatcher(ArrayList<Path> folders)
     {
-        try (WatchService watcher = FileSystems.getDefault().newWatchService())
-        {
-            Map<WatchKey, Path> keyMap = new HashMap<>();
-            keyMap.put(root.register(watcher,
-                                     StandardWatchEventKinds.ENTRY_CREATE,
-                                     StandardWatchEventKinds.ENTRY_DELETE,
-                                     StandardWatchEventKinds.ENTRY_MODIFY),
-                       root);
+        System.out.println("Before thread");
 
-            WatchKey key;
+        Thread scan;
+        scan = new Thread(new LibraryScan(folders)); // Creates the thread
+        scan.setDaemon(true); // Tells the thread to close with the app
+        //scan.start(); // Start the thread
 
-            do
-            {
-                key = watcher.take();
-                Path eventDir = keyMap.get(key);
-
-                for (WatchEvent<?> event : key.pollEvents())
-                {
-                    WatchEvent.Kind<?> kind = event.kind();
-                    Path eventPath = (Path) event.context();
-                    System.out.println(eventDir + ": " + kind + ": " + eventPath);
-                }
-            }
-            while (key.reset());
-        }
-        catch (IOException | InterruptedException ex)
-        {
-            throw new DALException();
-        }
+        System.out.println("After thread");
     }
 
     /**
-     * Sends the given category and specific movieid to MovieDAO where it is removed in the db 
+     * Sends the given category and specific movieid to MovieDAO where it is
+     * removed in the db
+     *
      * @param movieid
      * @param category
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public void removeMovieCategory(int movieid, String category) throws DALException {
-        try {
+    public void removeMovieCategory(int movieid, String category) throws DALException
+    {
+        try
+        {
             mDAO.removeMovieCategory(movieid, category);
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
 
     /**
      * Sends the given category and specific movieid to MovieDAO
-     * where it is added to the db 
+     * where it is added to the db
+     *
      * @param movieid
      * @param category
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public void addMovieCategory(int movieid, String category) throws DALException {
-        try {
+    public void addMovieCategory(int movieid, String category) throws DALException
+    {
+        try
+        {
             mDAO.addMovieCategory(movieid, category);
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
 
     /**
      * gets all categories from the database and MovieDAO and retur
+     *
      * @return
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public List<String> getAllCategories() throws DALException {
-        try {
-           return mDAO.getAllCategories();
-        } catch (DALException ex) {
+    public List<String> getAllCategories() throws DALException
+    {
+        try
+        {
+            return mDAO.getAllCategories();
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
 
     }
 
     /**
-     * Sends the given category to MovieDAO where it is removed in the db 
+     * Sends the given category to MovieDAO where it is removed in the db
+     *
      * @param cat
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public void removeCategory(String cat) throws DALException {
-        try {
+    public void removeCategory(String cat) throws DALException
+    {
+        try
+        {
             mDAO.removeCategory(cat);
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
 
     /**
-     * Sends the given category to MovieDAO where it is added to the db 
+     * Sends the given category to MovieDAO where it is added to the db
+     *
      * @param cat
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public void addCategory(String cat) throws DALException {
-        try {
+    public void addCategory(String cat) throws DALException
+    {
+        try
+        {
             mDAO.addCategory(cat);
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
+
     /**
-     * Sends the personal rating and movie id to MovieDAO to update personalrating
+     * Sends the personal rating and movie id to MovieDAO to update
+     * personalrating
+     *
      * @param movieId
      * @param rating
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public void setPersonalRating(int movieId, int rating) throws DALException {
-        try {
+    public void setPersonalRating(int movieId, int rating) throws DALException
+    {
+        try
+        {
             mDAO.setPersonalRating(movieId, rating);
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             throw new DALException();
         }
     }
