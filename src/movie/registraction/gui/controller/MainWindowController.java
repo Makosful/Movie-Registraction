@@ -105,6 +105,7 @@ public class MainWindowController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         SetupTilePane();
+        setupContextMenu();
 
         try
         {
@@ -235,8 +236,7 @@ public class MainWindowController implements Initializable
     private void setChosenFilesWithPicture() throws DALException
     {
         model.chooseFile(tilePane);
-        setupContextMenu(tilePane);
-        imageClick(tilePane, contextMenu);
+        imageClick(contextMenu);
     }
 
     /**
@@ -321,7 +321,7 @@ public class MainWindowController implements Initializable
      * Code so you can click or right click on an image and soemthing happens.
      * Mouse event.
      */
-    private void imageClick(TilePane tilePane, ContextMenu contextMenu)
+    private void imageClick(ContextMenu contextMenu)
     {
         
         for (ImageView imageView : model.GetImageViewList()) 
@@ -365,7 +365,7 @@ public class MainWindowController implements Initializable
      *
      * @param tilePane
      */
-    private void setupContextMenu(TilePane tilePane)
+    private void setupContextMenu()
     {
         contextMenu = new ContextMenu();
         MenuItem test1 = new MenuItem("1");
