@@ -37,17 +37,17 @@ public class DALManager
         {
             if (c.wasAdded())
             {
-                for (Path path : c.getAddedSubList())
+                c.getAddedSubList().forEach((path) ->
                 {
                     System.out.println(path);
-                }
+                });
             }
             else if (c.wasRemoved())
             {
-                for (Path path : c.getRemoved())
+                c.getRemoved().forEach((path) ->
                 {
                     System.out.println(path);
-                }
+                });
             }
         });
     }
@@ -225,13 +225,9 @@ public class DALManager
         {
             return true;
         }
-        else if (config.equalsIgnoreCase(":\\WindowsApps"))
-        {
-            return true;
-        }
         else
         {
-            return false;
+            return config.equalsIgnoreCase(":\\WindowsApps");
         }
     }
 
@@ -282,10 +278,7 @@ public class DALManager
     /**
      * Add a change listener to a folder and all sub folders
      *
-     * @param root    The root folder to watch
-     * @param folders
-     *
-     * @throws movie.registraction.dal.DALException
+     * @param root The root folder to watch
      */
     public void directoryWatcher(Path root)
     {

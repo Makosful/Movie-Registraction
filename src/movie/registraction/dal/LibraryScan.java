@@ -90,7 +90,6 @@ public class LibraryScan implements Runnable
         }
         catch (IOException | InterruptedException ex)
         {
-            ex.printStackTrace();
         }
     }
 
