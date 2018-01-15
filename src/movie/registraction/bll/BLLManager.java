@@ -257,7 +257,7 @@ public class BLLManager
                 if (Integer.parseInt(imageView.getId()) == movie.getId())
                 {
                     System.out.println("workeeeeeeeed");
-                    System.out.println(movie.getFileImg());
+                    System.out.println(movie.getImgPath());
                     System.out.println(movie.getPersonalRating());
                     System.out.println(movie.getYear());
                 }
