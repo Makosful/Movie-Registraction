@@ -357,9 +357,9 @@ public class BLLManager
 
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == ButtonType.YES){
-                            // ... user chose YES
+                            dal.removeMovie(m.getId());
                         } else {
-                            // ... user chose NO or closed the dialog
+                          
                         }
                     }
                 }
