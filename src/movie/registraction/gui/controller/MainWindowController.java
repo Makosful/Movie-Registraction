@@ -329,11 +329,11 @@ public class MainWindowController implements Initializable
             popOver = new PopOver(vBox); //WOLOLO (change to vBox)
             popOver.show(tilePane, event.getScreenX(), event.getScreenY());
         }
-        if (popOver.isShowing())
+        else if(popOver.isShowing())
         {
             popOver.hide();
         }
-        if (!popOver.isShowing())
+        else if(!popOver.isShowing())
         {
             popOver = new PopOver(vBox); //WOLOLO (change to vBox)
             popOver.show(tilePane, event.getScreenX(), event.getScreenY());
