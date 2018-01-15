@@ -111,6 +111,8 @@ public class MainWindowController implements Initializable
 
         //Initializing methods
         comboBoxSetup();
+        
+        model.findOldAndBadMovies();
     }
 
     /**
@@ -253,6 +255,7 @@ public class MainWindowController implements Initializable
                     {
                         model.getMovieData(imageView);
                         model.closeMenuOrClick(contextMenu);
+                        System.out.println(imageView.getId());
                     }
 
                     if (mouseButton == MouseButton.SECONDARY) 

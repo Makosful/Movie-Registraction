@@ -8,8 +8,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Optional;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
 import movie.registraction.be.Movie;
@@ -257,12 +262,6 @@ public class BLLManager
                     System.out.println(movie.getYear());
                 }
             }
-
-            else
-            {
-                System.out.println("ELSE WE CREATE DATA IN DATABASE. WAITING FOR CODE!!!!!");
-                System.out.println("nopeeeee");
-            }
         }
     }
 
@@ -343,5 +342,62 @@ public class BLLManager
             metaData[i] = meta[i].substring(meta[i].lastIndexOf(":") + 1);
         }
         return metaData;
+    }
+
+    /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param movieName
+     *
+     * @return
+     *
+     * @throws DALException
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
+    {
+        return dal.getSpecificMovieImage(movieName);
+    }
+
+    public String splitDot(String stringToSplit)
+    {
+        return stringToSplit = stringToSplit.split("\\.")[0];
+    }
+
+    public void findOldAndBadMovies() throws DALException
+    {
+        try
+        {
+            Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
+            for (Movie m : getAllMovies())
+            {
+                if (m.getLastView() != null)
+                {
+                    if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6)
+                    {
+                        Alert alert = new Alert(AlertType.WARNING,
+                                                "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
+                                                + " og du har givet den en rating på " + m.getPersonalRating()
+                                                + " , har du lyst til at slette den?",
+                                                ButtonType.YES, ButtonType.NO);
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.YES)
+                        {
+                            dal.removeMovie(m.getId());
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                }
+
+            }
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
     }
 }

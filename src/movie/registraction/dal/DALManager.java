@@ -398,4 +398,31 @@ public class DALManager
             throw new DALException();
         }
     }
+
+    /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param movieName
+     *
+     * @return
+     *
+     * @throws DALException
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
+    {
+        return mDAO.getSpecificMovieImage(movieName);
+    }
+
+    public void removeMovie(int movieId) throws DALException
+    {
+        try
+        {
+            mDAO.removeMovie(movieId);
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
+    }
 }

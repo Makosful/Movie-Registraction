@@ -341,10 +341,15 @@ public class MainWindowModel
         {
             for (File chosenFile : chosenFiles)
             {
+                String nameOfMovie = bll.splitDot(chosenFile.getName());
+                fxmlTitleSearch(nameOfMovie);
+                String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
+                imgPath = "https:" + imgPath;
+
                 chosenFile.toPath();
                 String fileName = chosenFile.getName();
                 fileName = FilenameUtils.getBaseName(fileName);
-                setPictures(tilePane, chosenFile);
+                setPictures(tilePane, chosenFile, imgPath);
                 System.out.println(fileName); //For debugging
             }
         }
@@ -356,9 +361,9 @@ public class MainWindowModel
         }
     }
 
-    public void setPictures(TilePane tilePane, File chosenFile) throws DALException
+    public void setPictures(TilePane tilePane, File chosenFile, String imgUrl) throws DALException
     {
-        ImageView imageView = new ImageView(chosenFile.toURI().toString());
+        ImageView imageView = new ImageView(imgUrl);
         imageView.setFitHeight(IMAGE_HEIGHT);
         imageView.setFitWidth(IMAGE_WIDTH);
         imageViewList.add(imageView);
@@ -650,4 +655,15 @@ public class MainWindowModel
         }
     }
 
+    public void findOldAndBadMovies()
+    {
+        try
+        {
+            bll.findOldAndBadMovies();
+        }
+        catch (DALException ex)
+        {
+            System.out.println("Could not execute the check of old and low rated movies");
+        }
+    }
 }

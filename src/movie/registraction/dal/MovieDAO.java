@@ -5,6 +5,7 @@
  */
 package movie.registraction.dal;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
@@ -264,13 +267,12 @@ public class MovieDAO {
             movie.setMovieYear(rs.getInt("year"));
             movie.setPersonalRating(rs.getDouble("personalRating"));
             movie.setImdbRating(rs.getDouble("imdbRating"));
-            movie.setLastView(rs.getString("lastView"));
+            movie.setLastView(rs.getDate("lastView"));
             movie.setFilePath(rs.getString("filePath"));
             movie.setFileImg(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));
-            if(rs.getString("categoryName") != null){
-                movie.setCategories(rs.getString("categoryName"));
-            }
+            movie.setCategories(rs.getString("categoryName"));
+            
 
             return movie;
         
@@ -291,18 +293,17 @@ public class MovieDAO {
            int id;
            
            String sqlInsert = "INSERT INTO Movie "
-                            + "(name, filePath, imgPath, lastView, personalRating, imdbRating, year, movieLength) "
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                            + "(name, filePath, imgPath, personalRating, imdbRating, year, movieLength) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
            preparedStatement.setString(1, movieMetaData[0]);
            preparedStatement.setString(2, "path");
            preparedStatement.setString(3, movieMetaData[4]);
-           preparedStatement.setDate(4, null);
-           preparedStatement.setDouble(5, 0);
-           preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[3]));
-           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[1]));
-           preparedStatement.setInt(8, Integer.parseInt(movieMetaData[2]));
+           preparedStatement.setDouble(4, -1);
+           preparedStatement.setDouble(5, Double.parseDouble(movieMetaData[3]));
+           preparedStatement.setInt(6, Integer.parseInt(movieMetaData[1]));
+           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[2]));
 
            preparedStatement.executeUpdate();
 
@@ -359,9 +360,10 @@ public class MovieDAO {
     {
         try (Connection con = db.getConnection())
         {
+            System.out.println(movieId);
 
             String sql = "DELETE Movie FROM Movie "
-                         + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
                          + "WHERE Movie.id = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -398,4 +400,32 @@ public class MovieDAO {
         }
     }
     
+        /**
+         * This method is to get a imgPath from a specific movie. 
+         * So that it can be thrown into the tilepane.
+         * @param movieName
+         * @return
+         * @throws DALException 
+         */
+        public String getSpecificMovieImage(String movieName) throws DALException
+    {
+        String imageLink = null;
+        try(Connection con = db.getConnection())
+        {
+            String sqlInsert = "SELECT imgPath FROM Movie WHERE name = ?";
+            
+            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+            preparedStatement.setString(1, movieName);
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next())
+            {
+                imageLink = rs.getString("imgPath");
+            }
+        } 
+        catch (SQLException ex) 
+        {
+            throw new DALException();
+        }
+       return imageLink;
+    }
 }
