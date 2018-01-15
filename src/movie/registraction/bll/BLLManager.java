@@ -414,4 +414,36 @@ public class BLLManager
         }
         return movieObject;
     }
+    
+    /**
+     * Check if movie already exists in the db
+     * @param movieTitle
+     * @return
+     * @throws DALException 
+     */
+    public boolean movieAlreadyExisting(String movieTitle) throws DALException
+    {
+        boolean isAlreadyInDataBase = true;
+        try
+        {
+           for(Movie m : getAllMovies())
+           {
+               if(m.getMovieTitle().equals(movieTitle))
+               {
+                  isAlreadyInDataBase = true;
+               }
+               else
+               {
+                   isAlreadyInDataBase = false;
+               }
+           
+           } 
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
+        
+        return isAlreadyInDataBase;
+    }
 }
