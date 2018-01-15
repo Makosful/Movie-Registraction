@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -413,5 +415,37 @@ public class BLLManager
             }
         }
         return movieObject;
+    }
+    
+    /**
+     * Check if movie already exists in the db
+     * @param movieTitle
+     * @return
+     * @throws DALException 
+     */
+    public boolean movieAlreadyExisting(String movieTitle) throws DALException
+    {
+        boolean isAlreadyInDataBase = true;
+        try
+        {
+           for(Movie m : getAllMovies())
+           {
+               if(m.getMovieTitle().equals(movieTitle))
+               {
+                  isAlreadyInDataBase = true;
+               }
+               else
+               {
+                   isAlreadyInDataBase = false;
+               }
+           
+           } 
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
+        
+        return isAlreadyInDataBase;
     }
 }

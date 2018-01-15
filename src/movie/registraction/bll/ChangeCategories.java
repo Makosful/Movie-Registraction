@@ -5,19 +5,14 @@
  */
 package movie.registraction.bll;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
-import movie.registraction.dal.MovieDAO;
 
 /**
  *
