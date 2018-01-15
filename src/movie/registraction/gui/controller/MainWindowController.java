@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -253,9 +254,16 @@ public class MainWindowController implements Initializable
                     MouseButton mouseButton = event.getButton();
                     if (mouseButton == MouseButton.PRIMARY) 
                     {
-                        model.getMovieData(imageView);
                         model.closeMenuOrClick(contextMenu);
-                        System.out.println(imageView.getId());
+                        Movie movie = model.getMovieInfo(imageView);
+                        System.out.println(movie.getImdbRating());
+                        Label label = new Label();
+                        label.setText(movie.getMovieTitle());
+                        tilePane.getChildren().add(label);
+                        VBox vBox = new VBox();
+                        vBox.getChildren().add(label);
+                        
+                        model.setPopOver(tilePane, vBox);
                     }
 
                     if (mouseButton == MouseButton.SECONDARY) 

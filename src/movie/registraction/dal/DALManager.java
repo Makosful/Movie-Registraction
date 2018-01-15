@@ -302,7 +302,8 @@ public class DALManager
      * @param cat
      * @throws DALException 
      */
-    public void addCategory(String cat) throws DALException {
+    public void addCategory(String cat) throws DALException 
+    {
         try {
             mDAO.addCategory(cat);
         } catch (DALException ex) {

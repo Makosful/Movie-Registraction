@@ -354,4 +354,18 @@ public class BLLManager
             throw new DALException();
         }
     }
+    
+    public Movie getMovieInfo(ImageView imageView) throws DALException
+    {
+        Movie movieObject = null;
+        for (Movie movie : getAllMovies()) 
+        {
+            //  Finding the ID that belongs to the movie.
+            if (Integer.parseInt(imageView.getId()) == movie.getId()) 
+            {
+                movieObject = movie;
+            }
+        }
+        return movieObject;
+    }
 }
