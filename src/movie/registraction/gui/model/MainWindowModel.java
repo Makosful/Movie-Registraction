@@ -18,6 +18,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
@@ -27,6 +28,7 @@ import movie.registraction.bll.ChangeCategories;
 import movie.registraction.bll.Rating;
 import movie.registraction.dal.DALException;
 import org.apache.commons.io.FilenameUtils;
+import org.controlsfx.control.PopOver;
 
 /**
  *
@@ -643,18 +645,6 @@ public class MainWindowModel
         return idMatchMovie;
     }
 
-    public void getMovieData(ImageView imageView)
-    {
-        Movie matchedMovie = null;
-        if (getMovieIdMatch(imageView) != null)
-        {
-            matchedMovie = getMovieIdMatch(imageView);
-            System.out.println(matchedMovie.getId());
-            System.out.println(matchedMovie.getFilePath());
-            // Code to be added.
-        }
-    }
-
     public void findOldAndBadMovies()
     {
         try
@@ -665,5 +655,27 @@ public class MainWindowModel
         {
             System.out.println("Could not execute the check of old and low rated movies");
         }
+    }
+    
+    public void setPopOver(TilePane tilePane, VBox vBox)
+    {
+        PopOver popOver = new PopOver(vBox);
+        popOver.setContentNode(vBox);
+        
+        popOver.show(tilePane);
+    }
+    
+     public Movie getMovieInfo(ImageView imageView)
+    {
+        Movie movieObject = null;
+        try 
+        {
+            movieObject = bll.getMovieInfo(imageView);
+        } 
+        catch (DALException ex) 
+        {
+            System.out.println("Failed to get movie");
+        }
+        return movieObject;
     }
 }

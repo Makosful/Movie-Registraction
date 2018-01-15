@@ -366,6 +366,7 @@ public class DALManager
      *
      * @throws DALException
      */
+
     public void addCategory(String cat) throws DALException
     {
         try
