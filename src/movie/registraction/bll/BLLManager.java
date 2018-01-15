@@ -235,12 +235,6 @@ public class BLLManager
                     System.out.println(movie.getYear());
                 }
             }
-
-            else 
-            {
-                System.out.println("ELSE WE CREATE DATA IN DATABASE. WAITING FOR CODE!!!!!");
-                System.out.println("nopeeeee");
-            }
         }
     }
     
@@ -321,5 +315,23 @@ public class BLLManager
             
         }
         return metaData;
+    }
+    
+    /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param movieName
+     * @return
+     * @throws DALException
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
+    {
+        return dal.getSpecificMovieImage(movieName);
+    }
+    
+    public String splitDot(String stringToSplit)
+    {
+        return stringToSplit = stringToSplit.split("\\.")[0];
     }
 }
