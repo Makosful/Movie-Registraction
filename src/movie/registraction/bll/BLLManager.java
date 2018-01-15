@@ -364,6 +364,11 @@ public class BLLManager
         return stringToSplit = stringToSplit.split("\\.")[0];
     }
 
+    /**
+     * If there is a movie last seen over 2 years ago and the movie i rated under 6 
+     * ask the user if the movie should be deleted
+     * @throws DALException 
+     */
     public void findOldAndBadMovies() throws DALException
     {
         try
