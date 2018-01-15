@@ -1,11 +1,14 @@
 package movie.registraction.dal;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -14,48 +17,46 @@ import java.util.Map;
 public class LibraryScan implements Runnable
 {
 
-    ArrayList<Path> list;
+    Path path;
+    ObservableList<Path> list;
 
-    public LibraryScan(ArrayList<Path> list)
+    public LibraryScan(Path root)
     {
-        this.list = list;
+        this.path = root;
+        this.list = FXCollections.observableArrayList();
     }
 
     @Override
     public void run()
     {
-        System.out.println("Thread START");
-        for (Path path : list)
-        {
-            System.out.println(path);
-        }
-        System.out.println("Thread END");
-        watch(list);
+        watch(path);
     }
 
-    private void m()
-    {
-    }
-
-    private void watch(ArrayList<Path> list)
+    private void watch(Path path)
     {
         try (WatchService watcher = FileSystems.getDefault().newWatchService())
         {
             Map<WatchKey, Path> keyMap = new HashMap<>();
-            for (Path path : list)
+
+            Files.walkFileTree(
+                    path, new SimpleFileVisitor<Path>()
             {
-                keyMap.put(path.register(watcher,
-                                         StandardWatchEventKinds.ENTRY_CREATE,
-                                         StandardWatchEventKinds.ENTRY_DELETE,
-                                         StandardWatchEventKinds.ENTRY_MODIFY),
-                           path);
-            }
+                @Override
+                public FileVisitResult preVisitDirectory(
+                        Path dir,
+                        BasicFileAttributes attrs)
+                        throws IOException
+                {
+                    keyMap.put(dir.register(watcher,
+                                            StandardWatchEventKinds.ENTRY_CREATE,
+                                            StandardWatchEventKinds.ENTRY_DELETE,
+                                            StandardWatchEventKinds.ENTRY_MODIFY),
+                               dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
 
             Collection<Path> values = keyMap.values();
-            for (Path value : values)
-            {
-                System.out.println(value);
-            }
 
             WatchKey key;
 
@@ -68,7 +69,21 @@ public class LibraryScan implements Runnable
                 {
                     WatchEvent.Kind<?> kind = event.kind();
                     Path eventPath = (Path) event.context();
-                    System.out.println(eventDir + ": " + kind + ": " + eventPath);
+
+                    if ("ENTRY_DELETE".equals(kind.name()))
+                    {
+                        Path toPath = new File(eventDir + "/" + eventPath).toPath();
+                        // System.out.println("Deleted");
+                        this.list.add(toPath);
+                    }
+                    if ("ENTRY_CREATE".equals(kind.name()))
+                    {
+                        Path toPath = new File(eventDir + "/" + eventPath).toPath();
+                        // System.out.println("Created");
+                        this.list.add(toPath);
+                    }
+
+                    //System.out.println(eventDir + ": " + kind + ": " + eventPath);
                 }
             }
             while (key.reset());
@@ -77,5 +92,10 @@ public class LibraryScan implements Runnable
         {
             ex.printStackTrace();
         }
+    }
+
+    public ObservableList<Path> getObsList()
+    {
+        return this.list;
     }
 }

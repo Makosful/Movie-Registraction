@@ -5,6 +5,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -17,16 +19,37 @@ public class DALManager
 
     MovieDAO mDAO;
 
+    ObservableList<Path> changes;
+
     public DALManager() throws DALException
     {
         try
         {
             mDAO = new MovieDAO();
+            changes = FXCollections.observableArrayList();
         }
         catch (IOException ex)
         {
             throw new DALException();
         }
+
+        changes.addListener((ListChangeListener.Change<? extends Path> c) ->
+        {
+            if (c.wasAdded())
+            {
+                for (Path path : c.getAddedSubList())
+                {
+                    System.out.println(path);
+                }
+            }
+            else if (c.wasRemoved())
+            {
+                for (Path path : c.getRemoved())
+                {
+                    System.out.println(path);
+                }
+            }
+        });
     }
 
     /**
@@ -94,14 +117,12 @@ public class DALManager
     public ArrayList<Path> getMovieList(ArrayList<String> filter) throws DALException
     {
         ArrayList<Path> list = new ArrayList();
-        ArrayList<Path> folders = new ArrayList();
 
         Path startPath = Paths.get(this.loadDirectory("path.txt"));
 
         fileTreeSearch(startPath, list, filter);
-        findFolders(startPath, folders);
 
-        this.directoryWatcher(folders);
+        this.directoryWatcher(startPath);
 
         return list;
     }
@@ -266,14 +287,18 @@ public class DALManager
      *
      * @throws movie.registraction.dal.DALException
      */
-    public void directoryWatcher(ArrayList<Path> folders)
+    public void directoryWatcher(Path root)
     {
         System.out.println("Before thread");
 
+        LibraryScan lib = new LibraryScan(root);
+
         Thread scan;
-        scan = new Thread(new LibraryScan(folders)); // Creates the thread
+        scan = new Thread(lib); // Creates the thread
         scan.setDaemon(true); // Tells the thread to close with the app
-        //scan.start(); // Start the thread
+        scan.start(); // Start the thread
+
+        changes.setAll(lib.getObsList());
 
         System.out.println("After thread");
     }
