@@ -85,13 +85,14 @@ public class MainWindowController implements Initializable
     ContextMenu contextMenu;
 
     //<editor-fold defaultstate="collapsed" desc="Labels">
-    Label labelMovieTitle;
-    Label labelGenre;
-    Label labelYear;
-    Label labelImdbRating;
-    Label labelPersonalRating;
-    Label labelMovieLength;
-    Label labelLastView;
+    Label lblMovieTitle;
+    Label lblGenre;
+    Label lblYear;
+    Label lblImdbRating;
+    Label lblPersonalRating;
+    Label lblMovieLength;
+    Label lblLastView;
+    Label lblIMDBId;
     //</editor-fold>
 
     /**
@@ -269,30 +270,32 @@ public class MainWindowController implements Initializable
         }
 
         //<editor-fold defaultstate="collapsed" desc="Label And One VBox">
-        labelMovieTitle = new Label();
-        labelPersonalRating = new Label();
-        labelMovieLength = new Label();
-        labelLastView = new Label();
-        labelImdbRating = new Label();
-        labelGenre = new Label();
-        labelYear = new Label();
+        lblMovieTitle = new Label();
+        lblGenre = new Label();
+        lblPersonalRating = new Label();
+        lblMovieLength = new Label();
+        lblLastView = new Label();
+        lblImdbRating = new Label();
+        lblYear = new Label();
         imdbURL = new Hyperlink();
         vBox = new VBox();
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
-        labelMovieTitle.setText("Title: " + movie.getMovieTitle());
-        labelMovieTitle.setStyle("-fx-text-fill: black");
-        labelGenre.setText("Genres: " + genreCategories);
-        labelGenre.setStyle("-fx-text-fill: black");
-        labelYear.setText("Release year: " + movie.getYear());
-        labelYear.setStyle("-fx-text-fill: black");
-        labelImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
-        labelImdbRating.setStyle("-fx-text-fill: black");
-        labelPersonalRating.setText("Personal rating: " + movie.getPersonalRating());
-        labelPersonalRating.setStyle("-fx-text-fill: black");
-        labelLastView.setText("Last viewed on: " + movie.getLastView());
-        labelLastView.setStyle("-fx-text-fill: black");
+        lblMovieTitle.setText("Title: " + movie.getMovieTitle());
+        lblMovieTitle.setStyle("-fx-text-fill: black");
+        lblGenre.setText("Genres: " + genreCategories);
+        lblGenre.setStyle("-fx-text-fill: black");
+        lblYear.setText("Release year: " + movie.getYear());
+        lblYear.setStyle("-fx-text-fill: black");
+        lblMovieLength.setText("Length: " + genreCategories + "minutes");
+        lblMovieLength.setStyle("-fx-text-fill: black");
+        lblImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
+        lblImdbRating.setStyle("-fx-text-fill: black");
+        lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating());
+        lblPersonalRating.setStyle("-fx-text-fill: black");
+        lblLastView.setText("Last viewed on: " + movie.getLastView());
+        lblLastView.setStyle("-fx-text-fill: black");
         
         //HYPERLINK
         imdbURL.setText("http://www.imdb.com/title/" + movie.getImdbLink());
@@ -300,12 +303,13 @@ public class MainWindowController implements Initializable
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="addToVbox">
-        vBox.getChildren().add(labelMovieTitle);
-        vBox.getChildren().add(labelGenre);
-        vBox.getChildren().add(labelYear);
-        vBox.getChildren().add(labelImdbRating);
-        vBox.getChildren().add(labelPersonalRating);
-        vBox.getChildren().add(labelLastView);
+        vBox.getChildren().add(lblMovieTitle);
+        vBox.getChildren().add(lblGenre);
+        vBox.getChildren().add(lblYear);
+        vBox.getChildren().add(lblMovieLength);
+        vBox.getChildren().add(lblImdbRating);
+        vBox.getChildren().add(lblPersonalRating);
+        vBox.getChildren().add(lblLastView);
         vBox.getChildren().add(imdbURL);
 
         //</editor-fold>
