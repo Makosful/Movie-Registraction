@@ -261,7 +261,7 @@ public class MovieDAO {
         }
         else
         {
-         
+            
             Movie movie = new Movie();
             movie.setId(rs.getInt("id"));
             movie.setMovieName(rs.getString("name"));
@@ -270,12 +270,12 @@ public class MovieDAO {
             movie.setImdbRating(rs.getDouble("imdbRating"));
             movie.setLastView(rs.getDate("lastView"));
             movie.setFilePath(rs.getString("filePath"));
-            movie.setFileImg(rs.getString("imgPath"));
+            movie.setImgPath(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));
             movie.setImdbLink(rs.getString("imdbLink"));
             movie.setCategories(rs.getString("categoryName"));
             
-
+           
             return movie;
         
         }
