@@ -110,11 +110,14 @@ public class MainWindowController implements Initializable
         {
             // Access the Model
             model = new MainWindowModel();
+            model.loadMoviesFromStart(tilePane);
+            imageClick();
         }
         catch (DALException ex)
         {
             System.out.println(ex);
         }
+        
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
@@ -235,7 +238,7 @@ public class MainWindowController implements Initializable
     private void setChosenFilesWithPicture() throws DALException
     {
         model.chooseFile(tilePane);
-        imageClick(contextMenu);
+        imageClick();
     }
 
     /**
@@ -340,7 +343,7 @@ public class MainWindowController implements Initializable
      * Code so you can click or right click on an image and something happens.
      * Mouse event.
      */
-    private void imageClick(ContextMenu contextMenu)
+    private void imageClick()
     {
 
         for (ImageView imageView : model.GetImageViewList())
@@ -355,7 +358,10 @@ public class MainWindowController implements Initializable
                     {
                         model.closeMenuOrClick(contextMenu);
                         Movie movie = model.getMovieInfo(imageView);
-                        vBoxAndLabelSetup(movie, event);
+                        //vbox bugged
+                        //vBoxAndLabelSetup(movie, event);
+                        System.out.println(imageView.getId());
+                        System.out.println(movie.getMovieTitle());
                     }
 
                     if (mouseButton == MouseButton.SECONDARY)
