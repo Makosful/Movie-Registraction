@@ -82,7 +82,6 @@ public class MainWindowController implements Initializable
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
-//    GridPane popGrid;
     ContextMenu contextMenu;
 
     //<editor-fold defaultstate="collapsed" desc="Labels">
@@ -277,6 +276,7 @@ public class MainWindowController implements Initializable
         labelImdbRating = new Label();
         labelGenre = new Label();
         labelYear = new Label();
+        imdbURL = new Hyperlink();
         vBox = new VBox();
         //</editor-fold>
 
