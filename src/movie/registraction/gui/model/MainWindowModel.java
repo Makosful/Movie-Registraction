@@ -314,6 +314,20 @@ public class MainWindowModel
      */
     public void chooseFile(TilePane tilePane) throws DALException
     {
+        
+
+        ImageView imageView;
+
+            for(Movie movie : getAllMovies())
+            {
+                System.out.println(movie.getMovieTitle());
+                imageView = new ImageView("https:" + movie.getImgPath());
+                System.out.println(movie.getImgPath());
+                imageView.setId("" + movie.getId());  
+                tilePane.getChildren().add(imageView);
+            }
+   
+        
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 

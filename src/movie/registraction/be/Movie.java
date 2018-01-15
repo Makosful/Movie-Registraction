@@ -88,7 +88,7 @@ public class Movie {
     
     public void setFileImg(String fileImg) 
     {
-        this.imgPath = imgPath;
+        this.imgPath = fileImg;
     }
     
     public void setMovieLength(int movieLength) 
