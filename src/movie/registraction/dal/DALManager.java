@@ -315,11 +315,25 @@ public class DALManager
      * @param rating
      * @throws DALException 
      */
-    public void setPersonalRating(int movieId, int rating) throws DALException {
+    public void setPersonalRating(int movieId, int rating) throws DALException 
+    {
         try {
             mDAO.setPersonalRating(movieId, rating);
         } catch (DALException ex) {
             throw new DALException();
         }
+    }
+    
+    /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param movieName
+     * @return
+     * @throws DALException
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
+    {
+      return  mDAO.getSpecificMovieImage(movieName);
     }
 }

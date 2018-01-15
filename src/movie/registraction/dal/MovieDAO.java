@@ -5,6 +5,7 @@
  */
 package movie.registraction.dal;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
@@ -396,4 +399,32 @@ public class MovieDAO {
         }
     }
     
+        /**
+         * This method is to get a imgPath from a specific movie. 
+         * So that it can be thrown into the tilepane.
+         * @param movieName
+         * @return
+         * @throws DALException 
+         */
+        public String getSpecificMovieImage(String movieName) throws DALException
+    {
+        String imageLink = null;
+        try(Connection con = db.getConnection())
+        {
+            String sqlInsert = "SELECT imgPath FROM Movie WHERE name = ?";
+            
+            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+            preparedStatement.setString(1, movieName);
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next())
+            {
+                imageLink = rs.getString("imgPath");
+            }
+        } 
+        catch (SQLException ex) 
+        {
+            throw new DALException();
+        }
+       return imageLink;
+    }
 }

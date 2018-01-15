@@ -10,9 +10,6 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
@@ -239,12 +236,6 @@ public class BLLManager
                     System.out.println(movie.getYear());
                 }
             }
-
-            else 
-            {
-                System.out.println("ELSE WE CREATE DATA IN DATABASE. WAITING FOR CODE!!!!!");
-                System.out.println("nopeeeee");
-            }
         }
     }
     
@@ -327,6 +318,23 @@ public class BLLManager
         return metaData;
     }
     
+    /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param movieName
+     * @return
+     * @throws DALException
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
+    {
+        return dal.getSpecificMovieImage(movieName);
+    }
+    
+    public String splitDot(String stringToSplit)
+    {
+        return stringToSplit = stringToSplit.split("\\.")[0];
+    }
     
     public void findOldAndBadMovies() throws DALException
     {
