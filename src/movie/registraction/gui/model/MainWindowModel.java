@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -332,13 +333,11 @@ public class MainWindowModel
             for (File chosenFile : chosenFiles)
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
-                String relativePath = chosenFile.getPath().split("src")[1];
-                       relativePath = "src" + relativePath;
                 try
                 {
                     if (!bll.movieAlreadyExisting(nameOfMovie))
                     {
-                    addMovie(nameOfMovie, relativePath);                  
+                    addMovie(nameOfMovie, chosenFile.getPath());                  
                     String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
                     imgPath = "https:" + imgPath;
                     setPictures(tilePane, chosenFile, imgPath);
