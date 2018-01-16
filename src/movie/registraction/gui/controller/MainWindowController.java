@@ -33,7 +33,6 @@ import org.controlsfx.control.PopOver;
  */
 public class MainWindowController implements Initializable
 {
-
     //<editor-fold defaultstate="collapsed" desc="FXML Variables">
     @FXML
     private ScrollPane scrlFilterSearch;

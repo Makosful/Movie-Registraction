@@ -20,7 +20,6 @@ import movie.registraction.dal.DALManager;
  */
 public class ChangeCategories
 {
-
     private Movie movie;
     private DALManager dal;
     private List<String> removeCategory;
@@ -212,5 +211,4 @@ public class ChangeCategories
         removeCategory.clear();
         categories.clear();
     }
-
 }
