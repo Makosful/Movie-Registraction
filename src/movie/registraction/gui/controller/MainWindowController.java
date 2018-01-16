@@ -79,6 +79,9 @@ public class MainWindowController implements Initializable
     @FXML
     private FlowPane flpOther;
 
+    private int gridHeight;
+    private int gridWidth;
+    boolean popOverVisible;
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
@@ -106,6 +109,7 @@ public class MainWindowController implements Initializable
     {
         SetupTilePane();
         setupContextMenu();
+        popOverVisible = false;
 
         try
         {
@@ -118,7 +122,6 @@ public class MainWindowController implements Initializable
         {
             System.out.println(ex);
         }
-        
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
@@ -253,7 +256,7 @@ public class MainWindowController implements Initializable
         tilePane.setVgap(20);
     }
 
-    private void vBoxAndLabelSetup(Movie movie, MouseEvent event)
+    private void PopOverSetup(Movie movie, MouseEvent event)
     {
         String genreCategories = null;
         for (int i = 0; i < movie.getCategories().size(); i++)
@@ -269,7 +272,7 @@ public class MainWindowController implements Initializable
             }
         }
 
-        //<editor-fold defaultstate="collapsed" desc="Label And One VBox">
+        //<editor-fold defaultstate="collapsed" desc="PopOver Content">
         lblMovieTitle = new Label();
         lblGenre = new Label();
         lblPersonalRating = new Label();
@@ -278,70 +281,92 @@ public class MainWindowController implements Initializable
         lblImdbRating = new Label();
         lblYear = new Label();
         imdbURL = new Hyperlink();
-        vBox = new VBox();
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
         lblMovieTitle.setText("Title: " + movie.getMovieTitle());
         lblMovieTitle.setStyle("-fx-text-fill: black");
+
         lblGenre.setText("Genres: " + genreCategories);
         lblGenre.setStyle("-fx-text-fill: black");
+
         lblYear.setText("Release year: " + movie.getYear());
         lblYear.setStyle("-fx-text-fill: black");
-        lblMovieLength.setText("Length: " + genreCategories + "minutes");
+
+        lblMovieLength.setText("Length: " + movie.getMovieLength() + "minutes");
         lblMovieLength.setStyle("-fx-text-fill: black");
+
         lblImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
         lblImdbRating.setStyle("-fx-text-fill: black");
-        lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating());
+
+        lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating() + "/10");
         lblPersonalRating.setStyle("-fx-text-fill: black");
+
         lblLastView.setText("Last viewed on: " + movie.getLastView());
         lblLastView.setStyle("-fx-text-fill: black");
-        
+
         //HYPERLINK
         imdbURL.setText("http://www.imdb.com/title/" + movie.getImdbLink());
         //imdbURL.setStyle("-fx-text-fill: black");
         //</editor-fold>
 
-        //<editor-fold defaultstate="collapsed" desc="addToVbox">
-        vBox.getChildren().add(lblMovieTitle);
-        vBox.getChildren().add(lblGenre);
-        vBox.getChildren().add(lblYear);
-        vBox.getChildren().add(lblMovieLength);
-        vBox.getChildren().add(lblImdbRating);
-        vBox.getChildren().add(lblPersonalRating);
-        vBox.getChildren().add(lblLastView);
-        vBox.getChildren().add(imdbURL);
+        //<editor-fold defaultstate="collapsed" desc="PopOver Gridpane Setup">
+        GridPane popGrid = new GridPane();
+        popGrid.setPadding(new Insets(30));
+        popGrid.setHgap(20);
+        popGrid.setVgap(10);
 
+        popGrid.add(lblMovieTitle, 0, 0);
+        popGrid.add(lblGenre, 0, 1);
+        popGrid.add(lblYear, 0, 2);
+        popGrid.add(lblImdbRating, 0, 3);
+        popGrid.add(lblPersonalRating, 0, 4);
+        popGrid.add(lblLastView, 0, 5);
+        popGrid.add(imdbURL, 0, 6);
+
+        gridHeight = 300;
+        gridWidth = 400;
+        popGrid.setPrefSize(gridWidth, gridHeight);
         //</editor-fold>
         
-//        GridPane popGrid = new GridPane();
-//
-//        popGrid.setPadding(new Insets(20));
-//        popGrid.setHgap(10);
-//        popGrid.setVgap(5); //irrelevant
-//
-//        popGrid.add(labelMovieTitle, 0, 0);
-//        popGrid.add(labelGenre, 0, 1);
-//        popGrid.add(labelYear, 0, 2);
-//        popGrid.add(labelImdbRating, 0, 3);
-//        popGrid.add(labelPersonalRating, 0, 4);
-//        popGrid.add(labelLastView, 0, 5);
-//        popGrid.add(imdbURL, 0, 6);
+        
+        if (popOverVisible == false)
+        {
+            System.out.println("boolean is false");
+            popOver = new PopOver(popGrid);
+            popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
+            popOverVisible = true;
+        }
+        else if(popOverVisible)
+        {
+         popOver.hide();
+         popOver = new PopOver(popGrid);
+            popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
+            
+         
+            System.out.println("boolean is not true");
+        }
 
-        if (popOver == null)
+//        if (!popOver.isShowing())
+//        {
+//            popOver = new PopOver(popGrid);
+//            popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
+//        }
+
+        if (popOver.isShowing() && popOverVisible)
         {
-            popOver = new PopOver(vBox); //WOLOLO (change to vBox)
-            popOver.show(tilePane, event.getScreenX(), event.getScreenY());
-        }
-        else if(popOver.isShowing())
-        {
+            popOverVisible = true;
             popOver.hide();
+            popOver = null; 
+            popOver = new PopOver(popGrid);
+            popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
         }
-        else if(!popOver.isShowing())
-        {
-            popOver = new PopOver(vBox); //WOLOLO (change to vBox)
-            popOver.show(tilePane, event.getScreenX(), event.getScreenY());
-        }
+
+        popOver.getStyleClass().add("popover");
+        popOver.setDetachable(false);
+        popOver.setDetached(false);
+        popOver.setHeaderAlwaysVisible(true);
+        popOver.setTitle("Movie Metadata");
     }
 
     /**
@@ -350,28 +375,30 @@ public class MainWindowController implements Initializable
      */
     private void imageClick()
     {
-
         for (ImageView imageView : model.GetImageViewList())
         {
+            Movie movie = model.getMovieInfo(imageView);
+
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
-                public void handle(MouseEvent event)
+                public void handle(MouseEvent me)
                 {
-                    MouseButton mouseButton = event.getButton();
+                    MouseButton mouseButton = me.getButton();
                     if (mouseButton == MouseButton.PRIMARY)
                     {
-                        model.closeMenuOrClick(contextMenu);
-                        Movie movie = model.getMovieInfo(imageView);
-                        vBoxAndLabelSetup(movie, event);
-                        System.out.println(imageView.getId());
+                        PopOverSetup(movie, me);
                         System.out.println(movie.getMovieTitle());
                     }
 
                     if (mouseButton == MouseButton.SECONDARY)
                     {
+                        if (popOver.isShowing())
+                        {
+                            popOver.hide();
+                        }
                         model.contextMenuOpenOrNot(contextMenu);
-                        contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
+                        contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
                     }
                 }
             });
