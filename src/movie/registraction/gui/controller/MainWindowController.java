@@ -402,32 +402,56 @@ public class MainWindowController implements Initializable
         {
             Movie movie = model.getMovieInfo(imageView);
 
-            imageView.setOnMouseClicked((MouseEvent me) ->
+            
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                MouseButton mouseButton = me.getButton();
-                if (mouseButton == MouseButton.PRIMARY)
+                @Override
+                public void handle(MouseEvent me)
                 {
-                    PopOverSetup(movie, me);
-                    System.out.println(movie.getMovieTitle());
-                }
-
-                if (mouseButton == MouseButton.SECONDARY)
-                {
-                    /**
-                     * Fixes the issue of stacking the Popover (left click) with
-                     * the Context menu (right click)
-                     */
-                    if (popOver.isShowing())
+                    MouseButton mouseButton = me.getButton();
+                    
+                    if(mouseButton == MouseButton.PRIMARY)
                     {
-                        popOver.hide();
+                        PopOverSetup(movie, me);
+                        System.out.println(movie.getMovieLength());
                     }
-
-                    Movie moviePoster = model.getMovieInfo(imageView);
-                    contextMenuAction(imageView, moviePoster);
-                    model.contextMenuOpenOrNot(contextMenu);
-                    contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
+                    
+                    else if(mouseButton == MouseButton.SECONDARY)
+                    {
+                        closePopOverIfRightClick();
+                        Movie movie = model.getMovieInfo(imageView);
+                        model.contextMenuOpenOrNot(contextMenu);
+                        contextMenu.show(tilePane, me.getSceneX(), me.getSceneY());
+                    }
                 }
-            });
+            }
+            
+//            imageView.setOnMouseClicked((MouseEvent me) ->
+//            {
+//                MouseButton mouseButton = me.getButton();
+//                if (mouseButton == MouseButton.PRIMARY)
+//                {
+//                    PopOverSetup(movie, me);
+//                    System.out.println(movie.getMovieTitle());
+//                }
+//
+//                if (mouseButton == MouseButton.SECONDARY)
+//                {
+//                    /**
+//                     * Fixes the issue of stacking the Popover (left click) with
+//                     * the Context menu (right click)
+//                     */
+//                    if (popOver.isShowing())
+//                    {
+//                        popOver.hide();
+//                    }
+//
+//                    Movie moviePoster = model.getMovieInfo(imageView);
+//                    contextMenuAction(imageView, moviePoster);
+//                    model.contextMenuOpenOrNot(contextMenu);
+//                    contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
+//                }
+//            });
         }
     }
 
