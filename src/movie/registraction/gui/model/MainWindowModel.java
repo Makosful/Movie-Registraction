@@ -6,6 +6,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -313,7 +315,7 @@ public class MainWindowModel
      * @throws movie.registraction.dal.DALException
      */
     public void chooseFile(TilePane tilePane) throws DALException
-    {
+    {     
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 
@@ -327,8 +329,6 @@ public class MainWindowModel
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
 
-        // Setting up the arrayList for ImageViews.
-        imageViewList();
 
         // Checks if any files where chosen
         if (chosenFiles != null)
@@ -337,6 +337,9 @@ public class MainWindowModel
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
                 fxmlTitleSearch(nameOfMovie);
+                // disse udkommenteret linjer er klar, så at der ik kan tilføjes flere af samme film. Dog kræver det, at man loader filmene fra DB med det samme, når man åbner programmet
+                // if(!bll.movieAlreadyExisting(nameOfMovie))
+                //{
                 String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
                 imgPath = "https:" + imgPath;
 
@@ -346,6 +349,10 @@ public class MainWindowModel
                 setPictures(tilePane, chosenFile, imgPath);
                 System.out.println(fileName); //For debugging
             }
+            //else
+            // {
+            //    System.out.println("Move has already been added!!!!!!");
+            //}
         }
         else
         {
@@ -364,11 +371,6 @@ public class MainWindowModel
 
         tilePane.getChildren().add(imageView);
         bll.imageIdMovieId(chosenFile, imageView);
-    }
-
-    public void imageViewList()
-    {
-        imageViewList = new ArrayList();
     }
 
     /**
@@ -599,5 +601,30 @@ public class MainWindowModel
             System.out.println("Failed to get movie");
         }
         return movieObject;
+    }
+     /**
+      * This loads all the movies from start.
+      * @param tilePane 
+      */
+    public void loadMoviesFromStart(TilePane tilePane)
+    {
+        ImageView imageView;
+        imageViewList = new ArrayList();
+        try
+        {
+            for (Movie movie : getAllMovies())
+            {
+                imageView = new ImageView("https:" + movie.getImgPath());
+                imageView.setFitHeight(IMAGE_HEIGHT);
+                imageView.setFitWidth(IMAGE_WIDTH);
+                imageView.setId("" + movie.getId());
+                imageViewList.add(imageView);
+                tilePane.getChildren().add(imageView);
+            }
+        }
+        catch (DALException ex)
+        {
+            System.out.println("Couldnt load movies from db.");
+        }
     }
 }

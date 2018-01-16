@@ -207,6 +207,7 @@ public class MovieDAO {
                         + "Movie.year, "
                         + "Movie.lastView,"
                         + "Movie.movieLength, "
+                        + "Movie.imdbLink, "
                         + "Category.name AS categoryName "
                         + "FROM Movie "
                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
@@ -260,7 +261,7 @@ public class MovieDAO {
         }
         else
         {
-         
+            
             Movie movie = new Movie();
             movie.setId(rs.getInt("id"));
             movie.setMovieName(rs.getString("name"));
@@ -269,11 +270,12 @@ public class MovieDAO {
             movie.setImdbRating(rs.getDouble("imdbRating"));
             movie.setLastView(rs.getDate("lastView"));
             movie.setFilePath(rs.getString("filePath"));
-            movie.setFileImg(rs.getString("imgPath"));
+            movie.setImgPath(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));
+            movie.setImdbLink(rs.getString("imdbLink"));
             movie.setCategories(rs.getString("categoryName"));
             
-
+           
             return movie;
         
         }
@@ -293,17 +295,18 @@ public class MovieDAO {
            int id;
            
            String sqlInsert = "INSERT INTO Movie "
-                            + "(name, filePath, imgPath, personalRating, imdbRating, year, movieLength) "
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                            + "(name, filePath, imgPath, imdbLink, personalRating, imdbRating, year, movieLength) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
            preparedStatement.setString(1, movieMetaData[0]);
            preparedStatement.setString(2, "path");
            preparedStatement.setString(3, movieMetaData[4]);
-           preparedStatement.setDouble(4, -1);
-           preparedStatement.setDouble(5, Double.parseDouble(movieMetaData[3]));
-           preparedStatement.setInt(6, Integer.parseInt(movieMetaData[1]));
-           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[2]));
+           preparedStatement.setString(4, movieMetaData[6]);
+           preparedStatement.setDouble(5, -1);
+           preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[3]));
+           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[1]));
+           preparedStatement.setInt(8, Integer.parseInt(movieMetaData[2]));
 
            preparedStatement.executeUpdate();
 

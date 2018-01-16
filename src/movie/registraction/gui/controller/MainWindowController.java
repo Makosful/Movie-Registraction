@@ -12,16 +12,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
@@ -80,25 +78,25 @@ public class MainWindowController implements Initializable
     private FlowPane flpYear;
     @FXML
     private FlowPane flpOther;
-    
+
     VBox vBox;
+    Hyperlink imdbURL;
     PopOver popOver;
     ContextMenu contextMenu;
-    
+
     //<editor-fold defaultstate="collapsed" desc="Labels">
-    Label labelMovieTitle;
-    Label labelGenre;
-    Label labelYear;
-    Label labelImdbRating;
-    Label labelPersonalRating;
-    Label labelMovieLength;
-    Label labelLastView;
-//</editor-fold>
-    
-    
+    Label lblMovieTitle;
+    Label lblGenre;
+    Label lblYear;
+    Label lblImdbRating;
+    Label lblPersonalRating;
+    Label lblMovieLength;
+    Label lblLastView;
+    Label lblIMDBId;
+    //</editor-fold>
 
     /**
-     * Constructor for all intrents and purposes
+     * Constructor for all intents and purposes
      *
      * @param url
      * @param rb
@@ -107,16 +105,20 @@ public class MainWindowController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         SetupTilePane();
+        setupContextMenu();
 
         try
         {
             // Access the Model
             model = new MainWindowModel();
+            model.loadMoviesFromStart(tilePane);
+            imageClick();
         }
         catch (DALException ex)
         {
             System.out.println(ex);
         }
+        
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
@@ -126,12 +128,12 @@ public class MainWindowController implements Initializable
 
         //Initializing methods
         comboBoxSetup();
-        
+
         model.findOldAndBadMovies();
     }
 
     /**
-     * Sets up the combo bozes
+     * Sets up the combo boxes
      */
     private void comboBoxSetup()
     {
@@ -144,7 +146,7 @@ public class MainWindowController implements Initializable
      */
     private void modalWindowSetup()
     {
-        
+
     }
 
     /**
@@ -237,8 +239,7 @@ public class MainWindowController implements Initializable
     private void setChosenFilesWithPicture() throws DALException
     {
         model.chooseFile(tilePane);
-        setupContextMenu(tilePane);
-        imageClick(tilePane, contextMenu);
+        imageClick();
     }
 
     /**
@@ -251,90 +252,123 @@ public class MainWindowController implements Initializable
         tilePane.setHgap(20);
         tilePane.setVgap(20);
     }
-    
+
     private void vBoxAndLabelSetup(Movie movie, MouseEvent event)
-    {       
+    {
         String genreCategories = null;
-        for(int i = 0;i<movie.getCategories().size();i++)
+        for (int i = 0; i < movie.getCategories().size(); i++)
         {
-            if(genreCategories == null)
+            if (genreCategories == null)
             {
                 genreCategories = movie.getCategories().get(i);
             }
             else
             {
-            genreCategories += "\n" + movie.getCategories().get(i);
-            System.out.println(genreCategories);
+                genreCategories += "\n" + movie.getCategories().get(i);
+                System.out.println(genreCategories);
             }
         }
-        
+
         //<editor-fold defaultstate="collapsed" desc="Label And One VBox">
-        labelMovieTitle = new Label();
-        labelPersonalRating= new Label();
-        labelMovieLength = new Label();
-        labelLastView = new Label();
-        labelImdbRating = new Label();
-        labelGenre = new Label();
-        labelYear = new Label();
+        lblMovieTitle = new Label();
+        lblGenre = new Label();
+        lblPersonalRating = new Label();
+        lblMovieLength = new Label();
+        lblLastView = new Label();
+        lblImdbRating = new Label();
+        lblYear = new Label();
+        imdbURL = new Hyperlink();
         vBox = new VBox();
         //</editor-fold>
-        
+
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
-        labelMovieTitle.setText(movie.getMovieTitle());
-        labelYear.setText("" + movie.getYear());
-        labelImdbRating.setText("" + movie.getImdbRating());
-        labelPersonalRating.setText("" + movie.getPersonalRating());
-        labelLastView.setText("" + movie.getLastView());
-        labelGenre.setText(genreCategories);
-//</editor-fold>
+        lblMovieTitle.setText("Title: " + movie.getMovieTitle());
+        lblMovieTitle.setStyle("-fx-text-fill: black");
+        lblGenre.setText("Genres: " + genreCategories);
+        lblGenre.setStyle("-fx-text-fill: black");
+        lblYear.setText("Release year: " + movie.getYear());
+        lblYear.setStyle("-fx-text-fill: black");
+        lblMovieLength.setText("Length: " + genreCategories + "minutes");
+        lblMovieLength.setStyle("-fx-text-fill: black");
+        lblImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
+        lblImdbRating.setStyle("-fx-text-fill: black");
+        lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating());
+        lblPersonalRating.setStyle("-fx-text-fill: black");
+        lblLastView.setText("Last viewed on: " + movie.getLastView());
+        lblLastView.setStyle("-fx-text-fill: black");
         
+        //HYPERLINK
+        imdbURL.setText("http://www.imdb.com/title/" + movie.getImdbLink());
+        //imdbURL.setStyle("-fx-text-fill: black");
+        //</editor-fold>
+
         //<editor-fold defaultstate="collapsed" desc="addToVbox">
-        vBox.getChildren().add(labelMovieTitle);
-        vBox.getChildren().add(labelGenre);
-        vBox.getChildren().add(labelYear);
-        vBox.getChildren().add(labelImdbRating);
-        vBox.getChildren().add(labelPersonalRating);
-        vBox.getChildren().add(labelLastView);
+        vBox.getChildren().add(lblMovieTitle);
+        vBox.getChildren().add(lblGenre);
+        vBox.getChildren().add(lblYear);
+        vBox.getChildren().add(lblMovieLength);
+        vBox.getChildren().add(lblImdbRating);
+        vBox.getChildren().add(lblPersonalRating);
+        vBox.getChildren().add(lblLastView);
+        vBox.getChildren().add(imdbURL);
+
         //</editor-fold>
         
-        if (popOver == null) 
+//        GridPane popGrid = new GridPane();
+//
+//        popGrid.setPadding(new Insets(20));
+//        popGrid.setHgap(10);
+//        popGrid.setVgap(5); //irrelevant
+//
+//        popGrid.add(labelMovieTitle, 0, 0);
+//        popGrid.add(labelGenre, 0, 1);
+//        popGrid.add(labelYear, 0, 2);
+//        popGrid.add(labelImdbRating, 0, 3);
+//        popGrid.add(labelPersonalRating, 0, 4);
+//        popGrid.add(labelLastView, 0, 5);
+//        popGrid.add(imdbURL, 0, 6);
+
+        if (popOver == null)
         {
-            popOver = new PopOver(vBox);
+            popOver = new PopOver(vBox); //WOLOLO (change to vBox)
             popOver.show(tilePane, event.getScreenX(), event.getScreenY());
         }
-        if (popOver.isShowing()) 
+        else if(popOver.isShowing())
         {
             popOver.hide();
-        }   
-        if(!popOver.isShowing())
+        }
+        else if(!popOver.isShowing())
         {
-            popOver = new PopOver(vBox);
+            popOver = new PopOver(vBox); //WOLOLO (change to vBox)
             popOver.show(tilePane, event.getScreenX(), event.getScreenY());
         }
     }
+
     /**
-     * Code so you can click or right click on an image and soemthing happens.
+     * Code so you can click or right click on an image and something happens.
      * Mouse event.
      */
-    private void imageClick(TilePane tilePane, ContextMenu contextMenu)
+    private void imageClick()
     {
-        
-        for (ImageView imageView : model.GetImageViewList()) 
+
+        for (ImageView imageView : model.GetImageViewList())
         {
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() 
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
-                public void handle(MouseEvent event) 
+                public void handle(MouseEvent event)
                 {
                     MouseButton mouseButton = event.getButton();
-                    if (mouseButton == MouseButton.PRIMARY) 
+                    if (mouseButton == MouseButton.PRIMARY)
                     {
                         model.closeMenuOrClick(contextMenu);
                         Movie movie = model.getMovieInfo(imageView);
                         vBoxAndLabelSetup(movie, event);
+                        System.out.println(imageView.getId());
+                        System.out.println(movie.getMovieTitle());
                     }
 
-                    if (mouseButton == MouseButton.SECONDARY) 
+                    if (mouseButton == MouseButton.SECONDARY)
                     {
                         model.contextMenuOpenOrNot(contextMenu);
                         contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
@@ -354,13 +388,13 @@ public class MainWindowController implements Initializable
     {
         model.fxmlSetLibrary();
     }
-    
-     /**
-     * Sets up the contextmenu with the choices user get.
+
+    /**
+     * Sets up the context menu with the choices user get.
      *
      * @param tilePane
      */
-    private void setupContextMenu(TilePane tilePane)
+    private void setupContextMenu()
     {
         contextMenu = new ContextMenu();
         MenuItem test1 = new MenuItem("1");

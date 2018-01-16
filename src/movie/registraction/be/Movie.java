@@ -24,7 +24,17 @@ public class Movie {
     private String filePath;    
     private int movieLength; //Minutes
     private Date lastView;
+    private String imdbLink;
 
+    public String getImdbLink()
+    {
+        return imdbLink;
+    }
+
+    public void setImdbLink(String imdbLink)
+    {
+        this.imdbLink = imdbLink;
+    }
     List<String> categories;
 
     public Movie() {
@@ -76,9 +86,9 @@ public class Movie {
         this.filePath = filePath;
     }
     
-    public void setFileImg(String fileImg) 
+    public void setImgPath(String fileImg) 
     {
-        this.imgPath = imgPath;
+        this.imgPath = fileImg;
     }
     
     public void setMovieLength(int movieLength) 
@@ -86,7 +96,7 @@ public class Movie {
         this.movieLength = movieLength;
     }
 
-    public String getFileImg() 
+    public String getImgPath() 
     {
         return imgPath;
     }
@@ -121,10 +131,6 @@ public class Movie {
         return filePath;
     }
     
-    public String getImgPath() {
-        return imgPath;
-    }
-
     public Date getLastView() {
         return lastView;
     }
