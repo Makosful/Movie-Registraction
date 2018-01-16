@@ -337,16 +337,13 @@ public class MainWindowModel
             for (File chosenFile : chosenFiles)
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
+                String relativePath = chosenFile.getPath().split("src")[1];
+                       relativePath = "src" + relativePath;
                 try
                 {
                     if (!bll.movieAlreadyExisting(nameOfMovie))
                     {
-                    addMovie(nameOfMovie, chosenFile.getPath());;
-                    
-                    String test = chosenFile.getPath().split("src")[1];
-                        System.out.println("src"+test);
-                    
-                    
+                    addMovie(nameOfMovie, relativePath);                  
                     String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
                     imgPath = "https:" + imgPath;
                     setPictures(tilePane, chosenFile, imgPath);
