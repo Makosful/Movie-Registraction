@@ -53,8 +53,6 @@ public class LibraryScan implements Runnable
                            folder);
             }
 
-            Collection<Path> values = keyMap.values();
-
             WatchKey key;
 
             do
