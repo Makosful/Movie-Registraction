@@ -3,14 +3,10 @@ package movie.registraction.gui.model;
 import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -27,7 +23,6 @@ import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.ChangeCategories;
 import movie.registraction.bll.Rating;
 import movie.registraction.dal.DALException;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
