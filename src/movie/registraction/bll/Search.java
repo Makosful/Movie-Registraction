@@ -33,12 +33,14 @@ public class Search
         }
     }
     
-    public ObservableList<Movie> prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText) throws DALException
+    public ObservableList<Movie> prepareSearch(List<String> categories, List<String> year, String order, String sort, int rating, String searchText) throws DALException
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
         String sqlOrderBy = "";
         String sqlSearch = "";
+        String sqlRating = "";
+        
         boolean searchNumeric = false;
         
         for(String criteria : categories) {
@@ -54,6 +56,7 @@ public class Search
 
             sqlSearchCategory += "Category.name = ?" ;
         }
+        
         for(String criteria : year){
 
             if(sqlSearchYear.isEmpty())
@@ -98,24 +101,34 @@ public class Search
                 searchNumeric = false;
             }
         }
+        
+        if(rating != -1)
+        {
+            sqlRating = "Movie.personalRating > ?";
+        }
             
 
         
         sqlSearchCategory += ")";
         sqlSearchYear += ")";
                 
-        if(!sqlSearchCategory.isEmpty() && !sqlSearchYear.isEmpty() || !sqlSearch.isEmpty())
+        if(!sqlSearchCategory.isEmpty() && !sqlSearchYear.isEmpty() || !sqlSearch.isEmpty() || !sqlRating.isEmpty())
         {
             sqlSearchCategory += " AND ";
         }
         
-        if(!sqlSearchYear.isEmpty() && !sqlSearch.isEmpty())
+        if(!sqlSearchYear.isEmpty() && !sqlSearch.isEmpty() || !sqlRating.isEmpty())
         {
             sqlSearchYear += " AND ";
         }
         
-        String sqlString = sqlSearchCategory+sqlSearchYear+sqlSearch+sqlOrderBy;
-        return dal.searchMovies(sqlString, categories, year, searchText, searchNumeric);
+        if(!sqlRating.isEmpty() && !sqlSearch.isEmpty())
+        {
+            sqlRating += " AND ";
+        }
+        
+        String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
+        return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
  
         
     }

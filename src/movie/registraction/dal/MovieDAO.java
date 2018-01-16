@@ -377,7 +377,11 @@ public class MovieDAO {
     }
     
     
-    
+    /**
+     * 
+     * @param movieId
+     * @throws DALException 
+     */
     public void setLastView(int movieId) throws DALException
     { 
         
@@ -399,14 +403,15 @@ public class MovieDAO {
         }
     }
     
-        /**
-         * This method is to get a imgPath from a specific movie. 
-         * So that it can be thrown into the tilepane.
-         * @param movieName
-         * @return
-         * @throws DALException 
-         */
-        public String getSpecificMovieImage(String movieName) throws DALException
+    
+    /**
+     * This method is to get a imgPath from a specific movie. 
+     * So that it can be thrown into the tilepane.
+     * @param movieName
+     * @return
+     * @throws DALException 
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
     {
         String imageLink = null;
         try(Connection con = db.getConnection())
@@ -428,7 +433,24 @@ public class MovieDAO {
        return imageLink;
     }
 
-    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, String searchText, boolean searchNumeric) throws DALException
+        
+    /**
+     * 
+     * @param sqlString
+     * @param categories
+     * @param year
+     * @param rating
+     * @param searchText
+     * @param searchNumeric
+     * @return
+     * @throws DALException 
+     */
+    public ObservableList<Movie> searchMovies(String sqlString,
+                                              List<String> categories,
+                                              List<String> year,
+                                              int rating,
+                                              String searchText,
+                                              boolean searchNumeric) throws DALException
     {
         try (Connection con = db.getConnection())
         {
@@ -461,6 +483,10 @@ public class MovieDAO {
             {
                 preparedStatement.setString(i, y);
                 i++;
+            }
+            if(rating != -1)
+            {
+                preparedStatement.setInt(i++, rating);
             }
             
             if(!searchText.isEmpty())
