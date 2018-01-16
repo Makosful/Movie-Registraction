@@ -7,11 +7,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
@@ -38,8 +41,9 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
-    private final ObservableList<Path> moviePaths;
     private final ObservableList<String> allCategories;
+    private final ObservableList<Path> moviePaths;
+    private final ObservableList<Path> changeList;
 
     private final int IMAGE_HEIGHT;
     private final int IMAGE_WIDTH;
@@ -61,13 +65,13 @@ public class MainWindowModel
         {
         }
 
-        genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
+        genres = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
+        changeList = bll.getChangeList();
+        categories = new ChangeCategories();
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
-
-        categories = new ChangeCategories();
 
         for (int i = 0; i < 10; i++)
         {
@@ -84,6 +88,37 @@ public class MainWindowModel
         extensionList.add(".mp4");
         extensionList.add(".mpeg4");
         loadMovieFromLibrary();
+        setupLibraryListener();
+        bll.setDirectoryWatch();
+
+    }
+
+    /**
+     * Sets up a listener to the List connected to the Library Watcher
+     */
+    private void setupLibraryListener()
+    {
+        changeList.addListener((ListChangeListener.Change<? extends Path> c) ->
+        {
+            while (c.next())
+            {
+                System.out.println("Scanning again");
+                this.updateLibrary();
+                changeList.clear();
+            }
+        });
+    }
+
+    private void updateLibrary()
+    {
+        try
+        {
+            bll.getMovieList(extensionList);
+            bll.updateLibrary(bll.getMovieList(extensionList));
+        }
+        catch (BLLException ex)
+        {
+        }
     }
 
     /**
@@ -110,12 +145,9 @@ public class MainWindowModel
         catch (BLLException ex)
         {
             System.out.println("Could not get search result");
-        }
-        catch (DALException ex)
-        {
             System.out.println("Could not add the movie in the database");
+            System.out.println(ex);
         }
-
     }
 
     /**
@@ -332,29 +364,30 @@ public class MainWindowModel
             for (File chosenFile : chosenFiles)
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
-                String relativePath = chosenFile.getPath().split("src")[1];
-                       relativePath = "src" + relativePath;
+
                 try
                 {
                     if (!bll.movieAlreadyExisting(nameOfMovie))
                     {
-                    addMovie(nameOfMovie, relativePath);                  
-                    String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
-                    imgPath = "https:" + imgPath;
-                    setPictures(tilePane, chosenFile, imgPath);
+
+                        addMovie(nameOfMovie, chosenFile.getPath());
+                        String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
+                        imgPath = "https:" + imgPath;
+                        setPictures(tilePane, chosenFile, imgPath);
+
                     }
                     else
                     {
-                     ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-                    Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
-                    okButton);
-                    
-                    Optional<ButtonType> result = alert.showAndWait();
+                        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                        Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
+                                                okButton);
+
+                        Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == okButton)
                         {
-                        alert.close();
+                            alert.close();
                         }
-                    }  
+                    }
                 }
                 catch (Exception e)
                 {
@@ -370,7 +403,6 @@ public class MainWindowModel
         }
     }
 
-
     public void setPictures(TilePane tilePane, File chosenFile, String imgUrl) throws DALException
     {
         ImageView imageView = new ImageView(imgUrl);
@@ -379,7 +411,14 @@ public class MainWindowModel
         imageViewList.add(imageView);
 
         tilePane.getChildren().add(imageView);
-        bll.setImageId(chosenFile, imageView);
+        try
+        {
+            bll.setImageId(chosenFile, imageView);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -449,12 +488,6 @@ public class MainWindowModel
 
             // Tell the user the files have been added
             System.out.println("Successfully added library");
-
-            // Show the user the full file path of the files in the console
-            moviePaths.forEach((movy) ->
-            {
-                //System.out.println(movy);
-            });
         }
         catch (BLLException ex)
         {
@@ -502,14 +535,23 @@ public class MainWindowModel
         return imageViewList;
     }
 
-    public ObservableList<Movie> getAllMovies() throws DALException
+    public ObservableList<Movie> getAllMovies() 
     {
-        return bll.getAllMovies();
+        ObservableList<Movie> movies = FXCollections.observableArrayList();
+        try
+        {
+            movies = bll.getAllMovies();
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+        return movies;
     }
 
     /**
      * Gets the Genre list !!! UNUSED
-     * NOT USED ANYMORE 
+     * NOT USED ANYMORE
      * TODO Replace dummy data with actual data
      *
      * @return
@@ -584,9 +626,9 @@ public class MainWindowModel
         {
             idMatchMovie = bll.getMovieIdMatch(imageView);
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
-            System.out.println("Failed to find ID");
+            System.out.println(ex);
         }
         return idMatchMovie;
     }
@@ -597,51 +639,46 @@ public class MainWindowModel
         {
             bll.findOldAndBadMovies();
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
-            System.out.println("Could not execute the check of old and low rated movies");
+            System.out.println(ex);
         }
     }
-    
-     public Movie getMovieInfo(ImageView imageView)
+
+    public Movie getMovieInfo(ImageView imageView)
     {
         Movie movieObject = null;
-        try 
+        try
         {
             movieObject = bll.getMovieInfo(imageView);
-        } 
-        catch (DALException ex) 
+        }
+        catch (BLLException ex)
         {
-            System.out.println("Failed to get movie");
+            System.out.println(ex);
         }
         return movieObject;
     }
-     /**
-      * This loads all the movies from start.
-      * @param tilePane 
-      */
+
+    /**
+     * This loads all the movies from start.
+     *
+     * @param tilePane
+     */
     public void loadMoviesFromStart(TilePane tilePane)
     {
         ImageView imageView;
         imageViewList = new ArrayList();
-        try
+        for (Movie movie : getAllMovies())
         {
-            for (Movie movie : getAllMovies())
-            {
-                imageView = new ImageView("https:" + movie.getImgPath());
-                imageView.setFitHeight(IMAGE_HEIGHT);
-                imageView.setFitWidth(IMAGE_WIDTH);
-                imageView.setId("" + movie.getId());
-                imageViewList.add(imageView);
-                tilePane.getChildren().add(imageView);
-            }
-        }
-        catch (DALException ex)
-        {
-            System.out.println("Couldnt load movies from db.");
+            imageView = new ImageView("https:" + movie.getImgPath());
+            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageView.setId("" + movie.getId());
+            imageViewList.add(imageView);
+            tilePane.getChildren().add(imageView);
         }
     }
-    
+
     public void removeMovie(int id)
     {
         try
@@ -653,7 +690,7 @@ public class MainWindowModel
             System.out.println(ex);
         }
     }
-    
+
     public void openFileInNative(File file)
     {
         try
