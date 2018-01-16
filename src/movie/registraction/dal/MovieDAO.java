@@ -274,8 +274,7 @@ public class MovieDAO {
             movie.setMovieLength(rs.getInt("movieLength"));
             movie.setImdbLink(rs.getString("imdbLink"));
             movie.setCategories(rs.getString("categoryName"));
-            
-           
+
             return movie;
         
         }
@@ -430,5 +429,64 @@ public class MovieDAO {
             throw new DALException();
         }
        return imageLink;
+    }
+
+    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, String searchText) throws DALException
+    {
+        try (Connection con = db.getConnection())
+        {
+            String sql = "SELECT "
+                        + "Movie.id, "
+                        + "Movie.name, "
+                        + "Movie.filePath, "
+                        + "Movie.imgPath, "
+                        + "Movie.personalRating, "
+                        + "Movie.imdbRating, "
+                        + "Movie.year, "
+                        + "Movie.lastView,"
+                        + "Movie.movieLength, "
+                        + "Movie.imdbLink, "
+                        + "Category.name AS categoryName "
+                        + "FROM Movie "
+                        + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id"
+                        + sqlString;
+            
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            
+            if(!searchText.isEmpty())
+            {
+               // preparedStatement.setString(1, movieId);
+            }
+            
+            
+            
+            
+            
+            
+            ObservableList<Movie> movies = FXCollections.observableArrayList();
+            Movie movie = new Movie();
+            while (rs.next())
+            {
+                
+                movie = createMovieFromDB(rs, movie);
+              
+                
+                if (!movies.contains(movie))
+                {
+                    movies.add(movie);
+                }
+
+            }
+            
+            return movies;
+            
+        } catch (SQLException ex) {
+            throw new DALException();
+        }
+        
+        
     }
 }

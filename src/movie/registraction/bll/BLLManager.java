@@ -244,7 +244,7 @@ public class BLLManager
         return dal.getAllMovies();
     }
 
-    public void imageIdMovieId(File files, ImageView imageView) throws DALException
+    public void setImageId(File files, ImageView imageView) throws DALException
     {
         for (Movie movie : getAllMovies())
         {
@@ -257,15 +257,6 @@ public class BLLManager
                 // Changing integer to string, as imageview requires string.
                 String idToString = Integer.toString(movie.getId());
                 imageView.setId(idToString);
-
-                //  Finding the ID that belongs to the movie.
-                if (Integer.parseInt(imageView.getId()) == movie.getId())
-                {
-                    System.out.println("workeeeeeeeed");
-                    System.out.println(movie.getImgPath());
-                    System.out.println(movie.getPersonalRating());
-                    System.out.println(movie.getYear());
-                }
             }
         }
     }
@@ -338,7 +329,7 @@ public class BLLManager
                 meta[5] = meta[i].replace(",", "");
             }
             //imdb id
-            else if(meta[i].contains("imdbID:"))
+            else if (meta[i].contains("imdbID:"))
             {
                 meta[6] = meta[i];
             }
@@ -441,9 +432,9 @@ public class BLLManager
      *
      * @throws DALException
      */
-    public boolean movieAlreadyExisting(String movieTitle) throws DALException
+    public boolean movieAlreadyExisting(String movieTitle) throws BLLException
     {
-        boolean isAlreadyInDataBase = true;
+        boolean isAlreadyInDataBase = false;
         try
         {
             for (Movie m : getAllMovies())
@@ -452,18 +443,26 @@ public class BLLManager
                 {
                     isAlreadyInDataBase = true;
                 }
-                else
-                {
-                    isAlreadyInDataBase = false;
-                }
 
             }
         }
         catch (DALException ex)
         {
-            throw new DALException();
+            throw new BLLException();
         }
 
         return isAlreadyInDataBase;
+    }
+
+    public void removeMovie(int id) throws BLLException
+    {
+        try
+        {
+            dal.removeMovie(id);
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
     }
 }

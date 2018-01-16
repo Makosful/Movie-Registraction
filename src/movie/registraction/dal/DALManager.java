@@ -467,13 +467,19 @@ public class DALManager
 
     public void removeMovie(int movieId) throws DALException
     {
+        mDAO.removeMovie(movieId);
+    }
+
+    public void searchMovies(String sqlString, List<String> categories, List<String> year, String searchText) throws DALException
+    {
         try
         {
-            mDAO.removeMovie(movieId);
+            mDAO.searchMovies(sqlString, categories, year, searchText);
         }
         catch (DALException ex)
         {
             throw new DALException();
         }
     }
+
 }
