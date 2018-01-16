@@ -73,15 +73,6 @@ public class MainWindowModel
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
 
-        for (int i = 0; i < 10; i++)
-        {
-            int y = 1990;
-            int y2 = y + i;
-
-            JFXCheckBox cb = new JFXCheckBox(String.valueOf(y2));
-            years.add(cb);
-        }
-
         extensionList = new ArrayList();
         extensionList.add(".jpg");
         extensionList.add(".png");
@@ -158,56 +149,6 @@ public class MainWindowModel
     {
     }
 
-    /**
-     * Gets the list of Genres
-     *
-     * @return Observablelist of checkboxes
-     */
-    public ObservableList<JFXCheckBox> getGenreList()
-    {
-        try
-        {
-            for (String category : categories.allCategories())
-            {
-                JFXCheckBox cb = new JFXCheckBox(category);
-                cb.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                        search.setSearchCategories(cb.getText()); 
-                    }
-                });
-                genres.add(cb);
-            }
-        }
-        catch (DALException ex)
-        {
-            System.out.println("Could not get the list of categories");
-        }
-
-        return genres;
-    }
-
-    /**
-     * Returns the list of CheckBoxes for the years
-     *
-     * @return Returns the list CheckBoxes for the years
-     */
-    public ObservableList<JFXCheckBox> getYearList()
-    {
-        return years;
-    }
-
-    /**
-     * Gets the list of Other options
-     *
-     * Gets the list of CheckBoxes for the Other category
-     *
-     * @return Returns the list of Other Options
-     */
-    public ObservableList<JFXCheckBox> getOtherList()
-    {
-        return others;
-    }
 
     /**
      * Gets all categories from changeCategories class
@@ -230,15 +171,12 @@ public class MainWindowModel
 
     
     /**
-     * 
-     * @param movie
-     * @return 
+     * Gets all categories, is used in EditCategoryController
+     * @return all categories in observable list
      */
     public ObservableList<String> loadCategories() throws BLLException
     {
-
             return categories.loadCategories();
-
     }
     
     
@@ -569,69 +507,63 @@ public class MainWindowModel
         return movies;
     }
 
-    /**
-     * Gets the Genre list !!! UNUSED
-     * NOT USED ANYMORE
-     * TODO Replace dummy data with actual data
+    
+    
+        /**
+     * Gets the list of Genres
      *
-     * @return
+     * @return Observablelist of checkboxes
      */
-    public ObservableList<Node> getGenreNodes()
+    public ObservableList<JFXCheckBox> getGenreList()
     {
-        ObservableList<Node> nodes = FXCollections.observableArrayList();
-
-        for (int i = 0; i < 10; i++)
+        try
         {
-            int j = i + 1;
-            Node node = new CheckBox("Test" + j);
-            nodes.add(node);
+            for (String category : categories.allCategories())
+            {
+                JFXCheckBox cb = new JFXCheckBox(category);
+                cb.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        search.setSearchCategories(cb.getText()); 
+                    }
+                });
+                genres.add(cb);
+            }
+        }
+        catch (DALException ex)
+        {
+            System.out.println("Could not get the list of categories");
         }
 
-        return nodes;
+        return genres;
     }
-
-    /**
-     * Gets the years list
+    
+        /**
+     * Returns the list of CheckBoxes for the years
      *
-     * TODO Replace the dummy data with actual data
-     *
-     * @return
+     * @return Returns the list CheckBoxes for the years
      */
-    public ObservableList<Node> getYearNodes()
+    public ObservableList<JFXCheckBox> getYearList()
     {
-        ObservableList<Node> nodes = FXCollections.observableArrayList();
-
         for (int i = 0; i < 12; i++)
         {
             int j = 1900+(i*10);
             int q = 1900+((1+i)*10);
-            Node node = new CheckBox(j+"-"+q);
-            nodes.add(node);
-        }
+            JFXCheckBox cb = new JFXCheckBox(j+"-"+q);
+            cb.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    search.setSearchYears(cb.getText()); 
+                }
+            });
+            
+        years.add(cb);
 
-        return nodes;
+        }
+        
+        return years;
     }
 
-    /**
-     * Gets the Other list
-     *
-     * TODO Replace the dummy data with actial data
-     *
-     * @return
-     */
-    public ObservableList<Node> getOtherNodes()
-    {
-        ObservableList<Node> nodes = FXCollections.observableArrayList();
-
-        for (int i = 0; i < 10; i++)
-        {
-            int j = i + 1;
-            Node node = new CheckBox("Test" + j);
-            nodes.add(node);
-        }
-
-        return nodes;
-    }
 
     /**
      * Tries to match ids of image and movie.

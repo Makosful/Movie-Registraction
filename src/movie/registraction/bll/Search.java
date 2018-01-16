@@ -24,6 +24,7 @@ public class Search
 {
     private DALManager dal;
     private List<String> categories = new ArrayList();
+    private HashMap<String, String> year = new HashMap();
     
     public Search() throws DALException
     {
@@ -54,9 +55,28 @@ public class Search
         }
     }
     
-    public ObservableList<Movie> prepareSearch(List<String> categories,
-                                               HashMap<String, String> year,
-                                               String order,
+    public void setSearchYears(String years)
+    {
+        String[] decade = years.split("-");
+        if(!year.containsKey(dal)){
+            year.put(decade[0], decade[1]);
+        }
+        else
+        {
+            year.remove(decade[0]);
+        }
+
+        
+        for(Map.Entry<String, String> entry : year.entrySet()) {
+
+            System.out.println(entry.getKey()+"-"+entry.getValue());
+        }
+        
+        
+    }
+    
+    
+    public ObservableList<Movie> prepareSearch(String order,
                                                String sort,
                                                int rating,
                                                String searchText) throws DALException
@@ -91,15 +111,13 @@ public class Search
             }
         }
         
-        sqlSearchCategory += ")";
-        sqlSearchYear += ")";
-                
-        if(!sqlSearchCategory.isEmpty() && !sqlSearchYear.isEmpty() || !sqlSearch.isEmpty() || !sqlRating.isEmpty())
+        
+        if(!sqlSearchCategory.isEmpty() && (!sqlSearchYear.isEmpty() || !sqlSearch.isEmpty() || !sqlRating.isEmpty()))
         {
             sqlSearchCategory += " AND ";
         }
         
-        if(!sqlSearchYear.isEmpty() && !sqlSearch.isEmpty() || !sqlRating.isEmpty())
+        if(!sqlSearchYear.isEmpty() && (!sqlSearch.isEmpty() || !sqlRating.isEmpty()))
         {
             sqlSearchYear += " AND ";
         }
@@ -151,6 +169,12 @@ public class Search
 
             sqlSearchCategory += "Category.name = ?" ;
         }
+        
+        if(!sqlSearchCategory.isEmpty())
+        {
+            sqlSearchCategory = ")";
+        }
+        
         return sqlSearchCategory; 
     }
     
@@ -170,6 +194,12 @@ public class Search
 
             sqlSearchYear += "Movie.year > ? AND Movie.year < ?" ;
         }
+        
+        if(!sqlSearchYear.isEmpty())
+        {
+            sqlSearchYear += ")";
+        }
+
         return sqlSearchYear;
     }
     

@@ -6,7 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -23,6 +29,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
+import movie.registraction.bll.Search;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
@@ -137,8 +144,8 @@ public class MainWindowController implements Initializable
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
         flpGenre.getChildren().setAll(model.getGenreList());
-        flpYear.getChildren().setAll(model.getYearNodes());
-        flpOther.getChildren().setAll(model.getOtherNodes());
+        flpYear.getChildren().setAll(model.getYearList());
+       
 
         //Initializing methods
         comboBoxSetup();
