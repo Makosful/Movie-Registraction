@@ -108,9 +108,9 @@ public class MainWindowController implements Initializable
     //</editor-fold>
 
     /**
-     * Our initializer, which is run when the program initially starts up.
-     * We create our tilepane and also our context menu for the imageview
-     * followed by setting our popOvers visiblity to false (used to bugfix)
+     * Our initializer, which is run when the program has its initial start up.
+     * We create our tile pane and also our context menu for the image view
+     * followed by setting our popOvers visibility to false (used to bug fix)
      *
      * @param url
      * @param rb
@@ -386,7 +386,7 @@ public class MainWindowController implements Initializable
 
     /**
      * Loops through all the images in the image view and pulls the moviePoster
-     * metadata. Stores them and allows us to click the moviePoster poster in our image
+     * meta data. Stores them and allows us to click the moviePoster poster in our image
      * view and display the Popover info panel which in turn displays all the relevant moviePoster information 
      * (apart from production team, actor + actress list and plot)
      * Also allows us to display a context menu where we enable the ability to
@@ -446,7 +446,7 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Making the setOnActions for contextmenu.
+     * Making the setOnActions for context menu.
      * @param imageView
      * @param movie
      */
