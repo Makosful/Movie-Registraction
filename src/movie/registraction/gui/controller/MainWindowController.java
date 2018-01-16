@@ -200,7 +200,6 @@ public class MainWindowController implements Initializable
 
         stage.setScene(new Scene(root));
         stage.show();
-
     }
 
     /**
@@ -298,6 +297,7 @@ public class MainWindowController implements Initializable
         lblImdbRating = new Label();
         lblYear = new Label();
         imdbURL = new Hyperlink();
+        
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
@@ -329,6 +329,7 @@ public class MainWindowController implements Initializable
 
         //<editor-fold defaultstate="collapsed" desc="PopOver Gridpane Setup">
         GridPane popGrid = new GridPane();
+        //TODO CSS
         popGrid.setPadding(new Insets(30));
         popGrid.setHgap(20);
         popGrid.setVgap(10);
@@ -384,20 +385,12 @@ public class MainWindowController implements Initializable
 
     /**
      * Loops through all the images in the image view and pulls the moviePoster
-     * meta
-     * data.
-     * Stores them and allows us to click the moviePoster poster in our image
-     * view and
-     * display the Popover info panel
-     * which in turn displays all the relevant moviePoster information (apart
-     * from
-     * production team, actor + actress list and plot)
+     * metadata. Stores them and allows us to click the moviePoster poster in our image
+     * view and display the Popover info panel which in turn displays all the relevant moviePoster information 
+     * (apart from production team, actor + actress list and plot)
      * Also allows us to display a context menu where we enable the ability to
      * 1: Play the moviePoster (with systems standard media player)
-     * 2: Edit data for each moviePoster and lastly 3: Delete the moviePoster
-     * from the
-     * database
-     * Mouse event.
+     * 2: Edit data for each moviePoster and lastly 3: Delete the moviePoster from the database
      */
     private void imageClick()
     {
@@ -427,36 +420,9 @@ public class MainWindowController implements Initializable
             });
         });
     }
-
-//            imageView.setOnMouseClicked((MouseEvent me) ->
-//            {
-//                MouseButton mouseButton = me.getButton();
-//                if (mouseButton == MouseButton.PRIMARY)
-//                {
-//                    PopOverSetup(moviePoster, me);
-//                    System.out.println(moviePoster.getMovieTitle());
-//                }
-//
-//                if (mouseButton == MouseButton.SECONDARY)
-//                {
-//                    /**
-//                     * Fixes the issue of stacking the Popover (left click) with
-//                     * the Context menu (right click)
-//                     */
-//                    if (popoOver != null && popOver.isShowing())
-//                    {
-//                        popOver.hide();
-//                    }
-//
-//                    Movie moviePoster = model.getMovieInfo(imageView);
-//                    contextMenuAction(imageView, moviePoster);
-//                    model.contextMenuOpenOrNot(contextMenu);
-//                    contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
-//                }
-//            });
+    
     /**
      * Sets the library
-     *
      * @param event
      */
     @FXML
@@ -467,8 +433,6 @@ public class MainWindowController implements Initializable
 
     /**
      * Initialize context menu and menu items.
-     *
-     * @param tilePane
      */
     private void setupContextMenu()
     {
@@ -482,7 +446,6 @@ public class MainWindowController implements Initializable
 
     /**
      * Making the setOnActions for contextmenu.
-     *
      * @param imageView
      * @param movie
      */
@@ -524,7 +487,6 @@ public class MainWindowController implements Initializable
 
     /**
      * Deletes movie.
-     *
      * @param imageView
      * @param movie
      */
