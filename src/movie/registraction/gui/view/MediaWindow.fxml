@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
@@ -11,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.media.MediaView?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.view.MediaWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MediaWindowController">
     <children>
         <SplitPane fx:id="splitPane" dividerPositions="0.9277" orientation="VERTICAL" prefHeight="640.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -26,43 +25,47 @@
                           <children>
                               <HBox prefWidth="800.0">
                                   <children>
-                                      <JFXButton fx:id="btnPlayPause" buttonType="RAISED" onAction="#moviePlayPause" prefHeight="25.0" prefWidth="55.0" ripplerFill="GREEN" text="Play">
+                                      <JFXButton fx:id="btnPlayPause" buttonType="RAISED" onAction="#moviePlayPause" prefHeight="40.0" prefWidth="55.0" ripplerFill="GREEN" text="Play">
                                           <HBox.margin>
-                                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                              <Insets />
                                           </HBox.margin>
                                       </JFXButton>
-                                      <JFXButton buttonType="RAISED" onAction="#movieStop" prefHeight="25.0" prefWidth="50.0" ripplerFill="RED" text="Stop">
-                                          <HBox.margin>
-                                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                          </HBox.margin>
-                                      </JFXButton>
-                                      <JFXSlider fx:id="volumeSlider" blockIncrement="1.0" minorTickCount="4" onDragDetected="#volumeMixer" prefHeight="40.0" prefWidth="125.0" showTickMarks="true" snapToTicks="true">
+                                      <JFXButton buttonType="RAISED" onAction="#movieStop" prefHeight="40.0" prefWidth="50.0" ripplerFill="RED" text="Stop">
                                           <HBox.margin>
                                               <Insets right="10.0" />
                                           </HBox.margin>
-                                          <padding>
-                                              <Insets left="10.0" />
-                                          </padding>
-                                      </JFXSlider>
-                                      <JFXButton buttonType="RAISED" onAction="#movieMute" prefHeight="44.0" prefWidth="50.0" ripplerFill="BLUE" text="Mute">
+                                      </JFXButton>
+                              <Slider fx:id="volumeSlider" onDragDetected="#volumeDrag" prefHeight="40.0" prefWidth="200.0" />
+                              <Label fx:id="lblVolume" ellipsisString="888%" prefHeight="40.0" prefWidth="28.0" text="888%">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets right="5.0" />
+                                 </padding>
+                              </Label>
+                                      <JFXButton onAction="#movieMute" prefHeight="44.0" prefWidth="50.0" ripplerFill="BLUE" text="Mute">
                                           <opaqueInsets>
                                               <Insets />
                                           </opaqueInsets>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
                                       </JFXButton>
                                       <Slider fx:id="progressSlider" prefHeight="40.0" prefWidth="200.0">
                                           <HBox.margin>
                                               <Insets />
                                           </HBox.margin>
                                       </Slider>
-                                      <Label fx:id="lblTimer" contentDisplay="TOP" prefHeight="40.0" text="00:00 / 13:37" textAlignment="RIGHT">
+                                      <Label fx:id="lblTimer" contentDisplay="TOP" prefHeight="40.0" text="00:00:00 / 00:13:37" textAlignment="RIGHT">
                                           <HBox.margin>
-                                              <Insets />
+                                              <Insets right="10.0" />
                                           </HBox.margin>
                                           <padding>
                                               <Insets left="5.0" />
                                           </padding>
                                       </Label>
-                                      <JFXButton buttonType="RAISED" onAction="#movieResize" prefHeight="44.0" prefWidth="50.0" ripplerFill="WHITE" text="?">
+                                      <JFXButton buttonType="RAISED" onAction="#movieResize" prefHeight="44.0" prefWidth="50.0" ripplerFill="WHITE" text="Full">
                                           <opaqueInsets>
                                               <Insets />
                                           </opaqueInsets>

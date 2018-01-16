@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package movie.registraction.gui.view;
+package movie.registraction.gui.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
@@ -11,6 +11,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -50,7 +52,7 @@ public class MediaWindowController implements Initializable
     @FXML
     private JFXButton btnPlayPause;
     @FXML
-    private JFXSlider volumeSlider;
+    private Slider volumeSlider;
     @FXML
     private Slider progressSlider;
     @FXML
@@ -60,6 +62,7 @@ public class MediaWindowController implements Initializable
     private MediaPlayer mediaPlayer;
     private boolean isPlaying;
     private boolean mediaPlayable;
+    private boolean mediaMuted;
 
     private String HourMinSecond;
 
@@ -70,6 +73,8 @@ public class MediaWindowController implements Initializable
     private AnchorPane anchorMedia;
     @FXML
     private SplitPane splitPane;
+    @FXML
+    private Label lblVolume;
 
     /**
      * Initializes the controller class.
@@ -86,12 +91,13 @@ public class MediaWindowController implements Initializable
         volumeSlider.setDisable(true);
         progressSlider.setDisable(true);
         lblTimer.setDisable(true);
+        lblVolume.setDisable(true);
 
         volumeSlider.getParent().getParent().toFront();
 
         //dragListener();
         MediaSetup();
-        
+
         MediaDoubleClick();
 
         splitPane.setDividerPosition(0, 0.95);
@@ -104,7 +110,6 @@ public class MediaWindowController implements Initializable
                 splitPane.setDividerPosition(0, 0.95);
             }
         });
-
     }
 
     private void MediaSetup()
@@ -122,18 +127,22 @@ public class MediaWindowController implements Initializable
 
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(false);
+        mediaPlayer.setVolume(1);
+
         mediaView.setMediaPlayer(mediaPlayer);
-
-        double MovieLengthMillis = mediaPlayer.getTotalDuration().toMillis();
-
-        HourMinSecond = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours((long) MovieLengthMillis),
-                                      TimeUnit.MILLISECONDS.toMinutes((long) MovieLengthMillis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours((long) MovieLengthMillis)),
-                                      TimeUnit.MILLISECONDS.toSeconds((long) MovieLengthMillis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) MovieLengthMillis)));
-
-        System.out.println(HourMinSecond);
 
         mediaPlayer.setOnReady(() ->
         {
+            double MovieLengthMillis = mediaPlayer.getTotalDuration().toMillis();
+
+            System.out.println("Length of movie (before format): " + MovieLengthMillis);
+
+            HourMinSecond = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours((long) MovieLengthMillis),
+                                          TimeUnit.MILLISECONDS.toMinutes((long) MovieLengthMillis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours((long) MovieLengthMillis)),
+                                          TimeUnit.MILLISECONDS.toSeconds((long) MovieLengthMillis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) MovieLengthMillis)));
+
+            System.out.println("Length of movie: " + HourMinSecond);
+
             mediaPlayable = true;
         });
     }
@@ -144,6 +153,7 @@ public class MediaWindowController implements Initializable
         volumeSlider.setDisable(false);
         progressSlider.setDisable(false);
         lblTimer.setDisable(false);
+        lblVolume.setDisable(false);
 
         if (!isPlaying && mediaPlayable)
         {
@@ -175,14 +185,32 @@ public class MediaWindowController implements Initializable
     }
 
     @FXML
-    private void volumeMixer(MouseEvent event)
+    private void volumeDrag(MouseEvent event)
     {
+        volumeSlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) ->
+        {
+            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
+            volumeSlider.setValue(mediaPlayer.getVolume() * 100);
+            System.out.println(volumeSlider.getValue());
+            lblVolume.setText(String.format("%.0f", new_val) + "%");
+        });
     }
 
     @FXML
     private void movieMute(ActionEvent event)
-    {
-
+    {        
+        if (!mediaMuted)
+        {
+            mediaPlayer.setVolume(0);
+            volumeSlider.setDisable(true);
+            mediaMuted = !mediaMuted;
+        }
+        else if (mediaMuted)
+        {
+            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
+            volumeSlider.setDisable(false);
+            mediaMuted = !mediaMuted;
+        }
     }
 
     @FXML
