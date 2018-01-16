@@ -439,7 +439,7 @@ public class MainWindowController implements Initializable
         contextMenu = new ContextMenu();
         play = new MenuItem("Play Movie");
         editData = new MenuItem("Edit Metadata TODO");
-        deleteMovie = new MenuItem("Delete Movie");
+        deleteMovie = new MenuItem("Delete Movie TODO");
         contextMenu.getItems().addAll(play, editData, deleteMovie);
 
     }
