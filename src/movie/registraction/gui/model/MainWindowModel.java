@@ -12,19 +12,18 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
-import movie.registraction.bll.BLLException;
-import movie.registraction.bll.BLLManager;
-import movie.registraction.bll.ChangeCategories;
-import movie.registraction.bll.Rating;
+import movie.registraction.bll.*;
 import movie.registraction.dal.DALException;
 
 /**
@@ -37,7 +36,8 @@ public class MainWindowModel
     List<ImageView> imageViewList;
 
     private BLLManager bll;
-
+    private Search search = new Search();
+            
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
@@ -170,6 +170,12 @@ public class MainWindowModel
             for (String category : categories.allCategories())
             {
                 JFXCheckBox cb = new JFXCheckBox(category);
+                cb.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        search.setSearchCategories(cb.getText()); 
+                    }
+                });
                 genres.add(cb);
             }
         }
@@ -222,6 +228,20 @@ public class MainWindowModel
         return allCategories;
     }
 
+    
+    /**
+     * 
+     * @param movie
+     * @return 
+     */
+    public ObservableList<String> loadCategories() throws BLLException
+    {
+
+            return categories.loadCategories();
+
+    }
+    
+    
     /**
      * Sends the category string to chosenCategories class to be added
      *

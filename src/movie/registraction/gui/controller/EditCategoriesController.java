@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import movie.registraction.bll.BLLException;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
@@ -48,7 +49,14 @@ public class EditCategoriesController implements Initializable
             System.out.println(ex.getMessage());
         }
 
-        lstViewAllCategories.setItems(m.getAllCategories());
+        try
+        {
+            lstViewAllCategories.setItems(m.loadCategories());
+        }
+        catch (BLLException ex)
+        {
+            System.out.println("Could not load list");
+        }
     }
 
     @FXML

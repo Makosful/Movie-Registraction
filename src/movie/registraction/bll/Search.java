@@ -6,6 +6,7 @@
 package movie.registraction.bll;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import movie.registraction.dal.DALManager;
 public class Search
 {
     private DALManager dal;
+    private List<String> categories = new ArrayList();
     
     public Search() throws DALException
     {
@@ -32,6 +34,23 @@ public class Search
         catch (DALException ex)
         {
             throw new DALException();
+        }
+    }
+    
+    public void setSearchCategories(String category)
+    {
+        if(!categories.contains(category))
+        {
+            categories.add(category);
+        }
+        else
+        {
+            categories.remove(category);
+        }
+        
+        for(String c : categories)
+        {
+            System.out.println(c);        
         }
     }
     
