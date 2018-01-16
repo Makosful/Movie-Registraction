@@ -327,9 +327,9 @@ public class MainWindowController implements Initializable
         //imdbURL.setStyle("-fx-text-fill: black");
         //</editor-fold>
 
-        //<editor-fold defaultstate="collapsed" desc="PopOver Gridpane Setup">
+        //<editor-fold defaultstate="collapsed" desc="Gridpane Setup">
         GridPane popGrid = new GridPane();
-        //popGrid.getStylesheets().add("movie/registraction/css/gridpane.css");
+        popGrid.getStylesheets().add("movie/registraction/css/gridpane.css");
         popGrid.setPadding(new Insets(30));
         popGrid.setHgap(20);
         popGrid.setVgap(10);
