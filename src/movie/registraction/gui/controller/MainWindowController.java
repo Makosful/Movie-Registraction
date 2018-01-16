@@ -540,7 +540,7 @@ public class MainWindowController implements Initializable
      */
     private void closePopOverIfRightClick()
     {
-        if (popOver != null && popOver.isShowing())
+        if (popOverVisible)
         {
             popOver.hide();
         }
