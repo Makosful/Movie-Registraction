@@ -581,10 +581,11 @@ public class MainWindowModel
     {
         ObservableList<Node> nodes = FXCollections.observableArrayList();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 12; i++)
         {
-            int j = i + 1;
-            Node node = new CheckBox("Test" + j);
+            int j = 1900+(i*10);
+            int q = 1900+((1+i)*10);
+            Node node = new CheckBox(j+"-"+q);
             nodes.add(node);
         }
 
