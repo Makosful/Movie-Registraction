@@ -7,6 +7,10 @@ package movie.registraction.bll;
 
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import movie.registraction.dal.DALException;
+import movie.registraction.dal.DALManager;
 
 
 /**
@@ -15,6 +19,19 @@ import java.util.List;
  */
 public class Search
 {
+    private DALManager dal;
+    
+    public Search() throws DALException
+    {
+        try
+        {
+            dal = new DALManager();
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
+    }
     
     public void prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText)
     {
@@ -35,7 +52,7 @@ public class Search
                 sqlSearchCategory += " OR ";
             }
 
-            sqlSearchCategory += "Categories.name = ?" ;
+            sqlSearchCategory += "Category.name = ?" ;
         }
         for(String criteria : year){
 
