@@ -72,18 +72,18 @@ public class MainWindowController implements Initializable
 
     //<editor-fold defaultstate="collapsed" desc="Instanciating">
     private MainWindowModel model;
-    
+
     @FXML
     private FlowPane flpGenre;
     @FXML
     private FlowPane flpYear;
     @FXML
     private FlowPane flpOther;
-    
+
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
-    
+
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
@@ -233,6 +233,7 @@ public class MainWindowController implements Initializable
 
     /**
      * Runs two methods which are described below (line 244)
+     *
      * @param event
      */
     @FXML
@@ -346,7 +347,6 @@ public class MainWindowController implements Initializable
 
         if (popOverVisible == false)
         {
-            System.out.println("boolean is false");
             popOver = new PopOver(popGrid);
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
             popOverVisible = true;
@@ -356,8 +356,6 @@ public class MainWindowController implements Initializable
             popOver.hide();
             popOver = new PopOver(popGrid);
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
-
-            System.out.println("boolean is not true");
         }
 
         if (popOver.isShowing() && popOverVisible)
@@ -371,6 +369,7 @@ public class MainWindowController implements Initializable
         popOver.setDetachable(false);
         popOver.setDetached(false);
         popOver.setHeaderAlwaysVisible(true);
+
         popOver.setTitle("Movie Metadata");
 
         /**
@@ -380,7 +379,6 @@ public class MainWindowController implements Initializable
         {
             popOver.hide();
         }
-
     }
 
     /**
@@ -405,31 +403,30 @@ public class MainWindowController implements Initializable
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
-                public void handle(MouseEvent me)
+                public void handle(MouseEvent event)
                 {
-                    MouseButton mouseButton = me.getButton();
-                    
-                    if(mouseButton == MouseButton.PRIMARY)
+                    MouseButton mouseButton = event.getButton();
+
+                    if (mouseButton == MouseButton.PRIMARY)
                     {
-                        PopOverSetup(movie, me);
+                        PopOverSetup(movie, event);
                         System.out.println(movie.getMovieLength());
                         model.contextMenuOpenOrNot(contextMenu);
                     }
-                    
-                    else if(mouseButton == MouseButton.SECONDARY)
+
+                    else if (mouseButton == MouseButton.SECONDARY)
                     {
                         closePopOverIfRightClick();
                         Movie movie = model.getMovieInfo(imageView);
                         contextMenuAction(imageView, movie);
                         model.contextMenuOpenOrNot(contextMenu);
-                        contextMenu.show(tilePane, me.getSceneX(), me.getSceneY());
+                        contextMenu.show(tilePane, event.getScreenX() - 5, event.getScreenY() - 5);
                     }
                 }
             });
         }
     }
-                    
-            
+
 //            imageView.setOnMouseClicked((MouseEvent me) ->
 //            {
 //                MouseButton mouseButton = me.getButton();
@@ -456,7 +453,6 @@ public class MainWindowController implements Initializable
 //                    contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
 //                }
 //            });
-
     /**
      * Sets the library
      *
@@ -524,6 +520,7 @@ public class MainWindowController implements Initializable
         tilePane.getChildren().remove(imageView);
         model.removeMovie(movie.getId());
     }
+
     private void closePopOverIfRightClick()
     {
         if (popOver != null && popOver.isShowing())
