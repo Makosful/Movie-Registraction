@@ -419,14 +419,7 @@ public class DALManager
 
     public void removeMovie(int movieId) throws DALException
     {
-        try
-        {
             mDAO.removeMovie(movieId);
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
     }
 
   
