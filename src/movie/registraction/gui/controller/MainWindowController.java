@@ -405,10 +405,7 @@ public class MainWindowController implements Initializable
 
                     if (mouseButton == MouseButton.SECONDARY)
                     {
-                        if (popOver.isShowing())
-                        {
-                            popOver.hide();
-                        }
+                        closePopOverIfRightClick();
                         Movie movie = model.getMovieInfo(imageView);
                         contextMenuAction(imageView, movie);
                         model.contextMenuOpenOrNot(contextMenu);
@@ -486,5 +483,13 @@ public class MainWindowController implements Initializable
     {
         tilePane.getChildren().remove(imageView);
         model.removeMovie(movie.getId());
+    }
+    
+    private void closePopOverIfRightClick()
+    {
+        if (popOver != null && popOver.isShowing())
+        {
+            popOver.hide();
+        }
     }
 }
