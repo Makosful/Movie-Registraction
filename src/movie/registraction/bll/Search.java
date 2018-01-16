@@ -16,7 +16,7 @@ import java.util.List;
 public class Search
 {
     
-    public void prepareSearch(List<String> criterias, List<String> values)
+    public void prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText)
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
@@ -24,60 +24,56 @@ public class Search
         String sqlSearch = "";
         
         
-        for(String criteria : criterias) {
+        for(String criteria : categories) {
 
-            if(criteria.equals("Categories"))
+            if(sqlSearchCategory.isEmpty())
             {
-               
-                if(sqlSearchCategory.isEmpty())
-                {
-                    sqlSearchCategory = "(";
-                }
-                else
-                {   
-                    sqlSearchCategory += " OR ";
-                }
-                
-                sqlSearchCategory += "Categories.name = ?" ;
+                sqlSearchCategory = "(";
             }
-            else if(criteria.equals("Year"))
-            {
-                if(sqlSearchYear.isEmpty())
-                {
-                    sqlSearchYear = "(";
-                }
-                else
-                {   
-                    sqlSearchYear += " OR ";
-                }
-                
-                sqlSearchYear += "Movie.year = ?" ;
+            else
+            {   
+                sqlSearchCategory += " OR ";
             }
-            else if(criteria.equals("Title"))
-            {
-                sqlOrderBy = " ORDER BY Movie.name";
 
-            }
-            else if(criteria.equals("Rating"))
-            {
-                sqlOrderBy = " ORDER BY Movie.personalRating";
-            }
-            else if(criteria.equals("DESC"))
-            {
-                sqlOrderBy += " DESC";
-            }
-            else if(criteria.equals("ASC"))
-            {
-                sqlOrderBy += " ASC";
-            }
-            else if(criteria.equals("Search"))
-            {
-                sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ? OR Movie.year = ?)";
-              
-            }
-            
-            
+            sqlSearchCategory += "Categories.name = ?" ;
         }
+        for(String criteria : year){
+
+            if(sqlSearchYear.isEmpty())
+            {
+                sqlSearchYear = "(";
+            }
+            else
+            {   
+                sqlSearchYear += " OR ";
+            }
+
+            sqlSearchYear += "Movie.year = ?" ;
+        }
+        if(order.equals("Title"))
+        {
+            sqlOrderBy = " ORDER BY Movie.name";
+
+        }
+        if(order.equals("Rating"))
+        {
+            sqlOrderBy = " ORDER BY Movie.personalRating";
+        }
+        if(sort.equals("DESC"))
+        {
+            sqlOrderBy += " DESC";
+        }
+        else if(sort.equals("ASC"))
+        {
+            sqlOrderBy += " ASC";
+        }
+        if(!searchText.isEmpty())
+        {
+            sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ? OR Movie.year = ?)";
+
+        }
+            
+
         
         sqlSearchCategory += ")";
         sqlSearchYear += ")";
