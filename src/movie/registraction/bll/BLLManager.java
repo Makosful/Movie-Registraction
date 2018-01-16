@@ -239,7 +239,7 @@ public class BLLManager
         return dal.getAllMovies();
     }
 
-    public void imageIdMovieId(File files, ImageView imageView) throws DALException
+    public void setImageId(File files, ImageView imageView) throws DALException
     {
         for (Movie movie : getAllMovies())
         {
@@ -252,15 +252,6 @@ public class BLLManager
                 // Changing integer to string, as imageview requires string.
                 String idToString = Integer.toString(movie.getId());
                 imageView.setId(idToString);
-
-                //  Finding the ID that belongs to the movie.
-                if (Integer.parseInt(imageView.getId()) == movie.getId())
-                {
-                    System.out.println("workeeeeeeeed");
-                    System.out.println(movie.getImgPath());
-                    System.out.println(movie.getPersonalRating());
-                    System.out.println(movie.getYear());
-                }
             }
         }
     }
@@ -363,7 +354,7 @@ public class BLLManager
     {
         return dal.getSpecificMovieImage(movieName);
     }
-
+    
     public String splitDot(String stringToSplit)
     {
         return stringToSplit = stringToSplit.split("\\.")[0];
