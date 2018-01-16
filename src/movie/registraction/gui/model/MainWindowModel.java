@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -143,12 +145,9 @@ public class MainWindowModel
         catch (BLLException ex)
         {
             System.out.println("Could not get search result");
-        }
-        catch (DALException ex)
-        {
             System.out.println("Could not add the movie in the database");
+            System.out.println(ex);
         }
-
     }
 
     /**
@@ -412,7 +411,14 @@ public class MainWindowModel
         imageViewList.add(imageView);
 
         tilePane.getChildren().add(imageView);
-        bll.setImageId(chosenFile, imageView);
+        try
+        {
+            bll.setImageId(chosenFile, imageView);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -529,9 +535,18 @@ public class MainWindowModel
         return imageViewList;
     }
 
-    public ObservableList<Movie> getAllMovies() throws DALException
+    public ObservableList<Movie> getAllMovies() 
     {
-        return bll.getAllMovies();
+        ObservableList<Movie> movies = FXCollections.observableArrayList();
+        try
+        {
+            movies = bll.getAllMovies();
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+        return movies;
     }
 
     /**
@@ -611,9 +626,9 @@ public class MainWindowModel
         {
             idMatchMovie = bll.getMovieIdMatch(imageView);
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
-            System.out.println("Failed to find ID");
+            System.out.println(ex);
         }
         return idMatchMovie;
     }
@@ -624,9 +639,9 @@ public class MainWindowModel
         {
             bll.findOldAndBadMovies();
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
-            System.out.println("Could not execute the check of old and low rated movies");
+            System.out.println(ex);
         }
     }
 
@@ -637,9 +652,9 @@ public class MainWindowModel
         {
             movieObject = bll.getMovieInfo(imageView);
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
-            System.out.println("Failed to get movie");
+            System.out.println(ex);
         }
         return movieObject;
     }
@@ -653,21 +668,14 @@ public class MainWindowModel
     {
         ImageView imageView;
         imageViewList = new ArrayList();
-        try
+        for (Movie movie : getAllMovies())
         {
-            for (Movie movie : getAllMovies())
-            {
-                imageView = new ImageView("https:" + movie.getImgPath());
-                imageView.setFitHeight(IMAGE_HEIGHT);
-                imageView.setFitWidth(IMAGE_WIDTH);
-                imageView.setId("" + movie.getId());
-                imageViewList.add(imageView);
-                tilePane.getChildren().add(imageView);
-            }
-        }
-        catch (DALException ex)
-        {
-            System.out.println("Couldnt load movies from db.");
+            imageView = new ImageView("https:" + movie.getImgPath());
+            imageView.setFitHeight(IMAGE_HEIGHT);
+            imageView.setFitWidth(IMAGE_WIDTH);
+            imageView.setId("" + movie.getId());
+            imageViewList.add(imageView);
+            tilePane.getChildren().add(imageView);
         }
     }
 
