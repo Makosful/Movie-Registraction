@@ -400,6 +400,7 @@ public class MainWindowController implements Initializable
                     {
                         PopOverSetup(movie, me);
                         System.out.println(movie.getMovieTitle());
+                        model.contextMenuOpenOrNot(contextMenu);
                     }
 
                     if (mouseButton == MouseButton.SECONDARY)
