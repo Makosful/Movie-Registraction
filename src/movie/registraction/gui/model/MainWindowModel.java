@@ -435,15 +435,10 @@ public class MainWindowModel
 
             // Load the files located at the library
             moviePaths.setAll(bll.getMovieList(extensionList));
+            bll.setDirectoryWatch();
 
             // Tell the user the files have been added
             System.out.println("Successfully added library");
-
-            // Show the user the full file path of the files in the console
-            moviePaths.forEach((movy) ->
-            {
-                //System.out.println(movy);
-            });
         }
         catch (BLLException ex)
         {
@@ -591,15 +586,15 @@ public class MainWindowModel
             System.out.println("Could not execute the check of old and low rated movies");
         }
     }
-    
-     public Movie getMovieInfo(ImageView imageView)
+
+    public Movie getMovieInfo(ImageView imageView)
     {
         Movie movieObject = null;
-        try 
+        try
         {
             movieObject = bll.getMovieInfo(imageView);
-        } 
-        catch (DALException ex) 
+        }
+        catch (DALException ex)
         {
             System.out.println("Failed to get movie");
         }

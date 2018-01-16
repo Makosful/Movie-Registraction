@@ -20,6 +20,7 @@ public class DALManager
     MovieDAO mDAO;
 
     ObservableList<Path> changes;
+    private List<Path> folders;
 
     public DALManager() throws DALException
     {
@@ -27,6 +28,7 @@ public class DALManager
         {
             mDAO = new MovieDAO();
             changes = FXCollections.observableArrayList();
+            folders = new ArrayList();
         }
         catch (IOException ex)
         {
@@ -122,9 +124,27 @@ public class DALManager
 
         fileTreeSearch(startPath, list, filter);
 
-        this.directoryWatcher(startPath);
-
         return list;
+    }
+
+    public void setDirectoryWatch()
+    {
+        //
+        ArrayList<Path> singleFolders = new ArrayList();
+
+        // Removes the dublicates
+        this.folders.stream().filter((folder)
+                -> (!singleFolders.contains(folder))).forEachOrdered((folder) ->
+        {
+            singleFolders.add(folder);
+        });
+
+        singleFolders.forEach((path) ->
+        {
+            System.out.println(path);
+        });
+
+        directoryWatcher(singleFolders);
     }
 
     private void findFolders(Path startPath, ArrayList<Path> folders) throws DALException
@@ -181,11 +201,12 @@ public class DALManager
             }
             else if (file.isDirectory())
             {
-                System.out.println("Going into folder");
+//                System.out.println("Going into folder");
                 fileTreeSearch(file.toPath(), list, filter);
             }
             else if (positiveFilter(file, filter))
             {
+                this.folders.add(file.toPath().getParent());
                 list.add(file.toPath());
             }
         }
@@ -282,13 +303,15 @@ public class DALManager
     /**
      * Add a change listener to a folder and all sub folders
      *
-     * @param root The root folder to watch
+     * @param folders
+     * @param root    The root folder to watch
      */
-    public void directoryWatcher(Path root)
+    public void directoryWatcher(ArrayList folders)
     {
         System.out.println("Before thread");
 
-        LibraryScan lib = new LibraryScan(root);
+        LibraryScan lib = new LibraryScan(folders);
+        //LibraryScan lib = new LibraryScan(root);
 
         Thread scan;
         scan = new Thread(lib); // Creates the thread
@@ -388,7 +411,6 @@ public class DALManager
      *
      * @throws DALException
      */
-
     public void addCategory(String cat) throws DALException
     {
         try

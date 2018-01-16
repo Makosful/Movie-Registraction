@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -17,8 +15,9 @@ import javafx.collections.ObservableList;
 public class LibraryScan implements Runnable
 {
 
-    Path path;
-    ObservableList<Path> list;
+    private Path path;
+    private ObservableList<Path> list;
+    private List folders;
 
     public LibraryScan(Path root)
     {
@@ -26,10 +25,61 @@ public class LibraryScan implements Runnable
         this.list = FXCollections.observableArrayList();
     }
 
+    public LibraryScan(ArrayList list)
+    {
+        this.folders = list;
+        this.list = FXCollections.observableArrayList();
+    }
+
     @Override
     public void run()
     {
-        watch(path);
+        watch(folders);
+        //watch(path);
+    }
+
+    private void watch(List<Path> folders)
+    {
+        try (WatchService watcher = FileSystems.getDefault().newWatchService())
+        {
+            Map<WatchKey, Path> keyMap = new HashMap<>();
+
+            for (Path folder : folders)
+            {
+                keyMap.put(folder.register(watcher,
+                                           StandardWatchEventKinds.ENTRY_CREATE,
+                                           StandardWatchEventKinds.ENTRY_DELETE,
+                                           StandardWatchEventKinds.ENTRY_MODIFY),
+                           folder);
+            }
+
+            Collection<Path> values = keyMap.values();
+
+            WatchKey key;
+
+            do
+            {
+                key = watcher.take();
+                Path eventDir = keyMap.get(key);
+
+                for (WatchEvent<?> event : key.pollEvents())
+                {
+                    WatchEvent.Kind<?> kind = event.kind();
+                    Path eventPath = (Path) event.context();
+
+                    /**
+                     * ENTRY_DELETE
+                     * ENTRY_CREATE
+                     * ENTRY_MODIFY
+                     */
+                    System.out.println(eventDir + ": " + kind + ": " + eventPath);
+                }
+            }
+            while (key.reset());
+        }
+        catch (IOException | InterruptedException ex)
+        {
+        }
     }
 
     private void watch(Path path)

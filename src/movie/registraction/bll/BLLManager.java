@@ -222,6 +222,11 @@ public class BLLManager
         }
     }
 
+    public void setDirectoryWatch()
+    {
+        dal.setDirectoryWatch();
+    }
+
     /**
      * Sends metadata to dataaccess layer to insert a movie
      *
@@ -365,9 +370,11 @@ public class BLLManager
     }
 
     /**
-     * If there is a movie last seen over 2 years ago and the movie i rated under 6 
+     * If there is a movie last seen over 2 years ago and the movie i rated
+     * under 6
      * ask the user if the movie should be deleted
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public void findOldAndBadMovies() throws DALException
     {
@@ -405,50 +412,53 @@ public class BLLManager
             throw new DALException();
         }
     }
-    
+
     public Movie getMovieInfo(ImageView imageView) throws DALException
     {
         Movie movieObject = null;
-        for (Movie movie : getAllMovies()) 
+        for (Movie movie : getAllMovies())
         {
             //  Finding the ID that belongs to the movie.
-            if (Integer.parseInt(imageView.getId()) == movie.getId()) 
+            if (Integer.parseInt(imageView.getId()) == movie.getId())
             {
                 movieObject = movie;
             }
         }
         return movieObject;
     }
-    
+
     /**
      * Check if movie already exists in the db
+     *
      * @param movieTitle
+     *
      * @return
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public boolean movieAlreadyExisting(String movieTitle) throws DALException
     {
         boolean isAlreadyInDataBase = true;
         try
         {
-           for(Movie m : getAllMovies())
-           {
-               if(m.getMovieTitle().equals(movieTitle))
-               {
-                  isAlreadyInDataBase = true;
-               }
-               else
-               {
-                   isAlreadyInDataBase = false;
-               }
-           
-           } 
+            for (Movie m : getAllMovies())
+            {
+                if (m.getMovieTitle().equals(movieTitle))
+                {
+                    isAlreadyInDataBase = true;
+                }
+                else
+                {
+                    isAlreadyInDataBase = false;
+                }
+
+            }
         }
         catch (DALException ex)
         {
             throw new DALException();
         }
-        
+
         return isAlreadyInDataBase;
     }
 }
