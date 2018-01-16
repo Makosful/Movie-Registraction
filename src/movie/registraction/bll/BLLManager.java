@@ -496,5 +496,6 @@ public class BLLManager
             throw new BLLException();
         }
 
+        // Compare the two lists
     }
 }

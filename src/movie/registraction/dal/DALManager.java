@@ -424,11 +424,11 @@ public class DALManager
         mDAO.removeMovie(movieId);
     }
 
-    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, String searchText, boolean searchNumeric) throws DALException
+    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, int rating, String searchText, boolean searchNumeric) throws DALException
     {
         try
         {
-            return mDAO.searchMovies(sqlString, categories, year, searchText, searchNumeric);
+            return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
         }
         catch (DALException ex)
         {

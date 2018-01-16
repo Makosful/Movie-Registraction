@@ -127,7 +127,7 @@ public class MainWindowController implements Initializable
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreNodes());
+        flpGenre.getChildren().setAll(model.getGenreList());
         flpYear.getChildren().setAll(model.getYearNodes());
         flpOther.getChildren().setAll(model.getOtherNodes());
 
