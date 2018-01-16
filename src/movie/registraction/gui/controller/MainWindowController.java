@@ -82,7 +82,12 @@ public class MainWindowController implements Initializable
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
+
     ContextMenu contextMenu;
+    MenuItem test1;
+    MenuItem test2;
+    MenuItem deleteMovie;
+    
 
     //<editor-fold defaultstate="collapsed" desc="Labels">
     Label lblMovieTitle;
@@ -362,14 +367,18 @@ public class MainWindowController implements Initializable
                     if (mouseButton == MouseButton.PRIMARY)
                     {
                         model.closeMenuOrClick(contextMenu);
+                        if(popOver.isShowing())
+                        {
+                            popOver.hide();
+                        }
                         Movie movie = model.getMovieInfo(imageView);
                         vBoxAndLabelSetup(movie, event);
-                        System.out.println(imageView.getId());
-                        System.out.println(movie.getMovieTitle());
                     }
 
                     if (mouseButton == MouseButton.SECONDARY)
                     {
+                        Movie movie = model.getMovieInfo(imageView);
+                        contextMenuAction(imageView, movie);
                         model.contextMenuOpenOrNot(contextMenu);
                         contextMenu.show(tilePane, event.getScreenX(), event.getScreenY());
                     }
@@ -390,24 +399,28 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Sets up the context menu with the choices user get.
+     * Initialize contextmenu and menuitems.
      *
      * @param tilePane
      */
     private void setupContextMenu()
     {
         contextMenu = new ContextMenu();
-        MenuItem test1 = new MenuItem("1");
-        MenuItem test2 = new MenuItem("2");
-        MenuItem test3 = new MenuItem("3");
+        test1 = new MenuItem("");
+        test2 = new MenuItem("2");
+        deleteMovie = new MenuItem("Delete Movie");
+        contextMenu.getItems().addAll(test1, test2, deleteMovie);
 
-        //<editor-fold defaultstate="collapsed" desc="setOnAction">
+    }
+    
+    public void contextMenuAction(ImageView imageView, Movie movie)
+    {
+                //<editor-fold defaultstate="collapsed" desc="setOnAction">
         test1.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
-                System.out.println("1");
                 contextMenu.hide();
             }
         });
@@ -422,17 +435,22 @@ public class MainWindowController implements Initializable
             }
         });
 
-        test3.setOnAction(new EventHandler<ActionEvent>()
+        deleteMovie.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
-                System.out.println("3");
+                deleteMovie(imageView, movie);
                 contextMenu.hide();
             }
         });
-//</editor-fold>
-
-        contextMenu.getItems().addAll(test1, test2, test3);
+        //</editor-fold>
+    }
+    
+    
+    private void deleteMovie(ImageView imageView, Movie movie)
+    {
+        tilePane.getChildren().remove(imageView);
+        model.removeMovie(movie.getId());
     }
 }

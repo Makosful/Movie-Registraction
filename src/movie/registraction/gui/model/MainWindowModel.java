@@ -6,14 +6,14 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
@@ -314,7 +314,7 @@ public class MainWindowModel
      *
      * @throws movie.registraction.dal.DALException
      */
-    public void chooseFile(TilePane tilePane) throws DALException
+    public void chooseFile(TilePane tilePane)
     {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
@@ -335,16 +335,32 @@ public class MainWindowModel
             for (File chosenFile : chosenFiles)
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
-                //if (bll.movieAlreadyExisting(nameOfMovie) == false)
-                //{
-                fxmlTitleSearch(nameOfMovie);
-                String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
-                imgPath = "https:" + imgPath;
-                setPictures(tilePane, chosenFile, imgPath);
-                //else
-                //{
-                // System.out.println("Move has already been added!!!!!!");
-                //}
+                try
+                {
+                    if (!bll.movieAlreadyExisting(nameOfMovie))
+                    {
+                    fxmlTitleSearch(nameOfMovie);
+                    String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
+                    imgPath = "https:" + imgPath;
+                    setPictures(tilePane, chosenFile, imgPath);
+                    }
+                    else
+                    {
+                     ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                    Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
+                    okButton);
+                    
+                    Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == okButton)
+                        {
+                        alert.close();
+                        }
+                    }  
+                }
+                catch (Exception e)
+                {
+                    System.out.println(e);
+                }
             }
         }
         else
@@ -353,7 +369,6 @@ public class MainWindowModel
             System.out.println("One or more invalid file(s) / None selected");
             return;
         }
-
     }
 
 
@@ -625,6 +640,18 @@ public class MainWindowModel
         catch (DALException ex)
         {
             System.out.println("Couldnt load movies from db.");
+        }
+    }
+    
+    public void removeMovie(int id)
+    {
+        try
+        {
+            bll.removeMovie(id);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
         }
     }
 }
