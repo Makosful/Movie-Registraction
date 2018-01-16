@@ -7,8 +7,6 @@ package movie.registraction.bll;
 
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
 
@@ -33,7 +31,7 @@ public class Search
         }
     }
     
-    public void prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText)
+    public void prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText) throws DALException
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
@@ -70,8 +68,8 @@ public class Search
         if(order.equals("Title"))
         {
             sqlOrderBy = " ORDER BY Movie.name";
-
         }
+        
         if(order.equals("Rating"))
         {
             sqlOrderBy = " ORDER BY Movie.personalRating";
@@ -84,6 +82,7 @@ public class Search
         {
             sqlOrderBy += " ASC";
         }
+        
         if(!searchText.isEmpty())
         {
             sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ? OR Movie.year = ?)";
@@ -99,12 +98,14 @@ public class Search
         {
             sqlSearchCategory += " AND ";
         }
+        
         if(!sqlSearchYear.isEmpty() && !sqlOrderBy.isEmpty() || !sqlSearch.isEmpty())
         {
             sqlSearchYear += " AND ";
         }
-
         
+        String sqlString = sqlSearchCategory+sqlSearchYear+sqlSearch+sqlOrderBy;
+        dal.searchMovies(sqlString, categories, year, searchText);
         System.out.println(sqlSearchCategory+sqlSearchYear+sqlSearch+sqlOrderBy);
     }
     

@@ -433,7 +433,7 @@ public class BLLManager
      */
     public boolean movieAlreadyExisting(String movieTitle) throws DALException
     {
-        boolean isAlreadyInDataBase = true;
+        boolean isAlreadyInDataBase = false;
         try
         {
            for(Movie m : getAllMovies())
@@ -442,11 +442,7 @@ public class BLLManager
                {
                   isAlreadyInDataBase = true;
                }
-               else
-               {
-                   isAlreadyInDataBase = false;
-               }
-           
+
            } 
         }
         catch (DALException ex)

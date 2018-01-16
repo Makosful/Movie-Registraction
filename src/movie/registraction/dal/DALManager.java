@@ -5,6 +5,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -426,4 +428,17 @@ public class DALManager
             throw new DALException();
         }
     }
+
+    public void searchMovies(String sqlString, List<String> categories, List<String> year, String searchText) throws DALException
+    {
+        try
+        {
+            mDAO.searchMovies(sqlString, categories, year, searchText);
+        }
+        catch (DALException ex)
+        {
+            throw new DALException();
+        }
+    }
+
 }
