@@ -1,12 +1,10 @@
 package movie.registraction.dal;
 
 import java.io.*;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -19,11 +17,20 @@ public class DALManager
 
     MovieDAO mDAO;
 
+    ObservableList<Path> changes;
+    private List<Path> folders;
+
+    LibraryScan lib;
+
     public DALManager() throws DALException
     {
         try
         {
             mDAO = new MovieDAO();
+            this.lib = new LibraryScan();
+
+            this.changes = lib.getObsList();
+            this.folders = new ArrayList();
         }
         catch (IOException ex)
         {
@@ -96,41 +103,32 @@ public class DALManager
     public ArrayList<Path> getMovieList(ArrayList<String> filter) throws DALException
     {
         ArrayList<Path> list = new ArrayList();
-        ArrayList<Path> folders = new ArrayList();
 
         Path startPath = Paths.get(this.loadDirectory("path.txt"));
 
         fileTreeSearch(startPath, list, filter);
-        findFolders(startPath, folders);
-
-        this.directoryWatcher(folders);
 
         return list;
     }
 
-    private void findFolders(Path startPath, ArrayList<Path> folders) throws DALException
+    public void setDirectoryWatch()
     {
-        try
-        {
-            Files.walkFileTree(
-                    startPath,
-                    new SimpleFileVisitor<Path>()
-            {
-                @Override
-                public FileVisitResult preVisitDirectory(
-                        Path dir,
-                        BasicFileAttributes attrs)
-                        throws IOException
-                {
-                    return FileVisitResult.CONTINUE;
-                }
+        //
+        ArrayList<Path> singleFolders = new ArrayList();
 
-            });
-        }
-        catch (IOException ex)
+        // Removes the dublicates
+        this.folders.stream().filter((folder)
+                -> (!singleFolders.contains(folder))).forEachOrdered((folder) ->
         {
-            throw new DALException();
-        }
+            singleFolders.add(folder);
+        });
+
+        singleFolders.forEach((path) ->
+        {
+            System.out.println(path);
+        });
+
+        directoryWatcher(singleFolders);
     }
 
     /**
@@ -162,11 +160,12 @@ public class DALManager
             }
             else if (file.isDirectory())
             {
-                System.out.println("Going into folder");
+//                System.out.println("Going into folder");
                 fileTreeSearch(file.toPath(), list, filter);
             }
             else if (positiveFilter(file, filter))
             {
+                this.folders.add(file.toPath().getParent());
                 list.add(file.toPath());
             }
         }
@@ -186,6 +185,10 @@ public class DALManager
     {
         String config = file.getAbsolutePath().substring(1);
 
+        /**
+         * This has been hardcoded because I couldn't find another way to make
+         * it skip these folders, should it encounter any of them.
+         */
         if (file.getAbsolutePath().contains("$"))
         {
             return true;
@@ -206,13 +209,9 @@ public class DALManager
         {
             return true;
         }
-        else if (config.equalsIgnoreCase(":\\WindowsApps"))
-        {
-            return true;
-        }
         else
         {
-            return false;
+            return config.equalsIgnoreCase(":\\WindowsApps");
         }
     }
 
@@ -263,19 +262,23 @@ public class DALManager
     /**
      * Add a change listener to a folder and all sub folders
      *
-     * @param root    The root folder to watch
      * @param folders
-     *
-     * @throws movie.registraction.dal.DALException
+     * @param root    The root folder to watch
      */
-    public void directoryWatcher(ArrayList<Path> folders)
+    public void directoryWatcher(ArrayList folders)
     {
         System.out.println("Before thread");
 
+        // Sets the folders in the library scanner
+        this.lib.setFolders(folders);
+
+        // Initiates the thread the scanner will run on
         Thread scan;
-        scan = new Thread(new LibraryScan(folders)); // Creates the thread
+        scan = new Thread(lib); // Creates the thread
         scan.setDaemon(true); // Tells the thread to close with the app
-        //scan.start(); // Start the thread
+        scan.start(); // Start the thread
+
+        changes.setAll(lib.getObsList());
 
         System.out.println("After thread");
     }
@@ -368,7 +371,6 @@ public class DALManager
      *
      * @throws DALException
      */
-
     public void addCategory(String cat) throws DALException
     {
         try
@@ -419,20 +421,29 @@ public class DALManager
 
     public void removeMovie(int movieId) throws DALException
     {
-            mDAO.removeMovie(movieId);
+        mDAO.removeMovie(movieId);
     }
 
-  
     public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, int rating, String searchText, boolean searchNumeric) throws DALException
     {
         try
         {
-           return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
+            return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
         }
         catch (DALException ex)
         {
             throw new DALException();
         }
+    }
+
+    /**
+     * Retrieves the list that hold the changes
+     *
+     * @return
+     */
+    public ObservableList<Path> getChangeList()
+    {
+        return this.changes;
     }
 
 }
