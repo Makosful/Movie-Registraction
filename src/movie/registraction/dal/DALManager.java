@@ -5,7 +5,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -37,26 +36,6 @@ public class DALManager
         {
             throw new DALException();
         }
-
-        changes.addListener((ListChangeListener.Change<? extends Path> c) ->
-        {
-            c.next();
-
-            if (c.wasAdded())
-            {
-                c.getAddedSubList().forEach((path) ->
-                {
-                    System.out.println("Added: " + path);
-                });
-            }
-            else if (c.wasRemoved())
-            {
-                c.getRemoved().forEach((path) ->
-                {
-                    System.out.println("Removed: " + path);
-                });
-            }
-        });
     }
 
     /**
@@ -480,6 +459,16 @@ public class DALManager
         {
             throw new DALException();
         }
+    }
+
+    /**
+     * Retrieves the list that hold the changes
+     *
+     * @return
+     */
+    public ObservableList<Path> getChangeList()
+    {
+        return this.changes;
     }
 
 }

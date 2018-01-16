@@ -465,4 +465,14 @@ public class BLLManager
             throw new BLLException();
         }
     }
+
+    /**
+     * Gets the list holding the changed files
+     *
+     * @return
+     */
+    public ObservableList<Path> getChangeList()
+    {
+        return dal.getChangeList();
+    }
 }

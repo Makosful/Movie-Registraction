@@ -7,13 +7,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
@@ -25,7 +24,6 @@ import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.ChangeCategories;
 import movie.registraction.bll.Rating;
 import movie.registraction.dal.DALException;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -87,6 +85,16 @@ public class MainWindowModel
         extensionList.add(".mp4");
         extensionList.add(".mpeg4");
         loadMovieFromLibrary();
+
+        ObservableList<Path> changeList = bll.getChangeList();
+
+        changeList.addListener((ListChangeListener.Change<? extends Path> c) ->
+        {
+            while (c.next())
+            {
+                //
+            }
+        });
     }
 
     /**
@@ -339,23 +347,23 @@ public class MainWindowModel
                 {
                     if (!bll.movieAlreadyExisting(nameOfMovie))
                     {
-                    fxmlTitleSearch(nameOfMovie);
-                    String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
-                    imgPath = "https:" + imgPath;
-                    setPictures(tilePane, chosenFile, imgPath);
+                        fxmlTitleSearch(nameOfMovie);
+                        String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
+                        imgPath = "https:" + imgPath;
+                        setPictures(tilePane, chosenFile, imgPath);
                     }
                     else
                     {
-                     ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-                    Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
-                    okButton);
-                    
-                    Optional<ButtonType> result = alert.showAndWait();
+                        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                        Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
+                                                okButton);
+
+                        Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == okButton)
                         {
-                        alert.close();
+                            alert.close();
                         }
-                    }  
+                    }
                 }
                 catch (Exception e)
                 {
@@ -370,7 +378,6 @@ public class MainWindowModel
             return;
         }
     }
-
 
     public void setPictures(TilePane tilePane, File chosenFile, String imgUrl) throws DALException
     {
@@ -612,10 +619,12 @@ public class MainWindowModel
         }
         return movieObject;
     }
-     /**
-      * This loads all the movies from start.
-      * @param tilePane 
-      */
+
+    /**
+     * This loads all the movies from start.
+     *
+     * @param tilePane
+     */
     public void loadMoviesFromStart(TilePane tilePane)
     {
         ImageView imageView;
@@ -637,7 +646,7 @@ public class MainWindowModel
             System.out.println("Couldnt load movies from db.");
         }
     }
-    
+
     public void removeMovie(int id)
     {
         try
