@@ -205,7 +205,7 @@ public class MovieDAO {
                         + "Movie.personalRating, "
                         + "Movie.imdbRating, "
                         + "Movie.year, "
-                        + "Movie.lastView,"
+                        + "Movie.lastView, "
                         + "Movie.movieLength, "
                         + "Movie.imdbLink, "
                         + "Category.name AS categoryName "
@@ -431,7 +431,7 @@ public class MovieDAO {
        return imageLink;
     }
 
-    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, String searchText) throws DALException
+    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, String searchText, boolean searchNumeric) throws DALException
     {
         try (Connection con = db.getConnection())
         {
@@ -443,37 +443,51 @@ public class MovieDAO {
                         + "Movie.personalRating, "
                         + "Movie.imdbRating, "
                         + "Movie.year, "
-                        + "Movie.lastView,"
+                        + "Movie.lastView, "
                         + "Movie.movieLength, "
                         + "Movie.imdbLink, "
                         + "Category.name AS categoryName "
                         + "FROM Movie "
                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
-                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id"
-                        + sqlString;
+                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id "
+                        + "WHERE "+sqlString;
+            System.out.println(sql);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
             
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            
+            int i = 1;   
+            for(String category : categories)
+            {
+                preparedStatement.setString(i, category);
+                i++;
+            }
+            for(String y : year)
+            {
+                preparedStatement.setString(i, y);
+                i++;
+            }
             
             if(!searchText.isEmpty())
             {
-               // preparedStatement.setString(1, movieId);
+                if(searchNumeric)
+                {
+                    preparedStatement.setInt(i++, Integer.parseInt(searchText));
+                }
+                else
+                {
+                    preparedStatement.setString(i++, "%"+searchText+"%");
+                    preparedStatement.setString(i++, "%"+searchText+"%");
+                }
             }
-            
-            
-            
-            
-            
+
+            ResultSet rs = preparedStatement.executeQuery();
+
             
             ObservableList<Movie> movies = FXCollections.observableArrayList();
             Movie movie = new Movie();
             while (rs.next())
-            {
-                
+            {  
                 movie = createMovieFromDB(rs, movie);
-              
-                
+
                 if (!movies.contains(movie))
                 {
                     movies.add(movie);
@@ -484,6 +498,7 @@ public class MovieDAO {
             return movies;
             
         } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
             throw new DALException();
         }
         
