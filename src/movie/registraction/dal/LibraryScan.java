@@ -19,6 +19,11 @@ public class LibraryScan implements Runnable
     private ObservableList<Path> list;
     private List folders;
 
+    public LibraryScan()
+    {
+        this.list = FXCollections.observableArrayList();
+    }
+
     public LibraryScan(Path root)
     {
         this.path = root;
@@ -42,6 +47,7 @@ public class LibraryScan implements Runnable
     {
         try (WatchService watcher = FileSystems.getDefault().newWatchService())
         {
+            WatchKey key;
             Map<WatchKey, Path> keyMap = new HashMap<>();
 
             for (Path folder : folders)
@@ -51,9 +57,8 @@ public class LibraryScan implements Runnable
                                            StandardWatchEventKinds.ENTRY_DELETE,
                                            StandardWatchEventKinds.ENTRY_MODIFY),
                            folder);
+                //this.list.add(folder);
             }
-
-            WatchKey key;
 
             do
             {
@@ -65,12 +70,20 @@ public class LibraryScan implements Runnable
                     WatchEvent.Kind<?> kind = event.kind();
                     Path eventPath = (Path) event.context();
 
-                    /**
-                     * ENTRY_DELETE
-                     * ENTRY_CREATE
-                     * ENTRY_MODIFY
-                     */
-                    System.out.println(eventDir + ": " + kind + ": " + eventPath);
+                    if ("ENTRY_DELETE".equals(kind.toString()))
+                    {
+                        Path p = new File(eventDir + "\\" + eventPath).toPath();
+                        this.list.remove(p);
+                        //System.out.println("Removed: " + eventPath);
+                        //System.out.println(this.list.size());
+                    }
+                    if ("ENTRY_CREATE".equals(kind.toString()))
+                    {
+                        Path p = new File(eventDir + "\\" + eventPath).toPath();
+                        this.list.add(p);
+                        //System.out.println("Created: " + eventPath);
+                        //System.out.println(this.list.size());
+                    }
                 }
             }
             while (key.reset());
@@ -144,5 +157,10 @@ public class LibraryScan implements Runnable
     public ObservableList<Path> getObsList()
     {
         return this.list;
+    }
+
+    public void setFolders(ArrayList<Path> folderList)
+    {
+        this.folders = folderList;
     }
 }

@@ -5,7 +5,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
@@ -22,13 +21,17 @@ public class DALManager
     ObservableList<Path> changes;
     private List<Path> folders;
 
+    LibraryScan lib;
+
     public DALManager() throws DALException
     {
         try
         {
             mDAO = new MovieDAO();
-            changes = FXCollections.observableArrayList();
-            folders = new ArrayList();
+            this.lib = new LibraryScan();
+
+            this.changes = lib.getObsList();
+            this.folders = new ArrayList();
         }
         catch (IOException ex)
         {
@@ -37,18 +40,20 @@ public class DALManager
 
         changes.addListener((ListChangeListener.Change<? extends Path> c) ->
         {
+            c.next();
+
             if (c.wasAdded())
             {
                 c.getAddedSubList().forEach((path) ->
                 {
-                    System.out.println(path);
+                    System.out.println("Added: " + path);
                 });
             }
             else if (c.wasRemoved())
             {
                 c.getRemoved().forEach((path) ->
                 {
-                    System.out.println(path);
+                    System.out.println("Removed: " + path);
                 });
             }
         });
@@ -310,9 +315,10 @@ public class DALManager
     {
         System.out.println("Before thread");
 
-        LibraryScan lib = new LibraryScan(folders);
-        //LibraryScan lib = new LibraryScan(root);
+        // Sets the folders in the library scanner
+        this.lib.setFolders(folders);
 
+        // Initiates the thread the scanner will run on
         Thread scan;
         scan = new Thread(lib); // Creates the thread
         scan.setDaemon(true); // Tells the thread to close with the app
