@@ -315,7 +315,7 @@ public class MainWindowModel
      * @throws movie.registraction.dal.DALException
      */
     public void chooseFile(TilePane tilePane) throws DALException
-    {     
+    {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
 
@@ -329,30 +329,23 @@ public class MainWindowModel
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
 
-
         // Checks if any files where chosen
         if (chosenFiles != null)
         {
             for (File chosenFile : chosenFiles)
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
-                fxmlTitleSearch(nameOfMovie);
-                // disse udkommenteret linjer er klar, så at der ik kan tilføjes flere af samme film. Dog kræver det, at man loader filmene fra DB med det samme, når man åbner programmet
-                // if(!bll.movieAlreadyExisting(nameOfMovie))
+                //if (bll.movieAlreadyExisting(nameOfMovie) == false)
                 //{
+                fxmlTitleSearch(nameOfMovie);
                 String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
                 imgPath = "https:" + imgPath;
-
-                chosenFile.toPath();
-                String fileName = chosenFile.getName();
-                fileName = FilenameUtils.getBaseName(fileName);
                 setPictures(tilePane, chosenFile, imgPath);
-                System.out.println(fileName); //For debugging
+                //else
+                //{
+                // System.out.println("Move has already been added!!!!!!");
+                //}
             }
-            //else
-            // {
-            //    System.out.println("Move has already been added!!!!!!");
-            //}
         }
         else
         {
@@ -360,7 +353,9 @@ public class MainWindowModel
             System.out.println("One or more invalid file(s) / None selected");
             return;
         }
+
     }
+
 
     public void setPictures(TilePane tilePane, File chosenFile, String imgUrl) throws DALException
     {
@@ -370,7 +365,7 @@ public class MainWindowModel
         imageViewList.add(imageView);
 
         tilePane.getChildren().add(imageView);
-        bll.imageIdMovieId(chosenFile, imageView);
+        bll.setImageId(chosenFile, imageView);
     }
 
     /**
