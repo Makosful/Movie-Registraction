@@ -507,8 +507,8 @@ public class MainWindowModel
     }
 
     /**
-     * Gets the Genre list
-     *
+     * Gets the Genre list !!! UNUSED
+     * NOT USED ANYMORE 
      * TODO Replace dummy data with actual data
      *
      * @return
