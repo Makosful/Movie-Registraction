@@ -205,7 +205,7 @@ public class MovieDAO {
                         + "Movie.personalRating, "
                         + "Movie.imdbRating, "
                         + "Movie.year, "
-                        + "Movie.lastView,"
+                        + "Movie.lastView, "
                         + "Movie.movieLength, "
                         + "Movie.imdbLink, "
                         + "Category.name AS categoryName "
@@ -274,8 +274,7 @@ public class MovieDAO {
             movie.setMovieLength(rs.getInt("movieLength"));
             movie.setImdbLink(rs.getString("imdbLink"));
             movie.setCategories(rs.getString("categoryName"));
-            
-           
+
             return movie;
         
         }
@@ -288,7 +287,7 @@ public class MovieDAO {
      * @return
      * @throws DALException 
      */
-    public int addMovie(String[] movieMetaData) throws DALException
+    public int addMovie(String[] movieMetaData, String filePath) throws DALException
     {            
        try (Connection con = db.getConnection())
        {
@@ -300,7 +299,7 @@ public class MovieDAO {
 
            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
            preparedStatement.setString(1, movieMetaData[0]);
-           preparedStatement.setString(2, "path");
+           preparedStatement.setString(2, filePath);
            preparedStatement.setString(3, movieMetaData[4]);
            preparedStatement.setString(4, movieMetaData[6]);
            preparedStatement.setDouble(5, -1);
@@ -343,9 +342,6 @@ public class MovieDAO {
             preparedStatement.setInt(1, personalRating);
             preparedStatement.setInt(2, movieId);
             preparedStatement.executeUpdate();
-
-        
-            
         }
         catch (SQLException ex)
         {
@@ -381,7 +377,11 @@ public class MovieDAO {
     }
     
     
-    
+    /**
+     * 
+     * @param movieId
+     * @throws DALException 
+     */
     public void setLastView(int movieId) throws DALException
     { 
         
@@ -403,14 +403,15 @@ public class MovieDAO {
         }
     }
     
-        /**
-         * This method is to get a imgPath from a specific movie. 
-         * So that it can be thrown into the tilepane.
-         * @param movieName
-         * @return
-         * @throws DALException 
-         */
-        public String getSpecificMovieImage(String movieName) throws DALException
+    
+    /**
+     * This method is to get a imgPath from a specific movie. 
+     * So that it can be thrown into the tilepane.
+     * @param movieName
+     * @return
+     * @throws DALException 
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
     {
         String imageLink = null;
         try(Connection con = db.getConnection())
@@ -430,5 +431,100 @@ public class MovieDAO {
             throw new DALException();
         }
        return imageLink;
+    }
+
+        
+    /**
+     * 
+     * @param sqlString
+     * @param categories
+     * @param year
+     * @param rating
+     * @param searchText
+     * @param searchNumeric
+     * @return
+     * @throws DALException 
+     */
+    public ObservableList<Movie> searchMovies(String sqlString,
+                                              List<String> categories,
+                                              List<String> year,
+                                              int rating,
+                                              String searchText,
+                                              boolean searchNumeric) throws DALException
+    {
+        try (Connection con = db.getConnection())
+        {
+            String sql = "SELECT "
+                        + "Movie.id, "
+                        + "Movie.name, "
+                        + "Movie.filePath, "
+                        + "Movie.imgPath, "
+                        + "Movie.personalRating, "
+                        + "Movie.imdbRating, "
+                        + "Movie.year, "
+                        + "Movie.lastView, "
+                        + "Movie.movieLength, "
+                        + "Movie.imdbLink, "
+                        + "Category.name AS categoryName "
+                        + "FROM Movie "
+                        + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id "
+                        + "WHERE "+sqlString;
+            System.out.println(sql);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            
+            int i = 1;   
+            for(String category : categories)
+            {
+                preparedStatement.setString(i, category);
+                i++;
+            }
+            for(String y : year)
+            {
+                preparedStatement.setString(i, y);
+                i++;
+            }
+            if(rating != -1)
+            {
+                preparedStatement.setInt(i++, rating);
+            }
+            
+            if(!searchText.isEmpty())
+            {
+                if(searchNumeric)
+                {
+                    preparedStatement.setInt(i++, Integer.parseInt(searchText));
+                }
+                else
+                {
+                    preparedStatement.setString(i++, "%"+searchText+"%");
+                    preparedStatement.setString(i++, "%"+searchText+"%");
+                }
+            }
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            
+            ObservableList<Movie> movies = FXCollections.observableArrayList();
+            Movie movie = new Movie();
+            while (rs.next())
+            {  
+                movie = createMovieFromDB(rs, movie);
+
+                if (!movies.contains(movie))
+                {
+                    movies.add(movie);
+                }
+
+            }
+            
+            return movies;
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DALException();
+        }
+        
+        
     }
 }

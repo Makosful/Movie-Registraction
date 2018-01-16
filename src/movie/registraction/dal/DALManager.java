@@ -5,6 +5,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 
@@ -240,11 +242,11 @@ public class DALManager
      *
      * @throws DALException
      */
-    public void addMovie(String[] movieMetaData) throws DALException
+    public void addMovie(String[] movieMetaData, String filePath) throws DALException
     {
         try
         {
-            int id = mDAO.addMovie(movieMetaData);
+            int id = mDAO.addMovie(movieMetaData, filePath);
 
             String[] metaMovieCategories = movieMetaData[5].split(" ");
             for (String cat : metaMovieCategories)
@@ -417,13 +419,20 @@ public class DALManager
 
     public void removeMovie(int movieId) throws DALException
     {
+            mDAO.removeMovie(movieId);
+    }
+
+  
+    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, int rating, String searchText, boolean searchNumeric) throws DALException
+    {
         try
         {
-            mDAO.removeMovie(movieId);
+           return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
         }
         catch (DALException ex)
         {
             throw new DALException();
         }
     }
+
 }

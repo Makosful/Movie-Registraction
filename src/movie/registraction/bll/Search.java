@@ -7,8 +7,8 @@ package movie.registraction.bll;
 
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.collections.ObservableList;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
 
@@ -33,13 +33,15 @@ public class Search
         }
     }
     
-    public void prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText)
+    public ObservableList<Movie> prepareSearch(List<String> categories, List<String> year, String order, String sort, int rating, String searchText) throws DALException
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
         String sqlOrderBy = "";
         String sqlSearch = "";
+        String sqlRating = "";
         
+        boolean searchNumeric = false;
         
         for(String criteria : categories) {
 
@@ -54,6 +56,7 @@ public class Search
 
             sqlSearchCategory += "Category.name = ?" ;
         }
+        
         for(String criteria : year){
 
             if(sqlSearchYear.isEmpty())
@@ -70,8 +73,8 @@ public class Search
         if(order.equals("Title"))
         {
             sqlOrderBy = " ORDER BY Movie.name";
-
         }
+        
         if(order.equals("Rating"))
         {
             sqlOrderBy = " ORDER BY Movie.personalRating";
@@ -84,10 +87,24 @@ public class Search
         {
             sqlOrderBy += " ASC";
         }
+        
         if(!searchText.isEmpty())
+        {  
+            if(isNumeric(searchText))
+            {
+                sqlSearch = "Movie.year = ?";
+                searchNumeric = true;
+            }
+            else
+            {
+                sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ?)";
+                searchNumeric = false;
+            }
+        }
+        
+        if(rating != -1)
         {
-            sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ? OR Movie.year = ?)";
-
+            sqlRating = "Movie.personalRating > ?";
         }
             
 
@@ -95,17 +112,45 @@ public class Search
         sqlSearchCategory += ")";
         sqlSearchYear += ")";
                 
-        if(!sqlSearchCategory.isEmpty() && !sqlSearchYear.isEmpty() || !sqlOrderBy.isEmpty() || !sqlSearch.isEmpty())
+        if(!sqlSearchCategory.isEmpty() && !sqlSearchYear.isEmpty() || !sqlSearch.isEmpty() || !sqlRating.isEmpty())
         {
             sqlSearchCategory += " AND ";
         }
-        if(!sqlSearchYear.isEmpty() && !sqlOrderBy.isEmpty() || !sqlSearch.isEmpty())
+        
+        if(!sqlSearchYear.isEmpty() && !sqlSearch.isEmpty() || !sqlRating.isEmpty())
         {
             sqlSearchYear += " AND ";
         }
-
         
-        System.out.println(sqlSearchCategory+sqlSearchYear+sqlSearch+sqlOrderBy);
+        if(!sqlRating.isEmpty() && !sqlSearch.isEmpty())
+        {
+            sqlRating += " AND ";
+        }
+        
+        String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
+        return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
+ 
+        
+    }
+    
+    /**
+     * Checks if a given string is numeric
+     *
+     * @param str
+     *
+     * @return
+     */
+    public boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch (NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
     }
     
 }

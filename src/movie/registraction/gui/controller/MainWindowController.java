@@ -85,7 +85,12 @@ public class MainWindowController implements Initializable
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
+
     ContextMenu contextMenu;
+    MenuItem play;
+    MenuItem test2;
+    MenuItem deleteMovie;
+    
 
     //<editor-fold defaultstate="collapsed" desc="Labels">
     Label lblMovieTitle;
@@ -125,7 +130,7 @@ public class MainWindowController implements Initializable
 
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreNodes());
+        flpGenre.getChildren().setAll(model.getGenreList());
         flpYear.getChildren().setAll(model.getYearNodes());
         flpOther.getChildren().setAll(model.getOtherNodes());
 
@@ -160,7 +165,7 @@ public class MainWindowController implements Initializable
     @FXML
     private void titleSearch(ActionEvent event)
     {
-        model.fxmlTitleSearch(txtTitleSearch.getText());
+       // model.addMovie(txtTitleSearch.getText());
     }
 
     /**
@@ -361,12 +366,18 @@ public class MainWindowController implements Initializable
             popOver = new PopOver(popGrid);
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
         }
-
-        popOver.getStyleClass().add("popover");
         popOver.setDetachable(false);
         popOver.setDetached(false);
         popOver.setHeaderAlwaysVisible(true);
         popOver.setTitle("Movie Metadata");
+
+        // So you can close the contextmenu when clicking on picture
+        // without opening the popover.
+        if(contextMenu.isShowing())
+        {
+            popOver.hide();
+        }
+
     }
 
     /**
@@ -397,6 +408,8 @@ public class MainWindowController implements Initializable
                         {
                             popOver.hide();
                         }
+                        Movie movie = model.getMovieInfo(imageView);
+                        contextMenuAction(imageView, movie);
                         model.contextMenuOpenOrNot(contextMenu);
                         contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
                     }
@@ -417,24 +430,30 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Sets up the context menu with the choices user get.
+     * Initialize contextmenu and menuitems.
      *
      * @param tilePane
      */
     private void setupContextMenu()
     {
         contextMenu = new ContextMenu();
-        MenuItem test1 = new MenuItem("1");
-        MenuItem test2 = new MenuItem("2");
-        MenuItem test3 = new MenuItem("3");
+        play = new MenuItem("Play Movie");
+        test2 = new MenuItem("2");
+        deleteMovie = new MenuItem("Delete Movie");
+        contextMenu.getItems().addAll(play, test2, deleteMovie);
 
-        //<editor-fold defaultstate="collapsed" desc="setOnAction">
-        test1.setOnAction(new EventHandler<ActionEvent>()
+    }
+    
+    public void contextMenuAction(ImageView imageView, Movie movie)
+    {
+                //<editor-fold defaultstate="collapsed" desc="setOnAction">
+        play.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
-                System.out.println("1");
+                System.out.println(movie.getFilePath());
+                model.openFileInNative(new File(movie.getFilePath()));
                 contextMenu.hide();
             }
         });
@@ -449,17 +468,22 @@ public class MainWindowController implements Initializable
             }
         });
 
-        test3.setOnAction(new EventHandler<ActionEvent>()
+        deleteMovie.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
-                System.out.println("3");
+                deleteMovie(imageView, movie);
                 contextMenu.hide();
             }
         });
-//</editor-fold>
-
-        contextMenu.getItems().addAll(test1, test2, test3);
+        //</editor-fold>
+    }
+    
+    
+    private void deleteMovie(ImageView imageView, Movie movie)
+    {
+        tilePane.getChildren().remove(imageView);
+        model.removeMovie(movie.getId());
     }
 }
