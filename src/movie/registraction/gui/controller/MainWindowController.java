@@ -204,7 +204,8 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Allows for changing the category of a movie, creates our new modal window
+     * Allows for changing the category of a moviePoster, creates our new modal
+     * window
      * and sets up the necessary
      * parameters for it to function and lastly display it to the user when
      * prompted.
@@ -247,7 +248,7 @@ public class MainWindowController implements Initializable
      * with certain extentions (mp4 etc.),
      * then runs the code that loops through each file (has description on
      * line 388)
-     * Setting the movie files and picture.
+     * Setting the moviePoster files and picture.
      */
     private void setChosenFilesWithPicture() throws DALException
     {
@@ -257,7 +258,7 @@ public class MainWindowController implements Initializable
 
     /**
      * Sets up the TilePane with the necessary binds to the width & height
-     * and gaps for each movie poster.
+     * and gaps for each moviePoster poster.
      */
     private void SetupTilePane()
     {
@@ -269,7 +270,7 @@ public class MainWindowController implements Initializable
 
     private void PopOverSetup(Movie movie, MouseEvent event)
     {
-        //<editor-fold defaultstate="collapsed" desc="Foreach loop w/ movie categories">
+        //<editor-fold defaultstate="collapsed" desc="Foreach loop w/ moviePoster categories">
         /**
          * Creates a for each loop for all the movie categories and allows us to
          * display them.
@@ -382,49 +383,49 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Loops through all the images in the image view and pulls the movie meta
+     * Loops through all the images in the image view and pulls the moviePoster
+     * meta
      * data.
-     * Stores them and allows us to click the movie poster in our image view and
+     * Stores them and allows us to click the moviePoster poster in our image
+     * view and
      * display the Popover info panel
-     * which in turn displays all the relevant movie information (apart from
+     * which in turn displays all the relevant moviePoster information (apart
+     * from
      * production team, actor + actress list and plot)
      * Also allows us to display a context menu where we enable the ability to
-     * 1: Play the movie (with systems standard media player)
-     * 2: Edit data for each movie and lastly 3: Delete the movie from the
+     * 1: Play the moviePoster (with systems standard media player)
+     * 2: Edit data for each moviePoster and lastly 3: Delete the moviePoster
+     * from the
      * database
      * Mouse event.
      */
     private void imageClick()
     {
-        for (ImageView imageView : model.GetImageViewList())
+        model.GetImageViewList().forEach((imageView) ->
         {
-            Movie movie = model.getMovieInfo(imageView);
+            Movie moviePoster = model.getMovieInfo(imageView);
 
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            imageView.setOnMouseClicked((MouseEvent event) ->
             {
-                @Override
-                public void handle(MouseEvent event)
+                MouseButton mouseButton = event.getButton();
+                
+                if (mouseButton == MouseButton.PRIMARY)
                 {
-                    MouseButton mouseButton = event.getButton();
-
-                    if (mouseButton == MouseButton.PRIMARY)
-                    {
-                        PopOverSetup(movie, event);
-                        System.out.println(movie.getMovieLength());
-                        model.contextMenuOpenOrNot(contextMenu);
-                    }
-
-                    else if (mouseButton == MouseButton.SECONDARY)
-                    {
-                        closePopOverIfRightClick();
-                        Movie movie = model.getMovieInfo(imageView);
-                        contextMenuAction(imageView, movie);
-                        model.contextMenuOpenOrNot(contextMenu);
-                        contextMenu.show(tilePane, event.getScreenX() - 5, event.getScreenY() - 5);
-                    }
+                    
+                    PopOverSetup(moviePoster, event);
+                    System.out.println(moviePoster.getMovieLength());
+                    model.contextMenuOpenOrNot(contextMenu);
+                }
+                
+                else if (mouseButton == MouseButton.SECONDARY)
+                {
+                    closePopOverIfRightClick();
+                    contextMenuAction(imageView, moviePoster);
+                    model.contextMenuOpenOrNot(contextMenu);
+                    contextMenu.show(tilePane, event.getScreenX() - 5, event.getScreenY() - 5);
                 }
             });
-        }
+        });
     }
 
 //            imageView.setOnMouseClicked((MouseEvent me) ->
@@ -432,8 +433,8 @@ public class MainWindowController implements Initializable
 //                MouseButton mouseButton = me.getButton();
 //                if (mouseButton == MouseButton.PRIMARY)
 //                {
-//                    PopOverSetup(movie, me);
-//                    System.out.println(movie.getMovieTitle());
+//                    PopOverSetup(moviePoster, me);
+//                    System.out.println(moviePoster.getMovieTitle());
 //                }
 //
 //                if (mouseButton == MouseButton.SECONDARY)
@@ -479,6 +480,12 @@ public class MainWindowController implements Initializable
 
     }
 
+    /**
+     * Making the setOnActions for contextmenu.
+     *
+     * @param imageView
+     * @param movie
+     */
     public void contextMenuAction(ImageView imageView, Movie movie)
     {
         //<editor-fold defaultstate="collapsed" desc="setOnAction">
@@ -515,12 +522,22 @@ public class MainWindowController implements Initializable
         //</editor-fold>
     }
 
+    /**
+     * Deletes movie.
+     *
+     * @param imageView
+     * @param movie
+     */
     private void deleteMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
         model.removeMovie(movie.getId());
     }
 
+    /**
+     * Closes the popover incase user rights click to open context menu.
+     * This is so both windows aren't open at the same time.
+     */
     private void closePopOverIfRightClick()
     {
         if (popOver != null && popOver.isShowing())
