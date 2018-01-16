@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -474,5 +475,26 @@ public class BLLManager
     public ObservableList<Path> getChangeList()
     {
         return dal.getChangeList();
+    }
+
+    public void updateLibrary()
+    {
+    }
+
+    public void updateLibrary(ArrayList<Path> movieList) throws BLLException
+    {
+        List<Movie> databaseList;
+        List<Path> LocalList;
+
+        try
+        {
+            databaseList = getAllMovies();
+            LocalList = movieList;
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
+
     }
 }

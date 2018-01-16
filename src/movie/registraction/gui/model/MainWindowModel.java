@@ -39,8 +39,9 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
-    private final ObservableList<Path> moviePaths;
     private final ObservableList<String> allCategories;
+    private final ObservableList<Path> moviePaths;
+    private final ObservableList<Path> changeList;
 
     private final int IMAGE_HEIGHT;
     private final int IMAGE_WIDTH;
@@ -62,13 +63,13 @@ public class MainWindowModel
         {
         }
 
-        genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
+        genres = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
+        changeList = bll.getChangeList();
+        categories = new ChangeCategories();
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
-
-        categories = new ChangeCategories();
 
         for (int i = 0; i < 10; i++)
         {
@@ -85,19 +86,37 @@ public class MainWindowModel
         extensionList.add(".mp4");
         extensionList.add(".mpeg4");
         loadMovieFromLibrary();
+        setupLibraryListener();
         bll.setDirectoryWatch();
 
-        ObservableList<Path> changeList = bll.getChangeList();
+    }
 
+    /**
+     * Sets up a listener to the List connected to the Library Watcher
+     */
+    private void setupLibraryListener()
+    {
         changeList.addListener((ListChangeListener.Change<? extends Path> c) ->
         {
             while (c.next())
             {
                 System.out.println("Scanning again");
-                this.loadMovieFromLibrary();
+                this.updateLibrary();
                 changeList.clear();
             }
         });
+    }
+
+    private void updateLibrary()
+    {
+        try
+        {
+            bll.getMovieList(extensionList);
+            bll.updateLibrary(bll.getMovieList(extensionList));
+        }
+        catch (BLLException ex)
+        {
+        }
     }
 
     /**
