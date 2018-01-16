@@ -13,7 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -447,7 +449,7 @@ public class MovieDAO {
      */
     public ObservableList<Movie> searchMovies(String sqlString,
                                               List<String> categories,
-                                              List<String> year,
+                                              HashMap<String, String> year,
                                               int rating,
                                               String searchText,
                                               boolean searchNumeric) throws DALException
@@ -470,35 +472,44 @@ public class MovieDAO {
                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
                         + "LEFT JOIN Category ON CatMovie.categoryId = Category.id "
                         + "WHERE "+sqlString;
-            System.out.println(sql);
+
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             
-            int i = 1;   
+            int i = 0;   
             for(String category : categories)
-            {
-                preparedStatement.setString(i, category);
+            {   
                 i++;
+                preparedStatement.setString(i, category);                
             }
-            for(String y : year)
-            {
-                preparedStatement.setString(i, y);
+            for(Map.Entry<String, String> y : year.entrySet()) {
+                String key = y.getKey();
+                String value = y.getValue();
                 i++;
+                preparedStatement.setInt(i, Integer.parseInt(key));
+      
+                i++;
+                preparedStatement.setInt(i, Integer.parseInt(value));
             }
+            
             if(rating != -1)
             {
-                preparedStatement.setInt(i++, rating);
+                i++;
+                preparedStatement.setInt(i, rating);
             }
             
             if(!searchText.isEmpty())
             {
                 if(searchNumeric)
                 {
-                    preparedStatement.setInt(i++, Integer.parseInt(searchText));
+                    i++;
+                    preparedStatement.setInt(i, Integer.parseInt(searchText));
                 }
                 else
                 {
-                    preparedStatement.setString(i++, "%"+searchText+"%");
-                    preparedStatement.setString(i++, "%"+searchText+"%");
+                    i++;
+                    preparedStatement.setString(i, "%"+searchText+"%");
+                    i++;
+                    preparedStatement.setString(i, "%"+searchText+"%");
                 }
             }
 
