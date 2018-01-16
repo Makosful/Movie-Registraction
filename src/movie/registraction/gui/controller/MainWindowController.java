@@ -329,7 +329,7 @@ public class MainWindowController implements Initializable
 
         //<editor-fold defaultstate="collapsed" desc="PopOver Gridpane Setup">
         GridPane popGrid = new GridPane();
-        //TODO CSS
+        //popGrid.getStylesheets().add("movie/registraction/css/gridpane.css");
         popGrid.setPadding(new Insets(30));
         popGrid.setHgap(20);
         popGrid.setVgap(10);
@@ -350,6 +350,7 @@ public class MainWindowController implements Initializable
         if (popOverVisible == false)
         {
             popOver = new PopOver(popGrid);
+            //popOver.getRoot().getStylesheets().add("movie/registraction/css/popover.css"); //Not working ??? ControlsFX issue
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
             popOverVisible = true;
         }
