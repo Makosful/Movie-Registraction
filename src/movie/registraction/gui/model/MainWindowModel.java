@@ -85,6 +85,7 @@ public class MainWindowModel
         extensionList.add(".mp4");
         extensionList.add(".mpeg4");
         loadMovieFromLibrary();
+        bll.setDirectoryWatch();
 
         ObservableList<Path> changeList = bll.getChangeList();
 
@@ -92,7 +93,9 @@ public class MainWindowModel
         {
             while (c.next())
             {
-                //
+                System.out.println("Scanning again");
+                this.loadMovieFromLibrary();
+                changeList.clear();
             }
         });
     }
@@ -456,7 +459,6 @@ public class MainWindowModel
 
             // Load the files located at the library
             moviePaths.setAll(bll.getMovieList(extensionList));
-            bll.setDirectoryWatch();
 
             // Tell the user the files have been added
             System.out.println("Successfully added library");

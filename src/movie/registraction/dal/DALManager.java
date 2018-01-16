@@ -1,8 +1,8 @@
 package movie.registraction.dal;
 
 import java.io.*;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -129,31 +129,6 @@ public class DALManager
         });
 
         directoryWatcher(singleFolders);
-    }
-
-    private void findFolders(Path startPath, ArrayList<Path> folders) throws DALException
-    {
-        try
-        {
-            Files.walkFileTree(
-                    startPath,
-                    new SimpleFileVisitor<Path>()
-            {
-                @Override
-                public FileVisitResult preVisitDirectory(
-                        Path dir,
-                        BasicFileAttributes attrs)
-                        throws IOException
-                {
-                    return FileVisitResult.CONTINUE;
-                }
-
-            });
-        }
-        catch (IOException ex)
-        {
-            throw new DALException();
-        }
     }
 
     /**
@@ -449,12 +424,11 @@ public class DALManager
         mDAO.removeMovie(movieId);
     }
 
-  
     public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, String searchText, boolean searchNumeric) throws DALException
     {
         try
         {
-           return mDAO.searchMovies(sqlString, categories, year, searchText, searchNumeric);
+            return mDAO.searchMovies(sqlString, categories, year, searchText, searchNumeric);
         }
         catch (DALException ex)
         {
