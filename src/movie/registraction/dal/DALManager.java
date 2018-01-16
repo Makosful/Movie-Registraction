@@ -242,11 +242,11 @@ public class DALManager
      *
      * @throws DALException
      */
-    public void addMovie(String[] movieMetaData) throws DALException
+    public void addMovie(String[] movieMetaData, String filePath) throws DALException
     {
         try
         {
-            int id = mDAO.addMovie(movieMetaData);
+            int id = mDAO.addMovie(movieMetaData, filePath);
 
             String[] metaMovieCategories = movieMetaData[5].split(" ");
             for (String cat : metaMovieCategories)

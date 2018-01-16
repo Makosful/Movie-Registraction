@@ -287,7 +287,7 @@ public class MovieDAO {
      * @return
      * @throws DALException 
      */
-    public int addMovie(String[] movieMetaData) throws DALException
+    public int addMovie(String[] movieMetaData, String filePath) throws DALException
     {            
        try (Connection con = db.getConnection())
        {
@@ -299,7 +299,7 @@ public class MovieDAO {
 
            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
            preparedStatement.setString(1, movieMetaData[0]);
-           preparedStatement.setString(2, "path");
+           preparedStatement.setString(2, filePath);
            preparedStatement.setString(3, movieMetaData[4]);
            preparedStatement.setString(4, movieMetaData[6]);
            preparedStatement.setDouble(5, -1);
@@ -342,9 +342,6 @@ public class MovieDAO {
             preparedStatement.setInt(1, personalRating);
             preparedStatement.setInt(2, movieId);
             preparedStatement.executeUpdate();
-
-        
-            
         }
         catch (SQLException ex)
         {

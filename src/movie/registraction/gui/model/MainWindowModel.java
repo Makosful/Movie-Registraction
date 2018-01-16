@@ -3,7 +3,9 @@ package movie.registraction.gui.model;
 import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +96,7 @@ public class MainWindowModel
      *
      * @param text
      */
-    public void fxmlTitleSearch(String text)
+    public void addMovie(String text, String filePath)
     {
         // Replace all the whitespaces with plus signs to make it URL friendly
         text = text.replaceAll(" ", "+");
@@ -107,7 +109,7 @@ public class MainWindowModel
             searchLink = bll.getOmdbTitleResult(text);
 
             String[] metaData = bll.getSearchMetaData(searchLink);
-            bll.addMovie(metaData);
+            bll.addMovie(metaData, filePath);
 
         }
         catch (BLLException ex)
@@ -339,7 +341,12 @@ public class MainWindowModel
                 {
                     if (!bll.movieAlreadyExisting(nameOfMovie))
                     {
-                    fxmlTitleSearch(nameOfMovie);
+                    addMovie(nameOfMovie, chosenFile.getPath());;
+                    
+                    String test = chosenFile.getPath().split("src")[1];
+                        System.out.println("src"+test);
+                    
+                    
                     String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
                     imgPath = "https:" + imgPath;
                     setPictures(tilePane, chosenFile, imgPath);
@@ -648,6 +655,18 @@ public class MainWindowModel
         try
         {
             bll.removeMovie(id);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+    }
+    
+    public void openFileInNative(File file)
+    {
+        try
+        {
+            bll.openFileInNative(file);
         }
         catch (BLLException ex)
         {

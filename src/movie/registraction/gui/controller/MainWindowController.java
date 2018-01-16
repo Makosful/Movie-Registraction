@@ -84,7 +84,7 @@ public class MainWindowController implements Initializable
     PopOver popOver;
 
     ContextMenu contextMenu;
-    MenuItem test1;
+    MenuItem play;
     MenuItem test2;
     MenuItem deleteMovie;
     
@@ -162,7 +162,7 @@ public class MainWindowController implements Initializable
     @FXML
     private void titleSearch(ActionEvent event)
     {
-        model.fxmlTitleSearch(txtTitleSearch.getText());
+       // model.addMovie(txtTitleSearch.getText());
     }
 
     /**
@@ -347,6 +347,12 @@ public class MainWindowController implements Initializable
             popOver = new PopOver(vBox); //WOLOLO (change to vBox)
             popOver.show(tilePane, event.getScreenX(), event.getScreenY());
         }
+        // So you can close the contextmenu when clicking on picture
+        // without opening the popover.
+        if(contextMenu.isShowing())
+        {
+            popOver.hide();
+        }
     }
 
     /**
@@ -366,13 +372,9 @@ public class MainWindowController implements Initializable
                     MouseButton mouseButton = event.getButton();
                     if (mouseButton == MouseButton.PRIMARY)
                     {
-                        model.closeMenuOrClick(contextMenu);
-                        if(popOver.isShowing())
-                        {
-                            popOver.hide();
-                        }
                         Movie movie = model.getMovieInfo(imageView);
                         vBoxAndLabelSetup(movie, event);
+                        model.closeMenuOrClick(contextMenu);
                     }
 
                     if (mouseButton == MouseButton.SECONDARY)
@@ -406,21 +408,23 @@ public class MainWindowController implements Initializable
     private void setupContextMenu()
     {
         contextMenu = new ContextMenu();
-        test1 = new MenuItem("");
+        play = new MenuItem("Play Movie");
         test2 = new MenuItem("2");
         deleteMovie = new MenuItem("Delete Movie");
-        contextMenu.getItems().addAll(test1, test2, deleteMovie);
+        contextMenu.getItems().addAll(play, test2, deleteMovie);
 
     }
     
     public void contextMenuAction(ImageView imageView, Movie movie)
     {
                 //<editor-fold defaultstate="collapsed" desc="setOnAction">
-        test1.setOnAction(new EventHandler<ActionEvent>()
+        play.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
             {
+                System.out.println(movie.getFilePath());
+                model.openFileInNative(new File(movie.getFilePath()));
                 contextMenu.hide();
             }
         });
