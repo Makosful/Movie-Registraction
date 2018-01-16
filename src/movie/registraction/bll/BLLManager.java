@@ -234,9 +234,9 @@ public class BLLManager
      *
      * @throws DALException
      */
-    public void addMovie(String[] movieMetaData) throws DALException
+    public void addMovie(String[] movieMetaData, String filePath) throws DALException
     {
-        dal.addMovie(movieMetaData);
+        dal.addMovie(movieMetaData, filePath);
     }
 
     public ObservableList<Movie> getAllMovies() throws DALException

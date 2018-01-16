@@ -102,7 +102,7 @@ public class MainWindowModel
      *
      * @param text
      */
-    public void fxmlTitleSearch(String text)
+    public void addMovie(String text, String filePath)
     {
         // Replace all the whitespaces with plus signs to make it URL friendly
         text = text.replaceAll(" ", "+");
@@ -115,7 +115,7 @@ public class MainWindowModel
             searchLink = bll.getOmdbTitleResult(text);
 
             String[] metaData = bll.getSearchMetaData(searchLink);
-            bll.addMovie(metaData);
+            bll.addMovie(metaData, filePath);
 
         }
         catch (BLLException ex)
@@ -343,11 +343,13 @@ public class MainWindowModel
             for (File chosenFile : chosenFiles)
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
+                String relativePath = chosenFile.getPath().split("src")[1];
+                relativePath = "src" + relativePath;
                 try
                 {
                     if (!bll.movieAlreadyExisting(nameOfMovie))
                     {
-                        fxmlTitleSearch(nameOfMovie);
+                        addMovie(nameOfMovie, relativePath);
                         String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
                         imgPath = "https:" + imgPath;
                         setPictures(tilePane, chosenFile, imgPath);
@@ -652,6 +654,18 @@ public class MainWindowModel
         try
         {
             bll.removeMovie(id);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+    }
+
+    public void openFileInNative(File file)
+    {
+        try
+        {
+            bll.openFileInNative(file);
         }
         catch (BLLException ex)
         {

@@ -266,11 +266,11 @@ public class DALManager
      *
      * @throws DALException
      */
-    public void addMovie(String[] movieMetaData) throws DALException
+    public void addMovie(String[] movieMetaData, String filePath) throws DALException
     {
         try
         {
-            int id = mDAO.addMovie(movieMetaData);
+            int id = mDAO.addMovie(movieMetaData, filePath);
 
             String[] metaMovieCategories = movieMetaData[5].split(" ");
             for (String cat : metaMovieCategories)
@@ -449,11 +449,12 @@ public class DALManager
         mDAO.removeMovie(movieId);
     }
 
-    public void searchMovies(String sqlString, List<String> categories, List<String> year, String searchText) throws DALException
+  
+    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, String searchText, boolean searchNumeric) throws DALException
     {
         try
         {
-            mDAO.searchMovies(sqlString, categories, year, searchText);
+           return mDAO.searchMovies(sqlString, categories, year, searchText, searchNumeric);
         }
         catch (DALException ex)
         {

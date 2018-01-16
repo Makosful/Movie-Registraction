@@ -7,6 +7,8 @@ package movie.registraction.bll;
 
 
 import java.util.List;
+import javafx.collections.ObservableList;
+import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
 
@@ -31,13 +33,13 @@ public class Search
         }
     }
     
-    public void prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText) throws DALException
+    public ObservableList<Movie> prepareSearch(List<String> categories, List<String> year,  String order, String sort, String searchText) throws DALException
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
         String sqlOrderBy = "";
         String sqlSearch = "";
-        
+        boolean searchNumeric = false;
         
         for(String criteria : categories) {
 
@@ -84,9 +86,17 @@ public class Search
         }
         
         if(!searchText.isEmpty())
-        {
-            sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ? OR Movie.year = ?)";
-
+        {  
+            if(isNumeric(searchText))
+            {
+                sqlSearch = "Movie.year = ?";
+                searchNumeric = true;
+            }
+            else
+            {
+                sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ?)";
+                searchNumeric = false;
+            }
         }
             
 
@@ -94,19 +104,40 @@ public class Search
         sqlSearchCategory += ")";
         sqlSearchYear += ")";
                 
-        if(!sqlSearchCategory.isEmpty() && !sqlSearchYear.isEmpty() || !sqlOrderBy.isEmpty() || !sqlSearch.isEmpty())
+        if(!sqlSearchCategory.isEmpty() && !sqlSearchYear.isEmpty() || !sqlSearch.isEmpty())
         {
             sqlSearchCategory += " AND ";
         }
         
-        if(!sqlSearchYear.isEmpty() && !sqlOrderBy.isEmpty() || !sqlSearch.isEmpty())
+        if(!sqlSearchYear.isEmpty() && !sqlSearch.isEmpty())
         {
             sqlSearchYear += " AND ";
         }
         
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlSearch+sqlOrderBy;
-        dal.searchMovies(sqlString, categories, year, searchText);
-        System.out.println(sqlSearchCategory+sqlSearchYear+sqlSearch+sqlOrderBy);
+        return dal.searchMovies(sqlString, categories, year, searchText, searchNumeric);
+ 
+        
+    }
+    
+    /**
+     * Checks if a given string is numeric
+     *
+     * @param str
+     *
+     * @return
+     */
+    public boolean isNumeric(String str)
+    {
+        try
+        {
+            double d = Double.parseDouble(str);
+        }
+        catch (NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
     }
     
 }
