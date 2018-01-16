@@ -70,27 +70,31 @@ public class MainWindowController implements Initializable
     private Button btnSetLibrary;
     //</editor-fold>
 
-    // Model
+    //<editor-fold defaultstate="collapsed" desc="Instanciating">
     private MainWindowModel model;
+    
     @FXML
     private FlowPane flpGenre;
     @FXML
     private FlowPane flpYear;
     @FXML
     private FlowPane flpOther;
-
+    
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
+    
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
+//</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Context menu">
     ContextMenu contextMenu;
-    MenuItem play;
+    MenuItem playMovie;
     MenuItem editData;
     MenuItem deleteMovie;
-    
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Labels">
     Label lblMovieTitle;
@@ -104,7 +108,9 @@ public class MainWindowController implements Initializable
     //</editor-fold>
 
     /**
-     * Constructor for all intents and purposes
+     * Our initializer, which is run when the program initially starts up.
+     * We create our tilepane and also our context menu for the imageview
+     * followed by setting our popOvers visiblity to false (used to bugfix)
      *
      * @param url
      * @param rb
@@ -146,15 +152,8 @@ public class MainWindowController implements Initializable
     private void comboBoxSetup()
     {
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
-        comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars", "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
-    }
-
-    /**
-     * TODO
-     */
-    private void modalWindowSetup()
-    {
-
+        comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars",
+                                          "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
     }
 
     /**
@@ -165,7 +164,7 @@ public class MainWindowController implements Initializable
     @FXML
     private void titleSearch(ActionEvent event)
     {
-       // model.addMovie(txtTitleSearch.getText());
+        //TODO model.addMovie(txtTitleSearch.getText());
     }
 
     /**
@@ -205,7 +204,10 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Change the category of a movie
+     * Allows for changing the category of a movie, creates our new modal window
+     * and sets up the necessary
+     * parameters for it to function and lastly display it to the user when
+     * prompted.
      *
      * @param event
      *
@@ -215,7 +217,6 @@ public class MainWindowController implements Initializable
     @FXML
     private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException
     {
-
         File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
         Parent root;
@@ -231,8 +232,7 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Adds files from outside the library to the program
-     *
+     * Runs two methods which are described below (line 244)
      * @param event
      */
     @FXML
@@ -242,6 +242,10 @@ public class MainWindowController implements Initializable
     }
 
     /**
+     * Firstly creates a file chooser and allows us to select multiple files
+     * with certain extentions (mp4 etc.),
+     * then runs the code that loops through each file (has description on
+     * line 388)
      * Setting the movie files and picture.
      */
     private void setChosenFilesWithPicture() throws DALException
@@ -251,7 +255,8 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Binds the TilePane to the ScrollPane, height n width.
+     * Sets up the TilePane with the necessary binds to the width & height
+     * and gaps for each movie poster.
      */
     private void SetupTilePane()
     {
@@ -263,6 +268,11 @@ public class MainWindowController implements Initializable
 
     private void PopOverSetup(Movie movie, MouseEvent event)
     {
+        //<editor-fold defaultstate="collapsed" desc="Foreach loop w/ movie categories">
+        /**
+         * Creates a for each loop for all the movie categories and allows us to
+         * display them.
+         */
         String genreCategories = null;
         for (int i = 0; i < movie.getCategories().size(); i++)
         {
@@ -272,10 +282,10 @@ public class MainWindowController implements Initializable
             }
             else
             {
-                genreCategories += "\n" + movie.getCategories().get(i);
-                System.out.println(genreCategories);
+                genreCategories += movie.getCategories().get(i);
             }
         }
+        //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="PopOver Content">
         lblMovieTitle = new Label();
@@ -333,8 +343,7 @@ public class MainWindowController implements Initializable
         gridWidth = 400;
         popGrid.setPrefSize(gridWidth, gridHeight);
         //</editor-fold>
-        
-        
+
         if (popOverVisible == false)
         {
             System.out.println("boolean is false");
@@ -342,27 +351,20 @@ public class MainWindowController implements Initializable
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
             popOverVisible = true;
         }
-        else if(popOverVisible)
+        else if (popOverVisible)
         {
-         popOver.hide();
-         popOver = new PopOver(popGrid);
+            popOver.hide();
+            popOver = new PopOver(popGrid);
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
-            
-         
+
             System.out.println("boolean is not true");
         }
-
-//        if (!popOver.isShowing())
-//        {
-//            popOver = new PopOver(popGrid);
-//            popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
-//        }
 
         if (popOver.isShowing() && popOverVisible)
         {
             popOverVisible = true;
             popOver.hide();
-            popOver = null; 
+            popOver = null;
             popOver = new PopOver(popGrid);
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
         }
@@ -371,9 +373,10 @@ public class MainWindowController implements Initializable
         popOver.setHeaderAlwaysVisible(true);
         popOver.setTitle("Movie Metadata");
 
-        // So you can close the contextmenu when clicking on picture
-        // without opening the popover.
-        if(contextMenu.isShowing())
+        /**
+         * Automatically hides the PopOver if the context menu is showing
+         */
+        if (contextMenu.isShowing())
         {
             popOver.hide();
         }
@@ -381,7 +384,16 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Code so you can click or right click on an image and something happens.
+     * Loops through all the images in the image view and pulls the movie meta
+     * data.
+     * Stores them and allows us to click the movie poster in our image view and
+     * display the Popover info panel
+     * which in turn displays all the relevant movie information (apart from
+     * production team, actor + actress list and plot)
+     * Also allows us to display a context menu where we enable the ability to
+     * 1: Play the movie (with systems standard media player)
+     * 2: Edit data for each movie and lastly 3: Delete the movie from the
+     * database
      * Mouse event.
      */
     private void imageClick()
@@ -390,29 +402,30 @@ public class MainWindowController implements Initializable
         {
             Movie movie = model.getMovieInfo(imageView);
 
-            imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
+            imageView.setOnMouseClicked((MouseEvent me) ->
             {
-                @Override
-                public void handle(MouseEvent me)
+                MouseButton mouseButton = me.getButton();
+                if (mouseButton == MouseButton.PRIMARY)
                 {
-                    MouseButton mouseButton = me.getButton();
-                    if (mouseButton == MouseButton.PRIMARY)
+                    PopOverSetup(movie, me);
+                    System.out.println(movie.getMovieTitle());
+                }
+
+                if (mouseButton == MouseButton.SECONDARY)
+                {
+                    /**
+                     * Fixes the issue of stacking the Popover (left click) with
+                     * the Context menu (right click)
+                     */
+                    if (popOver.isShowing())
                     {
-                        PopOverSetup(movie, me);
-                        System.out.println(movie.getMovieTitle());
+                        popOver.hide();
                     }
 
-                    if (mouseButton == MouseButton.SECONDARY)
-                    {
-                        if (popOver.isShowing())
-                        {
-                            popOver.hide();
-                        }
-                        Movie movie = model.getMovieInfo(imageView);
-                        contextMenuAction(imageView, movie);
-                        model.contextMenuOpenOrNot(contextMenu);
-                        contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
-                    }
+                    Movie moviePoster = model.getMovieInfo(imageView);
+                    contextMenuAction(imageView, moviePoster);
+                    model.contextMenuOpenOrNot(contextMenu);
+                    contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
                 }
             });
         }
@@ -430,24 +443,24 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Initialize contextmenu and menuitems.
+     * Initialize context menu and menu items.
      *
      * @param tilePane
      */
     private void setupContextMenu()
     {
         contextMenu = new ContextMenu();
-        play = new MenuItem("Play Movie");
+        playMovie = new MenuItem("Play Movie");
         editData = new MenuItem("Edit Metadata TODO");
-        deleteMovie = new MenuItem("Delete Movie TODO");
-        contextMenu.getItems().addAll(play, editData, deleteMovie);
+        deleteMovie = new MenuItem("Delete Movie");
+        contextMenu.getItems().addAll(playMovie, editData, deleteMovie);
 
     }
-    
+
     public void contextMenuAction(ImageView imageView, Movie movie)
     {
-                //<editor-fold defaultstate="collapsed" desc="setOnAction">
-        play.setOnAction(new EventHandler<ActionEvent>()
+        //<editor-fold defaultstate="collapsed" desc="setOnAction">
+        playMovie.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
@@ -479,8 +492,7 @@ public class MainWindowController implements Initializable
         });
         //</editor-fold>
     }
-    
-    
+
     private void deleteMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
