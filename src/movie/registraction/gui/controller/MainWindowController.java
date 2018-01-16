@@ -88,7 +88,7 @@ public class MainWindowController implements Initializable
 
     ContextMenu contextMenu;
     MenuItem play;
-    MenuItem test2;
+    MenuItem editData;
     MenuItem deleteMovie;
     
 
@@ -438,9 +438,9 @@ public class MainWindowController implements Initializable
     {
         contextMenu = new ContextMenu();
         play = new MenuItem("Play Movie");
-        test2 = new MenuItem("2");
-        deleteMovie = new MenuItem("Delete Movie");
-        contextMenu.getItems().addAll(play, test2, deleteMovie);
+        editData = new MenuItem("Edit Metadata TODO");
+        deleteMovie = new MenuItem("Delete Movie TODO");
+        contextMenu.getItems().addAll(play, editData, deleteMovie);
 
     }
     
@@ -458,7 +458,7 @@ public class MainWindowController implements Initializable
             }
         });
 
-        test2.setOnAction(new EventHandler<ActionEvent>()
+        editData.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
             public void handle(ActionEvent event)
