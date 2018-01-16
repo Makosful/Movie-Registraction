@@ -4,15 +4,15 @@ import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
@@ -39,8 +39,9 @@ public class MainWindowModel
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
-    private final ObservableList<Path> moviePaths;
     private final ObservableList<String> allCategories;
+    private final ObservableList<Path> moviePaths;
+    private final ObservableList<Path> changeList;
 
     private final int IMAGE_HEIGHT;
     private final int IMAGE_WIDTH;
@@ -62,13 +63,13 @@ public class MainWindowModel
         {
         }
 
-        genres = FXCollections.observableArrayList();
         years = FXCollections.observableArrayList();
+        genres = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
+        changeList = bll.getChangeList();
+        categories = new ChangeCategories();
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
-
-        categories = new ChangeCategories();
 
         for (int i = 0; i < 10; i++)
         {
@@ -85,6 +86,37 @@ public class MainWindowModel
         extensionList.add(".mp4");
         extensionList.add(".mpeg4");
         loadMovieFromLibrary();
+        setupLibraryListener();
+        bll.setDirectoryWatch();
+
+    }
+
+    /**
+     * Sets up a listener to the List connected to the Library Watcher
+     */
+    private void setupLibraryListener()
+    {
+        changeList.addListener((ListChangeListener.Change<? extends Path> c) ->
+        {
+            while (c.next())
+            {
+                System.out.println("Scanning again");
+                this.updateLibrary();
+                changeList.clear();
+            }
+        });
+    }
+
+    private void updateLibrary()
+    {
+        try
+        {
+            bll.getMovieList(extensionList);
+            bll.updateLibrary(bll.getMovieList(extensionList));
+        }
+        catch (BLLException ex)
+        {
+        }
     }
 
     /**
@@ -333,27 +365,30 @@ public class MainWindowModel
             for (File chosenFile : chosenFiles)
             {
                 String nameOfMovie = bll.splitDot(chosenFile.getName());
+
                 try
                 {
                     if (!bll.movieAlreadyExisting(nameOfMovie))
                     {
-                    addMovie(nameOfMovie, chosenFile.getPath());                  
-                    String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
-                    imgPath = "https:" + imgPath;
-                    setPictures(tilePane, chosenFile, imgPath);
+
+                        addMovie(nameOfMovie, chosenFile.getPath());
+                        String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
+                        imgPath = "https:" + imgPath;
+                        setPictures(tilePane, chosenFile, imgPath);
+
                     }
                     else
                     {
-                     ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-                    Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
-                    okButton);
-                    
-                    Optional<ButtonType> result = alert.showAndWait();
+                        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+                        Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
+                                                okButton);
+
+                        Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == okButton)
                         {
-                        alert.close();
+                            alert.close();
                         }
-                    }  
+                    }
                 }
                 catch (Exception e)
                 {
@@ -368,7 +403,6 @@ public class MainWindowModel
             return;
         }
     }
-
 
     public void setPictures(TilePane tilePane, File chosenFile, String imgUrl) throws DALException
     {
@@ -448,12 +482,6 @@ public class MainWindowModel
 
             // Tell the user the files have been added
             System.out.println("Successfully added library");
-
-            // Show the user the full file path of the files in the console
-            moviePaths.forEach((movy) ->
-            {
-                //System.out.println(movy);
-            });
         }
         catch (BLLException ex)
         {
@@ -508,7 +536,7 @@ public class MainWindowModel
 
     /**
      * Gets the Genre list !!! UNUSED
-     * NOT USED ANYMORE 
+     * NOT USED ANYMORE
      * TODO Replace dummy data with actual data
      *
      * @return
@@ -601,24 +629,26 @@ public class MainWindowModel
             System.out.println("Could not execute the check of old and low rated movies");
         }
     }
-    
-     public Movie getMovieInfo(ImageView imageView)
+
+    public Movie getMovieInfo(ImageView imageView)
     {
         Movie movieObject = null;
-        try 
+        try
         {
             movieObject = bll.getMovieInfo(imageView);
-        } 
-        catch (DALException ex) 
+        }
+        catch (DALException ex)
         {
             System.out.println("Failed to get movie");
         }
         return movieObject;
     }
-     /**
-      * This loads all the movies from start.
-      * @param tilePane 
-      */
+
+    /**
+     * This loads all the movies from start.
+     *
+     * @param tilePane
+     */
     public void loadMoviesFromStart(TilePane tilePane)
     {
         ImageView imageView;
@@ -640,7 +670,7 @@ public class MainWindowModel
             System.out.println("Couldnt load movies from db.");
         }
     }
-    
+
     public void removeMovie(int id)
     {
         try
@@ -652,7 +682,7 @@ public class MainWindowModel
             System.out.println(ex);
         }
     }
-    
+
     public void openFileInNative(File file)
     {
         try

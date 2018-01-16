@@ -10,9 +10,8 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -224,6 +223,11 @@ public class BLLManager
         }
     }
 
+    public void setDirectoryWatch()
+    {
+        dal.setDirectoryWatch();
+    }
+
     /**
      * Sends metadata to dataaccess layer to insert a movie
      *
@@ -326,7 +330,7 @@ public class BLLManager
                 meta[5] = meta[i].replace(",", "");
             }
             //imdb id
-            else if(meta[i].contains("imdbID:"))
+            else if (meta[i].contains("imdbID:"))
             {
                 meta[6] = meta[i];
             }
@@ -356,16 +360,18 @@ public class BLLManager
     {
         return dal.getSpecificMovieImage(movieName);
     }
-    
+
     public String splitDot(String stringToSplit)
     {
         return stringToSplit = stringToSplit.split("\\.")[0];
     }
 
     /**
-     * If there is a movie last seen over 2 years ago and the movie i rated under 6 
+     * If there is a movie last seen over 2 years ago and the movie i rated
+     * under 6
      * ask the user if the movie should be deleted
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public void findOldAndBadMovies() throws DALException
     {
@@ -403,49 +409,52 @@ public class BLLManager
             throw new DALException();
         }
     }
-    
+
     public Movie getMovieInfo(ImageView imageView) throws DALException
     {
         Movie movieObject = null;
-        for (Movie movie : getAllMovies()) 
+        for (Movie movie : getAllMovies())
         {
             //  Finding the ID that belongs to the movie.
-            if (Integer.parseInt(imageView.getId()) == movie.getId()) 
+            if (Integer.parseInt(imageView.getId()) == movie.getId())
             {
                 movieObject = movie;
             }
         }
         return movieObject;
     }
-    
+
     /**
      * Check if movie already exists in the db
+     *
      * @param movieTitle
+     *
      * @return
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public boolean movieAlreadyExisting(String movieTitle) throws BLLException
     {
         boolean isAlreadyInDataBase = false;
         try
         {
-           for(Movie m : getAllMovies())
-           {
-               if(m.getMovieTitle().equals(movieTitle))
-               {
-                  isAlreadyInDataBase = true;
-               }
+            for (Movie m : getAllMovies())
+            {
+                if (m.getMovieTitle().equals(movieTitle))
+                {
+                    isAlreadyInDataBase = true;
+                }
 
-           } 
+            }
         }
         catch (DALException ex)
         {
             throw new BLLException();
         }
-        
+
         return isAlreadyInDataBase;
     }
-    
+
     public void removeMovie(int id) throws BLLException
     {
         try
@@ -456,5 +465,37 @@ public class BLLManager
         {
             throw new BLLException();
         }
+    }
+
+    /**
+     * Gets the list holding the changed files
+     *
+     * @return
+     */
+    public ObservableList<Path> getChangeList()
+    {
+        return dal.getChangeList();
+    }
+
+    public void updateLibrary()
+    {
+    }
+
+    public void updateLibrary(ArrayList<Path> movieList) throws BLLException
+    {
+        List<Movie> databaseList;
+        List<Path> LocalList;
+
+        try
+        {
+            databaseList = getAllMovies();
+            LocalList = movieList;
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
+
+        // Compare the two lists
     }
 }

@@ -1,11 +1,12 @@
 package movie.registraction.dal;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -14,48 +15,111 @@ import java.util.Map;
 public class LibraryScan implements Runnable
 {
 
-    ArrayList<Path> list;
+    private Path path;
+    private ObservableList<Path> list;
+    private List folders;
 
-    public LibraryScan(ArrayList<Path> list)
+    public LibraryScan()
     {
-        this.list = list;
+        this.list = FXCollections.observableArrayList();
+    }
+
+    public LibraryScan(Path root)
+    {
+        this.path = root;
+        this.list = FXCollections.observableArrayList();
+    }
+
+    public LibraryScan(ArrayList list)
+    {
+        this.folders = list;
+        this.list = FXCollections.observableArrayList();
     }
 
     @Override
     public void run()
     {
-        System.out.println("Thread START");
-        for (Path path : list)
-        {
-            System.out.println(path);
-        }
-        System.out.println("Thread END");
-        watch(list);
+        watch(folders);
+        //watch(path);
     }
 
-    private void m()
+    private void watch(List<Path> folders)
     {
+        try (WatchService watcher = FileSystems.getDefault().newWatchService())
+        {
+            WatchKey key;
+            Map<WatchKey, Path> keyMap = new HashMap<>();
+
+            for (Path folder : folders)
+            {
+                keyMap.put(folder.register(watcher,
+                                           StandardWatchEventKinds.ENTRY_CREATE,
+                                           StandardWatchEventKinds.ENTRY_DELETE,
+                                           StandardWatchEventKinds.ENTRY_MODIFY),
+                           folder);
+                //this.list.add(folder);
+            }
+
+            do
+            {
+                key = watcher.take();
+                Path eventDir = keyMap.get(key);
+
+                for (WatchEvent<?> event : key.pollEvents())
+                {
+                    WatchEvent.Kind<?> kind = event.kind();
+                    Path eventPath = (Path) event.context();
+
+                    if ("ENTRY_DELETE".equals(kind.toString()))
+                    {
+                        Path p = new File(eventDir + "\\" + eventPath).toPath();
+                        this.list.remove(p);
+                        //System.out.println("Removed: " + eventPath);
+                        //System.out.println(this.list.size());
+                    }
+
+                    if ("ENTRY_CREATE".equals(kind.toString()))
+                    {
+                        Path p = new File(eventDir + "\\" + eventPath).toPath();
+                        this.list.add(p);
+                        //System.out.println("Created: " + eventPath);
+                        //System.out.println(this.list.size());
+                    }
+
+                }
+            }
+            while (key.reset());
+        }
+        catch (IOException | InterruptedException ex)
+        {
+        }
     }
 
-    private void watch(ArrayList<Path> list)
+    private void watch(Path path)
     {
         try (WatchService watcher = FileSystems.getDefault().newWatchService())
         {
             Map<WatchKey, Path> keyMap = new HashMap<>();
-            for (Path path : list)
+
+            Files.walkFileTree(
+                    path, new SimpleFileVisitor<Path>()
             {
-                keyMap.put(path.register(watcher,
-                                         StandardWatchEventKinds.ENTRY_CREATE,
-                                         StandardWatchEventKinds.ENTRY_DELETE,
-                                         StandardWatchEventKinds.ENTRY_MODIFY),
-                           path);
-            }
+                @Override
+                public FileVisitResult preVisitDirectory(
+                        Path dir,
+                        BasicFileAttributes attrs)
+                        throws IOException
+                {
+                    keyMap.put(dir.register(watcher,
+                                            StandardWatchEventKinds.ENTRY_CREATE,
+                                            StandardWatchEventKinds.ENTRY_DELETE,
+                                            StandardWatchEventKinds.ENTRY_MODIFY),
+                               dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
 
             Collection<Path> values = keyMap.values();
-            for (Path value : values)
-            {
-                System.out.println(value);
-            }
 
             WatchKey key;
 
@@ -68,14 +132,37 @@ public class LibraryScan implements Runnable
                 {
                     WatchEvent.Kind<?> kind = event.kind();
                     Path eventPath = (Path) event.context();
-                    System.out.println(eventDir + ": " + kind + ": " + eventPath);
+
+                    if ("ENTRY_DELETE".equals(kind.name()))
+                    {
+                        Path toPath = new File(eventDir + "/" + eventPath).toPath();
+                        // System.out.println("Deleted");
+                        this.list.add(toPath);
+                    }
+                    if ("ENTRY_CREATE".equals(kind.name()))
+                    {
+                        Path toPath = new File(eventDir + "/" + eventPath).toPath();
+                        // System.out.println("Created");
+                        this.list.add(toPath);
+                    }
+
+                    //System.out.println(eventDir + ": " + kind + ": " + eventPath);
                 }
             }
             while (key.reset());
         }
         catch (IOException | InterruptedException ex)
         {
-            ex.printStackTrace();
         }
+    }
+
+    public ObservableList<Path> getObsList()
+    {
+        return this.list;
+    }
+
+    public void setFolders(ArrayList<Path> folderList)
+    {
+        this.folders = folderList;
     }
 }
