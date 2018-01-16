@@ -402,7 +402,6 @@ public class MainWindowController implements Initializable
         {
             Movie movie = model.getMovieInfo(imageView);
 
-            
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
                 @Override
@@ -414,17 +413,22 @@ public class MainWindowController implements Initializable
                     {
                         PopOverSetup(movie, me);
                         System.out.println(movie.getMovieLength());
+                        model.contextMenuOpenOrNot(contextMenu);
                     }
                     
                     else if(mouseButton == MouseButton.SECONDARY)
                     {
                         closePopOverIfRightClick();
                         Movie movie = model.getMovieInfo(imageView);
+                        contextMenuAction(imageView, movie);
                         model.contextMenuOpenOrNot(contextMenu);
                         contextMenu.show(tilePane, me.getSceneX(), me.getSceneY());
                     }
                 }
-            }
+            });
+        }
+    }
+                    
             
 //            imageView.setOnMouseClicked((MouseEvent me) ->
 //            {
@@ -441,7 +445,7 @@ public class MainWindowController implements Initializable
 //                     * Fixes the issue of stacking the Popover (left click) with
 //                     * the Context menu (right click)
 //                     */
-//                    if (popOver.isShowing())
+//                    if (popoOver != null && popOver.isShowing())
 //                    {
 //                        popOver.hide();
 //                    }
@@ -452,8 +456,6 @@ public class MainWindowController implements Initializable
 //                    contextMenu.show(tilePane, me.getScreenX(), me.getScreenY());
 //                }
 //            });
-        }
-    }
 
     /**
      * Sets the library
@@ -521,5 +523,12 @@ public class MainWindowController implements Initializable
     {
         tilePane.getChildren().remove(imageView);
         model.removeMovie(movie.getId());
+    }
+    private void closePopOverIfRightClick()
+    {
+        if (popOver != null && popOver.isShowing())
+        {
+            popOver.hide();
+        }
     }
 }
