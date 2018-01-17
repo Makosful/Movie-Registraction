@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -653,6 +655,18 @@ public class MainWindowModel
         try
         {
             bll.openFileInNative(file);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+    }
+    
+    public void setLastView(int movieId)
+    {
+        try
+        {
+            bll.setLastView(movieId);
         }
         catch (BLLException ex)
         {

@@ -289,6 +289,7 @@ public class MainWindowController implements Initializable
                 genreCategories += movie.getCategories().get(i);
             }
         }
+        
         //</editor-fold>
 
         //<editor-fold defaultstate="collapsed" desc="PopOver Content">
@@ -463,6 +464,9 @@ public class MainWindowController implements Initializable
             {
                 System.out.println(movie.getFilePath());
                 model.openFileInNative(new File(movie.getFilePath()));
+                model.setLastView(movie.getId());
+                imageClick();
+                
                 contextMenu.hide();
             }
         });
