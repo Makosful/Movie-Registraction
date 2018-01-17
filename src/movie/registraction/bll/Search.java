@@ -80,19 +80,16 @@ public class Search
     
     public void setOrder(String order)
     {
-        System.out.println(order);
         this.order = order;
     }
     
     public void setSort(String sort)
     {
-        System.out.println(sort);
         this.sort = sort;
     }
     
     public void setSearchText(String searchText)
     {
-        System.out.println(searchText);
         this.searchText = searchText;
     }
     
