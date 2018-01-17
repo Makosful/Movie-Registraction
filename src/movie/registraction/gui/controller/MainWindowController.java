@@ -281,7 +281,7 @@ public class MainWindowController implements Initializable
             {
                 genreCategories = movie.getCategories().get(i);
             }
-            if(i <= 3)
+            else if(i <= 3)
             {
                 genreCategories += " " + movie.getCategories().get(i);
             }
