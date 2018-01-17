@@ -459,11 +459,11 @@ public class MainWindowController implements Initializable
             public void handle(ActionEvent event)
             {
                 System.out.println(movie.getFilePath());
-                model.openFileInNative(new File(movie.getFilePath()));
+//                model.openFileInNative(new File(movie.getFilePath()));
                 model.setLastView(movie.getId());
                 try
                 {
-                    PlayMovieCustomPlayer();
+                    PlayMovieCustomPlayer(imageView);
                 }
                 catch (IOException ex)
                 {
@@ -574,7 +574,7 @@ public class MainWindowController implements Initializable
         imageClick();
     }
 
-    private void PlayMovieCustomPlayer() throws IOException
+    private void PlayMovieCustomPlayer(ImageView imageView) throws IOException
     {
         File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
@@ -586,6 +586,7 @@ public class MainWindowController implements Initializable
         MediaWindowController controller;
         controller = fxmlLoader.getController();
 
+        controller.setImageView(imageView);
         
         stage.setScene(new Scene(root));
         stage.show();
