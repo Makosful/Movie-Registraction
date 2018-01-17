@@ -283,8 +283,10 @@ public class BLLManager
             //get all the categories by using substring with genre and director as start and end index
             else if (meta1.contains("Genre:"))
             {
+                
                 meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
-                meta[5] = meta1.replace(",", "");
+                meta[5] = meta[5].replace(",", "");
+                System.out.println(meta[5]);
             }
             //imdb id
             else if (meta1.contains("imdbID:"))
