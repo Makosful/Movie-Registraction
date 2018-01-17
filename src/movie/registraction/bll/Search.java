@@ -74,8 +74,15 @@ public class Search
     
     public void setRating(String rating)
     {
-        String number = rating.replaceAll("\\D+","");
-        this.rating = Integer.parseInt(number);
+        if(rating.equals("All"))
+        {
+            this.rating = -1;
+        }
+        else
+        {
+            String number = rating.replaceAll("\\D+","");
+            this.rating = Integer.parseInt(number);
+        }
     }
     
     public void setOrder(String order)
@@ -149,7 +156,7 @@ public class Search
         }
         
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
-        System.out.println(sqlString);
+
         return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
 
     }

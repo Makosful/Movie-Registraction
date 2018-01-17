@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -31,7 +33,6 @@ public class MainWindowModel
     List<ImageView> imageViewList;
 
     private BLLManager bll;
-    private Search search = new Search();
 
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
@@ -650,17 +651,17 @@ public class MainWindowModel
 
     public void setRatingSearch(String selectedItem)
     {
-        search.setRating(selectedItem);
+        bll.setRating(selectedItem);
     }
 
     public void setSortOrder(String selectedItem)
     {
-        search.setSort(selectedItem);
+        bll.setSort(selectedItem);
     }
 
     public void setOrderSearch(String selectedToggle)
     {
-        search.setOrder(selectedToggle);
+        bll.setOrder(selectedToggle);
     }
     
     public void prepareSearch(TilePane tilePane)
@@ -669,7 +670,7 @@ public class MainWindowModel
         tilePane.getChildren().clear();
         try
         {
-            for(Movie movie : search.prepareSearch())
+            for(Movie movie : bll.prepareSearch())
             {
                 ImageView imageView = new ImageView("https:" + movie.getImgPath());
                 imageViewSizeAndId(imageView, movie);
@@ -677,9 +678,9 @@ public class MainWindowModel
                 tilePane.getChildren().add(imageView);
             }
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
-            System.out.println("Could not prepare search");
+            System.out.println("Could not retrieve the searchresult of movies");
         }
     }
     
@@ -704,16 +705,16 @@ public class MainWindowModel
 
     public void setSearchCategories(String categories)
     {
-        search.setSearchCategories(categories); 
+        bll.setSearchCategories(categories); 
     }
 
     public void setSearchYears(String years)
     {
-        search.setSearchYears(years);
+        bll.setSearchYears(years);
     }
 
     public void setSearchText(String text)
     {
-        search.setSearchText(text);
+        bll.setSearchText(text);
     }
 }

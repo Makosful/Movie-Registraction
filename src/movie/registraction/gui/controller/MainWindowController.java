@@ -151,7 +151,7 @@ public class MainWindowController implements Initializable
     private void comboBoxSetup()
     {
         comBoxSortOrder.getItems().addAll("Ascending", "Descending");
-        comBoxMinRating.getItems().addAll("min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars",
+        comBoxMinRating.getItems().addAll("All", "min. 1 star", "min. 2 stars", "min. 3 stars", "min. 4 stars",
                                           "min. 5 stars", "min. 6 stars", "min. 7 stars", "min. 8 stars", "min. 9 stars");
     }
 

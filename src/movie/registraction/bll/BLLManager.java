@@ -35,11 +35,15 @@ public class BLLManager
 
     // DAL Layer manager
     DALManager dal;
+    
+    //Filter search
+    Search search;
 
     public BLLManager() throws BLLException, DALException
     {
         try
         {
+            search = new Search();
             dal = new DALManager();
             omdb = new OmdbSearch();
         }
@@ -461,6 +465,48 @@ public class BLLManager
         try
         {
             dal.setLastView(movieId);
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
+    }
+
+    public void setSearchText(String text)
+    {
+        search.setSearchText(text);
+    }
+
+    public void setSearchYears(String years)
+    {
+        search.setSearchYears(years);
+    }
+
+    public void setSearchCategories(String categories)
+    {
+        search.setSearchCategories(categories);
+    }
+
+    public void setOrder(String order)
+    {
+        search.setOrder(order);
+    }
+
+    public void setSort(String sort)
+    {
+        search.setSort(sort);
+    }
+
+    public void setRating(String rating)
+    {
+        search.setRating(rating);
+    }
+
+    public List<Movie> prepareSearch() throws BLLException
+    {
+        try
+        {
+            return search.prepareSearch();
         }
         catch (DALException ex)
         {
