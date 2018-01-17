@@ -6,13 +6,10 @@
 package movie.registraction.gui.controller;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXSlider;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -22,8 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
@@ -36,8 +31,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import static javafx.util.Duration.millis;
-import movie.registraction.gui.model.MediaWindowModel;
 
 /**
  * FXML Controller class
@@ -70,7 +63,6 @@ public class MediaWindowController implements Initializable
 
     private String movieLength;
 
-    private MediaWindowModel wm;
     @FXML
     private AnchorPane anchorPane;
     @FXML
@@ -89,7 +81,6 @@ public class MediaWindowController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        wm = new MediaWindowModel();
 
         volumeSlider.setValue(100);
         volumeSlider.setDisable(true);
