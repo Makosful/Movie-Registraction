@@ -626,11 +626,11 @@ public class MainWindowModel
      *
      * @param tilePane
      */
-    public void loadMoviesFromStart(TilePane tilePane)
+    public void loadMovies(TilePane tilePane, List<Movie> movieObjects)
     {
         ImageView imageView;
         imageViewList = new ArrayList();
-        for (Movie movie : getAllMovies())
+        for (Movie movie : movieObjects)
         {
             imageView = new ImageView("https:" + movie.getImgPath());
             imageView.setFitHeight(IMAGE_HEIGHT);
@@ -640,7 +640,7 @@ public class MainWindowModel
             tilePane.getChildren().add(imageView);
         }
     }
-
+    
     public void removeMovie(int id)
     {
         try

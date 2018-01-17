@@ -127,7 +127,7 @@ public class MainWindowController implements Initializable
         {
             // Access the Model
             model = new MainWindowModel();
-            model.loadMoviesFromStart(tilePane);
+            model.loadMovies(tilePane, model.getAllMovies());
             imageClick();
         }
         catch (DALException ex)
