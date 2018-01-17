@@ -232,8 +232,9 @@ public class BLLManager
      * Sends metadata to dataaccess layer to insert a movie
      *
      * @param movieMetaData
+     * @param filePath
      *
-     * @throws DALException
+     * @throws movie.registraction.bll.BLLException
      */
     public void addMovie(String[] movieMetaData, String filePath) throws BLLException
     {
@@ -284,7 +285,7 @@ public class BLLManager
         {
             if (Integer.parseInt(imageView.getId()) == movie.getId())
             {
-                return movieMatch = movie;
+                return movie;
             }
         }
         return movieMatch;
@@ -310,43 +311,42 @@ public class BLLManager
                 .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         System.out.println(searchResult);
-        for (int i = 0; i < meta.length; i++)
-        //get title
+        for (String meta1 : meta) //get title
         {
-            if (meta[i].contains("Title:"))
+            if (meta1.contains("Title:"))
             {
-                meta[0] = meta[i];
+                meta[0] = meta1;
             }
             //get year
-            else if (meta[i].contains("Year:"))
+            else if (meta1.contains("Year:"))
             {
-                meta[1] = meta[i];
+                meta[1] = meta1;
             }
             //remove "min" after number of minutes
-            else if (meta[i].contains("Runtime:"))
+            else if (meta1.contains("Runtime:"))
             {
-                meta[2] = meta[i].substring(0, meta[i].lastIndexOf(" "));
+                meta[2] = meta1.substring(0, meta1.lastIndexOf(" "));
             }
             //get imdb rating
-            else if (meta[i].contains("imdbRating:"))
+            else if (meta1.contains("imdbRating:"))
             {
-                meta[3] = meta[i];
+                meta[3] = meta1;
             }
             //Poster
-            else if (meta[i].contains("Poster:"))
+            else if (meta1.contains("Poster:"))
             {
-                meta[4] = meta[i];
+                meta[4] = meta1;
             }
             //get all the categories by using substring with genre and director as start and end index
-            else if (meta[i].contains("Genre:"))
+            else if (meta1.contains("Genre:"))
             {
                 meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
-                meta[5] = meta[i].replace(",", "");
+                meta[5] = meta1.replace(",", "");
             }
             //imdb id
-            else if (meta[i].contains("imdbID:"))
+            else if (meta1.contains("imdbID:"))
             {
-                meta[6] = meta[i];
+                meta[6] = meta1;
             }
         }
 
@@ -368,7 +368,7 @@ public class BLLManager
      *
      * @return
      *
-     * @throws DALException
+     * @throws movie.registraction.bll.BLLException
      */
     public String getSpecificMovieImage(String movieName) throws BLLException
     {
@@ -384,7 +384,7 @@ public class BLLManager
 
     public String splitDot(String stringToSplit)
     {
-        return stringToSplit = stringToSplit.split("\\.")[0];
+        return stringToSplit.split("\\.")[0];
     }
 
     /**
@@ -392,7 +392,7 @@ public class BLLManager
      * under 6
      * ask the user if the movie should be deleted
      *
-     * @throws DALException
+     * @throws movie.registraction.bll.BLLException
      */
     public void findOldAndBadMovies() throws BLLException
     {
@@ -452,7 +452,7 @@ public class BLLManager
      *
      * @return
      *
-     * @throws DALException
+     * @throws movie.registraction.bll.BLLException
      */
     public boolean movieAlreadyExisting(String movieTitle) throws BLLException
     {
@@ -491,10 +491,6 @@ public class BLLManager
         return dal.getChangeList();
     }
 
-    public void updateLibrary()
-    {
-    }
-
     public void updateLibrary(ArrayList<Path> movieList) throws BLLException
     {
         List<Movie> databaseList;
@@ -503,9 +499,9 @@ public class BLLManager
         databaseList = getAllMovies();
         localList = movieList;
 
-        for (Movie movie : databaseList)
+        databaseList.forEach((movie) ->
         {
-            for (Path path : localList)
+            localList.forEach((path) ->
             {
                 String a = movie.getFilePath();
                 String b = path.toString();
@@ -516,7 +512,7 @@ public class BLLManager
                     System.out.println("Match!");
                     System.out.println(a + "\n");
                 }
-            }
-        }
+            });
+        });
     }
 }
