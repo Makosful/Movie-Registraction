@@ -281,7 +281,7 @@ public class MainWindowController implements Initializable
             }
             else
             {
-                genreCategories += movie.getCategories().get(i);
+                genreCategories += " " + movie.getCategories().get(i);
             }
         }
 
