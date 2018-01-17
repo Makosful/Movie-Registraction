@@ -163,7 +163,9 @@ public class MainWindowController implements Initializable
     @FXML
     private void titleSearch(ActionEvent event)
     {
-        //TODO model.addMovie(txtTitleSearch.getText());
+        model.setSearchText(txtTitleSearch.getText());
+        model.prepareSearch(tilePane);
+        imageClick();
     }
 
     /**
