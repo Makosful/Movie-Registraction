@@ -521,7 +521,7 @@ public class MainWindowModel
      *
      * @return Observablelist of checkboxes
      */
-    public ObservableList<JFXCheckBox> getGenreList()
+    public ObservableList<JFXCheckBox> getGenreList(TilePane tilePane)
     {
         try
         {
@@ -532,7 +532,7 @@ public class MainWindowModel
                 {
                     public void handle(MouseEvent e) {
                         search.setSearchCategories(cb.getText()); 
-                        prepareSearch();
+                        prepareSearch(tilePane);
                     }
                 });
                 genres.add(cb);
@@ -551,7 +551,7 @@ public class MainWindowModel
      *
      * @return Returns the list CheckBoxes for the years
      */
-    public ObservableList<JFXCheckBox> getYearList()
+    public ObservableList<JFXCheckBox> getYearList(TilePane tilePane)
     {
         for (int i = 0; i < 12; i++)
         {
@@ -562,7 +562,7 @@ public class MainWindowModel
             {
                 public void handle(MouseEvent e) {
                     search.setSearchYears(cb.getText()); 
-                    prepareSearch();
+                    prepareSearch(tilePane);
 
                 }
             });
@@ -633,9 +633,7 @@ public class MainWindowModel
         for (Movie movie : movieObjects)
         {
             imageView = new ImageView("https:" + movie.getImgPath());
-            imageView.setFitHeight(IMAGE_HEIGHT);
-            imageView.setFitWidth(IMAGE_WIDTH);
-            imageView.setId("" + movie.getId());
+            imageViewSizeAndId(imageView, movie);
             imageViewList.add(imageView);
             tilePane.getChildren().add(imageView);
         }
@@ -681,11 +679,19 @@ public class MainWindowModel
         search.setOrder(selectedToggle);
     }
     
-    public void prepareSearch()
+    public void prepareSearch(TilePane tilePane)
     {
+        imageViewList.clear();
+        tilePane.getChildren().clear();
         try
         {
-            search.prepareSearch();
+            for(Movie movie : search.prepareSearch())
+            {
+                ImageView imageView = new ImageView("https:" + movie.getImgPath());
+                imageViewSizeAndId(imageView, movie);
+                imageViewList.add(imageView);
+                tilePane.getChildren().add(imageView);
+            }
         }
         catch (DALException ex)
         {
@@ -703,5 +709,12 @@ public class MainWindowModel
         {
             System.out.println(ex);
         }
+    }
+    
+    public void imageViewSizeAndId(ImageView imageView, Movie movie)
+    {
+        imageView.setFitHeight(IMAGE_HEIGHT);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageView.setId("" + movie.getId());
     }
 }
