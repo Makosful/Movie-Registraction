@@ -57,7 +57,7 @@ public class Search
         {
             categories.remove(category);
         }
-        System.out.println("-------------------------------------------------");
+
         for(String c : categories)
         {
             System.out.println(c);        

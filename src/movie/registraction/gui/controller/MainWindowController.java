@@ -543,28 +543,7 @@ public class MainWindowController implements Initializable
         RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
         model.setOrderSearch(orderRadiobtn.getText());
         model.prepareSearch(tilePane);
-        imageClick();
-        
-                 for(int i = 0;i<model.getYearList(tilePane).size();i++)
-        {
-        
-           JFXCheckBox checkBox = model.getYearList(tilePane).get(i);
-           checkBox.setOnAction((e) ->
-           {
-               imageClick();
-           });
-        }
-        
-                for(int i = 0;i<model.getGenreList(tilePane).size();i++)
-        {
-        
-           JFXCheckBox checkBox = model.getGenreList(tilePane).get(i);
-           checkBox.setOnAction((e) ->
-           {
-               imageClick();
-           });
-        }
-       
+        imageClick();       
     }
 
     @FXML
@@ -603,7 +582,29 @@ public class MainWindowController implements Initializable
         flpGenre.getChildren().setAll(model.getGenreList(tilePane));
         flpYear.getChildren().setAll(model.getYearList(tilePane));
         
+        for(CheckBox cb: model.getGenreList(tilePane))
+        {
+            cb.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                public void handle(MouseEvent e) {
+                    model.setSearchCategories(cb.getText()); 
+                    model.prepareSearch(tilePane);
+                    imageClick();
+                }
+            });
+        }
         
+        for(CheckBox cb: model.getYearList(tilePane))
+        {
+            cb.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                public void handle(MouseEvent e) {
+                    model.setSearchYears(cb.getText()); 
+                    model.prepareSearch(tilePane);
+                    imageClick();
+                }
+            });
+        }
     }
 
 }

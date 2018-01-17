@@ -528,13 +528,7 @@ public class MainWindowModel
             for (String category : categories.allCategories())
             {
                 JFXCheckBox cb = new JFXCheckBox(category);
-                cb.setOnMouseClicked(new EventHandler<MouseEvent>()
-                {
-                    public void handle(MouseEvent e) {
-                        search.setSearchCategories(cb.getText()); 
-                        prepareSearch(tilePane);
-                    }
-                });
+                
                 genres.add(cb);
             }
         }
@@ -558,15 +552,7 @@ public class MainWindowModel
             int j = 1900 + (i * 10);
             int q = 1900 + ((1 + i) * 10);
             JFXCheckBox cb = new JFXCheckBox(j + "-" + q);
-            cb.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                public void handle(MouseEvent e) {
-                    search.setSearchYears(cb.getText()); 
-                    prepareSearch(tilePane);
-
-                }
-            });
-
+            
             years.add(cb);
 
         }
@@ -716,5 +702,15 @@ public class MainWindowModel
         imageView.setFitHeight(IMAGE_HEIGHT);
         imageView.setFitWidth(IMAGE_WIDTH);
         imageView.setId("" + movie.getId());
+    }
+
+    public void setSearchCategories(String categories)
+    {
+        search.setSearchCategories(categories); 
+    }
+
+    public void setSearchYears(String years)
+    {
+        search.setSearchYears(years);
     }
 }
