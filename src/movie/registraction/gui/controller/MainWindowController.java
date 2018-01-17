@@ -368,7 +368,7 @@ public class MainWindowController implements Initializable
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
         }
 
-        if (popOver.isShowing() && popOverVisible)
+        if (popOverVisible)
         {
             popOverVisible = true;
             popOver.hide();
