@@ -135,11 +135,8 @@ public class MainWindowController implements Initializable
             System.out.println(ex);
         }
 
-        // Set default values
-        acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreList());
-        flpYear.getChildren().setAll(model.getYearList());
-
+        defaultValues();
+        
         //Initializing methods
         comboBoxSetup();
 
@@ -546,6 +543,14 @@ public class MainWindowController implements Initializable
         
         stage.setMinHeight(700);
         stage.setMinWidth(825);
+    }
+    
+    private void defaultValues()
+    {
+        // Set default values
+        acdPanes.setExpandedPane(acdGenre);
+        flpGenre.getChildren().setAll(model.getGenreList());
+        flpYear.getChildren().setAll(model.getYearList());
     }
 
 }
