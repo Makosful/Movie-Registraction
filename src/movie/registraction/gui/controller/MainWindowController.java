@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -602,16 +603,6 @@ public class MainWindowController implements Initializable
         flpGenre.getChildren().setAll(model.getGenreList(tilePane));
         flpYear.getChildren().setAll(model.getYearList(tilePane));
         
-        for(JFXCheckBox ck : model.getGenreList(tilePane))
-        {
-            ck.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                public void handle(MouseEvent e) {
-                    imageClick();
-
-                }
-            });
-        }
         
     }
 
