@@ -6,8 +6,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
+import movie.registraction.bll.BLLException;
 
 /**
  *
@@ -440,5 +443,16 @@ public class DALManager
     {
         return this.changes;
     }
+    
+     /**
+     * Sets when you last saw the video.
+     * @param movieId
+     * @throws DALException 
+     */
+    public void setLastView(int movieId) throws DALException 
+    { 
+            mDAO.setLastView(movieId);
+    }
+        
 
 }
