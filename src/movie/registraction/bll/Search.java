@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
@@ -58,10 +57,6 @@ public class Search
             categories.remove(category);
         }
 
-        for(String c : categories)
-        {
-            System.out.println(c);        
-        }
     }
     
     public void setSearchYears(String years)
@@ -74,12 +69,6 @@ public class Search
         {
             year.remove(decade[0], decade[1]);
         }
-
-        System.out.println("-------------------------------------------------");
-        for(Map.Entry<String, String> entry : year.entrySet()) {
-            System.out.println(entry.getKey()+"+"+entry.getValue()+" ->"+decade[0]+" "+decade[1]);
-        }
-        
         
     }
     
@@ -106,6 +95,8 @@ public class Search
         System.out.println(searchText);
         this.searchText = searchText;
     }
+    
+    
     
     public List<Movie> prepareSearch() throws DALException
     {
@@ -267,7 +258,7 @@ public class Search
         {
             sqlRating = "Movie.personalRating > ?";
         }
-        return sqlRating; // push
+        return sqlRating; 
     }
    
 }
