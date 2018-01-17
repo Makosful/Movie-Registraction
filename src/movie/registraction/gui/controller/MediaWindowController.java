@@ -32,6 +32,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import movie.registraction.gui.model.MainWindowModel;
 
 /**
  * FXML Controller class
@@ -61,8 +62,9 @@ public class MediaWindowController implements Initializable
     private boolean mediaMuted;
     private double MovieLengthMillis;
     private Duration duration;
-
     private String movieLength;
+    
+    private MainWindowModel mdl;
 
     @FXML
     private AnchorPane anchorPane;
@@ -120,7 +122,9 @@ public class MediaWindowController implements Initializable
         mvh.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
         mediaView.setPreserveRatio(false); //disables the "perfect" stretch ratio
 
-        String path = new File("src/movie/registraction/rsx/battlerite.mp4").getAbsolutePath();
+        String path = mdl.getMovieInfo(imageView).getFilePath();
+        //String movie = new File(path).getAbsolutePath();
+        
         media = new Media(new File(path).toURI().toString());
 
         mediaPlayer = new MediaPlayer(media);
@@ -182,8 +186,9 @@ public class MediaWindowController implements Initializable
     @FXML
     private void movieStop(ActionEvent event)
     {
-        mediaPlayer.stop();
         resetControls();
+        mediaPlayer.pause();
+        mediaPlayer.seek(mediaPlayer.getStartTime());
     }
 
     private void resetControls()

@@ -458,7 +458,7 @@ public class MainWindowController implements Initializable
             public void handle(ActionEvent event)
             {
                 System.out.println(movie.getFilePath());
-                model.openFileInNative(new File(movie.getFilePath()));
+//                model.openFileInNative(new File(movie.getFilePath()));
                 model.setLastView(movie.getId());
                 try
                 {
