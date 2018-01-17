@@ -333,7 +333,7 @@ public class MainWindowModel
 
                 try
                 {
-                    if (!bll.movieAlreadyExisting(nameOfMovie))
+                    if (!bll.movieAlreadyExisting(nameOfMovie.toLowerCase()))
                     {
 
                         addMovie(nameOfMovie, chosenFile.getPath());

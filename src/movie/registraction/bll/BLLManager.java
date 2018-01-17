@@ -417,7 +417,7 @@ public class BLLManager
 
         for (Movie m : getAllMovies())
         {
-            if (m.getMovieTitle().equals(movieTitle))
+            if (m.getMovieTitle().toLowerCase().equals(movieTitle.toLowerCase()))
             {
                 isAlreadyInDataBase = true;
             }
