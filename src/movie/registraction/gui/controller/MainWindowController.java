@@ -466,7 +466,14 @@ public class MainWindowController implements Initializable
             public void handle(ActionEvent event)
             {
                 System.out.println(movie.getFilePath());
-                model.openFileInNative(new File(movie.getFilePath()));
+                try
+                {
+                    PlayMovieCustomPlayer();
+                }
+                catch (IOException ex)
+                {
+                    System.out.println(ex);
+                }
                 contextMenu.hide();
             }
         });
@@ -522,4 +529,22 @@ public class MainWindowController implements Initializable
             popOver.hide();
         }
     }
+    
+    private void PlayMovieCustomPlayer() throws IOException
+    {
+        File fxml = new File("src/movie/registraction/gui/view/MediaWindowController.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+        Parent root;
+        root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(anchorPane.getScene().getWindow());
+        EditCategoriesController controller;
+        controller = fxmlLoader.getController();
+
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+    
+    
 }
