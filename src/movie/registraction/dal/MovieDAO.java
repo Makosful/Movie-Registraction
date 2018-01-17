@@ -474,7 +474,6 @@ public class MovieDAO {
                         + "LEFT JOIN Category ON CatMovie.categoryId = Category.id "
                         + sqlString;
 
-            System.out.println(sql);
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             
             int i = 0;   
@@ -508,7 +507,6 @@ public class MovieDAO {
                 }
                 else
                 {
-                    System.out.println(searchText);
                     i++;
                     preparedStatement.setString(i, "%"+searchText+"%");
                     i++;

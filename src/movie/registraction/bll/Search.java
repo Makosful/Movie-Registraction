@@ -127,19 +127,14 @@ public class Search
         
         if(!searchText.isEmpty())
         {  
-            if(sqlSearchCategory.isEmpty() && sqlSearchYear.isEmpty())
-            {
-                sqlSearch += "WHERE ";
-            }
-            
             if(isNumeric(searchText))
             {
-                sqlSearch += "Movie.year = ?";
+                sqlSearch = "Movie.year = ?";
                 searchNumeric = true;
             }
             else
             {
-                sqlSearch += "(Category.name LIKE ? OR Movie.name LIKE ?)";
+                sqlSearch = "(Category.name LIKE ? OR Movie.name LIKE ?)";
                 searchNumeric = false;
             }
         }
