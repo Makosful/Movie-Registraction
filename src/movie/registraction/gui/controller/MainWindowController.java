@@ -26,6 +26,7 @@ import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.Action;
 
 /**
  *
@@ -530,7 +531,8 @@ public class MainWindowController implements Initializable
     private void comBoxMinRatingHandler(ActionEvent event)
     {
       model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
-      model.prepareSearch();
+      model.prepareSearch(tilePane);
+      imageClick();
     }
 
     @FXML
@@ -539,14 +541,37 @@ public class MainWindowController implements Initializable
         
         RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
         model.setOrderSearch(orderRadiobtn.getText());
-        model.prepareSearch();
+        model.prepareSearch(tilePane);
+        imageClick();
+        
+                 for(int i = 0;i<model.getYearList(tilePane).size();i++)
+        {
+        
+           JFXCheckBox checkBox = model.getYearList(tilePane).get(i);
+           checkBox.setOnAction((e) ->
+           {
+               imageClick();
+           });
+        }
+        
+                for(int i = 0;i<model.getGenreList(tilePane).size();i++)
+        {
+        
+           JFXCheckBox checkBox = model.getGenreList(tilePane).get(i);
+           checkBox.setOnAction((e) ->
+           {
+               imageClick();
+           });
+        }
+       
     }
 
     @FXML
     private void comBoxSortOrderHandler(ActionEvent event)
     {
         model.setSortOrder(comBoxSortOrder.getSelectionModel().getSelectedItem());
-        model.prepareSearch();
+        model.prepareSearch(tilePane);
+        imageClick();
     }
 
     private void PlayMovieCustomPlayer() throws IOException
@@ -573,8 +598,9 @@ public class MainWindowController implements Initializable
     {
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreList());
-        flpYear.getChildren().setAll(model.getYearList());
+        flpGenre.getChildren().setAll(model.getGenreList(tilePane));
+        flpYear.getChildren().setAll(model.getYearList(tilePane));
+        
     }
 
 }
