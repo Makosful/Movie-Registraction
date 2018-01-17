@@ -157,50 +157,6 @@ public class BLLManager
     }
 
     /**
-     * Closes the menu incase the context menu is open
-     * or else the user clicks normally.
-     *
-     * @param contextMenu
-     */
-    public void closeMenuOrClick(ContextMenu contextMenu)
-    {
-        if (!contextMenu.isShowing())
-        {
-            System.out.println("You clicked on the picture.");
-        }
-        else
-        {
-            contextMenu.hide();
-        }
-    }
-
-    /**
-     * Closes the contextmenu.
-     *
-     * @param contextMenu
-     */
-    public void closeMenu(ContextMenu contextMenu)
-    {
-        contextMenu.hide();
-    }
-
-    /**
-     * Checks whether contextmenu is open or not, if yes, it closes.
-     * Incase user dobbleclicks several times, so it doesnt stack.
-     *
-     * @param contextMenu
-     */
-    public void contextMenuOpenOrNot(ContextMenu contextMenu)
-    {
-        // So the contextMenu doesnt stack.
-        if (contextMenu.isShowing())
-        {
-            closeMenu(contextMenu);
-            System.out.println("closed menu");
-        }
-    }
-
-    /**
      * Gets the list of movies in the library
      *
      * Return the list of movies in the library as a String ArrayList

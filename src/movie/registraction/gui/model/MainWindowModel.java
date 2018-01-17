@@ -357,7 +357,6 @@ public class MainWindowModel
         {
             // Otherwise return
             System.out.println("One or more invalid file(s) / None selected");
-            return;
         }
     }
 
@@ -387,19 +386,16 @@ public class MainWindowModel
      */
     public void closeMenuOrClick(ContextMenu contextMenu)
     {
-        bll.closeMenuOrClick(contextMenu);
+        if (!contextMenu.isShowing())
+        {
+            System.out.println("You clicked on the picture.");
+        }
+        else
+        {
+            contextMenu.hide();
+        }
     }
-
-    /**
-     * Closes the contextmenu.
-     *
-     * @param contextMenu
-     */
-    public void closeMenu(ContextMenu contextMenu)
-    {
-        contextMenu.hide();
-    }
-
+    
     /**
      * Checks whether contextmenu is open or not, if yes, it closes.
      * Incase user dobbleclicks several times, so it doesnt stack.
@@ -408,9 +404,14 @@ public class MainWindowModel
      */
     public void contextMenuOpenOrNot(ContextMenu contextMenu)
     {
-        bll.contextMenuOpenOrNot(contextMenu);
+        // So the contextMenu doesnt stack.
+        if (contextMenu.isShowing())
+        {
+            contextMenu.hide();
+            System.out.println("closed menu");
+        }
     }
-
+    
     /**
      * Loads the movies from the library
      */
