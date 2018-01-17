@@ -711,4 +711,9 @@ public class MainWindowModel
     {
         search.setSearchYears(years);
     }
+
+    public void setSearchText(String text)
+    {
+        search.setSearchText(text);
+    }
 }
