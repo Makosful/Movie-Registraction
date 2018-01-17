@@ -7,16 +7,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -25,12 +19,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import movie.registraction.be.Movie;
 import movie.registraction.bll.*;
 import movie.registraction.dal.DALException;
-import movie.registraction.gui.controller.EditMovieCategoryController;
 
 /**
  *
@@ -111,7 +102,20 @@ public class MainWindowModel
         try
         {
             bll.getMovieList(extensionList);
-            bll.updateLibrary(bll.getMovieList(extensionList));
+            List<String> updateLibrary = bll.getUpdateLibrary(bll.getMovieList(extensionList));
+            if (updateLibrary.isEmpty())
+            {
+                // Don't add anything
+            }
+            else
+            {
+                // Add all entries to the library
+                for (String filePath : updateLibrary)
+                {
+                    String fileName = new File(filePath).toPath().getFileName().toString();
+                    this.addMovie(fileName, filePath);
+                }
+            }
         }
         catch (BLLException ex)
         {

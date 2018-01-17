@@ -18,7 +18,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
@@ -449,29 +448,24 @@ public class BLLManager
         return dal.getChangeList();
     }
 
-    public void updateLibrary(ArrayList<Path> movieList) throws BLLException
+    public List<String> getUpdateLibrary(ArrayList<Path> movieList) throws BLLException
     {
-        List<Movie> databaseList;
-        List<Path> localList;
+        List<String> databaseList = new ArrayList<>();
+        List<String> localList = new ArrayList<>();
 
-        databaseList = getAllMovies();
-        localList = movieList;
-
-        databaseList.forEach((movie) ->
+        for (Movie movy : getAllMovies())
         {
-            localList.forEach((path) ->
-            {
-                String a = movie.getFilePath();
-                String b = path.toString();
-                if (a.equals(b))
-                {
-                    // For testing. When confirmed, replace with adding it to
-                    // the database
-                    System.out.println("Match!");
-                    System.out.println(a + "\n");
-                }
-            });
-        });
+            databaseList.add(movy.getFilePath());
+        }
+
+        for (Path path : movieList)
+        {
+            localList.add(path.toString());
+        }
+
+        localList.removeAll(databaseList);
+
+        return localList;
     }
     
     public void setLastView(int movieId) throws BLLException
