@@ -262,7 +262,7 @@ public class Search
         {
             sqlRating = "Movie.personalRating > ?";
         }
-        return sqlRating;
+        return sqlRating; // push
     }
    
 }
