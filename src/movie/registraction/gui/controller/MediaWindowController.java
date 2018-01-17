@@ -41,7 +41,6 @@ import movie.registraction.gui.model.MainWindowModel;
  */
 public class MediaWindowController implements Initializable
 {
-
     @FXML
     private MediaView mediaView;
     @FXML
@@ -85,7 +84,6 @@ public class MediaWindowController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-
         volumeSlider.setValue(100);
         volumeSlider.setDisable(true);
         progressSlider.setDisable(true);
@@ -121,9 +119,8 @@ public class MediaWindowController implements Initializable
         mvw.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
         mvh.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
         mediaView.setPreserveRatio(false); //disables the "perfect" stretch ratio
-
+        
         String path = mdl.getMovieInfo(imageView).getFilePath();
-        //String movie = new File(path).getAbsolutePath();
         
         media = new Media(new File(path).toURI().toString());
 
