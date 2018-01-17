@@ -333,7 +333,7 @@ public class MainWindowModel
 
                 try
                 {
-                    if (!bll.movieAlreadyExisting(nameOfMovie))
+                    if (!bll.movieAlreadyExisting(nameOfMovie.toLowerCase()))
                     {
 
                         addMovie(nameOfMovie, chosenFile.getPath());
@@ -572,7 +572,7 @@ public class MainWindowModel
         Movie idMatchMovie = null;
         try
         {
-            idMatchMovie = bll.getMovieIdMatch(imageView);
+            idMatchMovie = bll.getMovieInfo(imageView);
         }
         catch (BLLException ex)
         {
