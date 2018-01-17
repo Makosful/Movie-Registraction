@@ -12,8 +12,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -237,7 +235,7 @@ public class BLLManager
      *
      * @throws DALException
      */
-    public void addMovie(String[] movieMetaData, String filePath) throws BLLException 
+    public void addMovie(String[] movieMetaData, String filePath) throws BLLException
     {
         try
         {
@@ -249,7 +247,7 @@ public class BLLManager
         }
     }
 
-    public ObservableList<Movie> getAllMovies() throws BLLException 
+    public ObservableList<Movie> getAllMovies() throws BLLException
     {
         try
         {
@@ -257,26 +255,26 @@ public class BLLManager
         }
         catch (DALException ex)
         {
-           throw new BLLException();
+            throw new BLLException();
         }
     }
 
     public void setImageId(File files, ImageView imageView) throws BLLException
     {
-            for (Movie movie : getAllMovies())
+        for (Movie movie : getAllMovies())
+        {
+            // Removing the dot and text after, so only the text is in the string.
+            String fileName = files.getName().split("\\.")[0];
+
+            // If database movie title matches chosenfile name.
+            if (movie.getMovieTitle().equalsIgnoreCase(fileName))
             {
-                // Removing the dot and text after, so only the text is in the string.
-                String fileName = files.getName().split("\\.")[0];
-                
-                // If database movie title matches chosenfile name.
-                if (movie.getMovieTitle().equalsIgnoreCase(fileName))
-                {
-                    // Changing integer to string, as imageview requires string.
-                    String idToString = Integer.toString(movie.getId());
-                    imageView.setId(idToString);
-                }
+                // Changing integer to string, as imageview requires string.
+                String idToString = Integer.toString(movie.getId());
+                imageView.setId(idToString);
             }
         }
+    }
 
     public Movie getMovieIdMatch(ImageView imageView) throws BLLException
     {
@@ -380,7 +378,7 @@ public class BLLManager
         }
         catch (DALException ex)
         {
-           throw new BLLException();
+            throw new BLLException();
         }
     }
 
@@ -460,17 +458,16 @@ public class BLLManager
     {
         boolean isAlreadyInDataBase = false;
 
-            for (Movie m : getAllMovies())
+        for (Movie m : getAllMovies())
+        {
+            if (m.getMovieTitle().equals(movieTitle))
             {
-                if (m.getMovieTitle().equals(movieTitle))
-                {
-                    isAlreadyInDataBase = true;
-                }
-
+                isAlreadyInDataBase = true;
             }
-        return isAlreadyInDataBase;
-        }
 
+        }
+        return isAlreadyInDataBase;
+    }
 
     public void removeMovie(int id) throws BLLException
     {
@@ -501,9 +498,25 @@ public class BLLManager
     public void updateLibrary(ArrayList<Path> movieList) throws BLLException
     {
         List<Movie> databaseList;
-        List<Path> LocalList;
+        List<Path> localList;
 
         databaseList = getAllMovies();
-        LocalList = movieList;
+        localList = movieList;
+
+        for (Movie movie : databaseList)
+        {
+            for (Path path : localList)
+            {
+                String a = movie.getFilePath();
+                String b = path.toString();
+                if (a.equals(b))
+                {
+                    // For testing. When confirmed, replace with adding it to
+                    // the database
+                    System.out.println("Match!");
+                    System.out.println(a + "\n");
+                }
+            }
+        }
     }
 }
