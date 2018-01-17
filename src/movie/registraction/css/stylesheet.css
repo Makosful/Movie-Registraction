@@ -17,6 +17,7 @@ and open the template in the editor.
 
 .label {
     -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 5, 0, 0, 1);
 }
 
 .button {
@@ -45,7 +46,6 @@ and open the template in the editor.
 }
 
 .titled-pane {
-
     -fx-text-fill: white;
 }
 
@@ -60,6 +60,10 @@ and open the template in the editor.
 
 .context-menu .label {
     -fx-text-fill: black;
+}
+
+.popover > .content {
+    -fx-text-fill: black
 }
 
 /*

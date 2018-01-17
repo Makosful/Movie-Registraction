@@ -5,6 +5,7 @@
  */
 package movie.registraction.dal;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
@@ -202,8 +205,9 @@ public class MovieDAO {
                         + "Movie.personalRating, "
                         + "Movie.imdbRating, "
                         + "Movie.year, "
-                        + "Movie.lastView,"
+                        + "Movie.lastView, "
                         + "Movie.movieLength, "
+                        + "Movie.imdbLink, "
                         + "Category.name AS categoryName "
                         + "FROM Movie "
                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
@@ -257,20 +261,19 @@ public class MovieDAO {
         }
         else
         {
-         
+            
             Movie movie = new Movie();
             movie.setId(rs.getInt("id"));
             movie.setMovieName(rs.getString("name"));
             movie.setMovieYear(rs.getInt("year"));
             movie.setPersonalRating(rs.getDouble("personalRating"));
             movie.setImdbRating(rs.getDouble("imdbRating"));
-            movie.setLastView(rs.getString("lastView"));
+            movie.setLastView(rs.getDate("lastView"));
             movie.setFilePath(rs.getString("filePath"));
-            movie.setFileImg(rs.getString("imgPath"));
+            movie.setImgPath(rs.getString("imgPath"));
             movie.setMovieLength(rs.getInt("movieLength"));
-            if(rs.getString("categoryName") != null){
-                movie.setCategories(rs.getString("categoryName"));
-            }
+            movie.setImdbLink(rs.getString("imdbLink"));
+            movie.setCategories(rs.getString("categoryName"));
 
             return movie;
         
@@ -278,50 +281,54 @@ public class MovieDAO {
      }
      
      
-     /**
-      * Add a new movie to the database
-      * @param movieMetaData
-      * @return
-      * @throws DALException 
-      */
-     public int addMovie(String[] movieMetaData) throws DALException
-     {
-      
-            
-            try (Connection con = db.getConnection())
-            {
-                int id;
-                java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
-                String sqlInsert = "INSERT INTO Movie "
-                                 + "(name, filePath, imgPath, lastView, personalRating, imdbRating, year, movieLength) "
-                                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                
-                PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, movieMetaData[0]);
-                preparedStatement.setString(2, movieMetaData[1]);
-                preparedStatement.setString(3, movieMetaData[2]);
-                preparedStatement.setDate(4, null);
-                preparedStatement.setDouble(5, Double.parseDouble(movieMetaData[3]));
-                preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[4]));
-                preparedStatement.setInt(7, Integer.parseInt(movieMetaData[5]));
-                preparedStatement.setInt(8, Integer.parseInt(movieMetaData[6]));
-                
-                preparedStatement.executeUpdate();
+    /**
+     * Add a new movie to the database
+     * @param movieMetaData
+     * @return
+     * @throws DALException 
+     */
+    public int addMovie(String[] movieMetaData, String filePath) throws DALException
+    {            
+       try (Connection con = db.getConnection())
+       {
+           int id;
+           
+           String sqlInsert = "INSERT INTO Movie "
+                            + "(name, filePath, imgPath, imdbLink, personalRating, imdbRating, year, movieLength) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-                ResultSet rsi = preparedStatement.getGeneratedKeys();
+           PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+           preparedStatement.setString(1, movieMetaData[0]);
+           preparedStatement.setString(2, filePath);
+           preparedStatement.setString(3, movieMetaData[4]);
+           preparedStatement.setString(4, movieMetaData[6]);
+           preparedStatement.setDouble(5, -1);
+           preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[3]));
+           preparedStatement.setInt(7, Integer.parseInt(movieMetaData[1]));
+           preparedStatement.setInt(8, Integer.parseInt(movieMetaData[2]));
 
-                rsi.next();
+           preparedStatement.executeUpdate();
 
-                id = rsi.getInt(1);
+           ResultSet rsi = preparedStatement.getGeneratedKeys();
 
-                return id;
-            }
-            catch (SQLException ex)
-            {
-                throw new DALException();
-            }    
-     }
+           rsi.next();
 
+           id = rsi.getInt(1);
+
+           return id;
+       }
+       catch (SQLException ex)
+       {
+           throw new DALException();
+       }    
+    }
+
+    /**
+     * Sets the users rating for a specific movie in the database
+     * @param movieId
+     * @param personalRating
+     * @throws DALException 
+     */
     public void setPersonalRating(int movieId, int personalRating) throws DALException {
        
         try (Connection con = db.getConnection())
@@ -335,9 +342,6 @@ public class MovieDAO {
             preparedStatement.setInt(1, personalRating);
             preparedStatement.setInt(2, movieId);
             preparedStatement.executeUpdate();
-
-        
-            
         }
         catch (SQLException ex)
         {
@@ -355,9 +359,10 @@ public class MovieDAO {
     {
         try (Connection con = db.getConnection())
         {
+            System.out.println(movieId);
 
             String sql = "DELETE Movie FROM Movie "
-                         + "INNER JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
                          + "WHERE Movie.id = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -371,4 +376,155 @@ public class MovieDAO {
         }
     }
     
+    
+    /**
+     * 
+     * @param movieId
+     * @throws DALException 
+     */
+    public void setLastView(int movieId) throws DALException
+    { 
+        
+        try (Connection con = db.getConnection())
+        {
+            String sqlInsert = "UPDATE Movie "
+                             + "SET Movie.lastView = GETDATE() "
+                             + "WHERE id = ?";
+            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+            preparedStatement.setInt(1, movieId);
+            preparedStatement.executeUpdate();
+
+        
+            
+        }
+        catch (SQLException ex)
+        {
+            throw new DALException();
+        }
+    }
+    
+    
+    /**
+     * This method is to get a imgPath from a specific movie. 
+     * So that it can be thrown into the tilepane.
+     * @param movieName
+     * @return
+     * @throws DALException 
+     */
+    public String getSpecificMovieImage(String movieName) throws DALException
+    {
+        String imageLink = null;
+        try(Connection con = db.getConnection())
+        {
+            String sqlInsert = "SELECT imgPath FROM Movie WHERE name = ?";
+            
+            PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
+            preparedStatement.setString(1, movieName);
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next())
+            {
+                imageLink = rs.getString("imgPath");
+            }
+        } 
+        catch (SQLException ex) 
+        {
+            throw new DALException();
+        }
+       return imageLink;
+    }
+
+        
+    /**
+     * 
+     * @param sqlString
+     * @param categories
+     * @param year
+     * @param rating
+     * @param searchText
+     * @param searchNumeric
+     * @return
+     * @throws DALException 
+     */
+    public ObservableList<Movie> searchMovies(String sqlString,
+                                              List<String> categories,
+                                              List<String> year,
+                                              int rating,
+                                              String searchText,
+                                              boolean searchNumeric) throws DALException
+    {
+        try (Connection con = db.getConnection())
+        {
+            String sql = "SELECT "
+                        + "Movie.id, "
+                        + "Movie.name, "
+                        + "Movie.filePath, "
+                        + "Movie.imgPath, "
+                        + "Movie.personalRating, "
+                        + "Movie.imdbRating, "
+                        + "Movie.year, "
+                        + "Movie.lastView, "
+                        + "Movie.movieLength, "
+                        + "Movie.imdbLink, "
+                        + "Category.name AS categoryName "
+                        + "FROM Movie "
+                        + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
+                        + "LEFT JOIN Category ON CatMovie.categoryId = Category.id "
+                        + "WHERE "+sqlString;
+            System.out.println(sql);
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            
+            int i = 1;   
+            for(String category : categories)
+            {
+                preparedStatement.setString(i, category);
+                i++;
+            }
+            for(String y : year)
+            {
+                preparedStatement.setString(i, y);
+                i++;
+            }
+            if(rating != -1)
+            {
+                preparedStatement.setInt(i++, rating);
+            }
+            
+            if(!searchText.isEmpty())
+            {
+                if(searchNumeric)
+                {
+                    preparedStatement.setInt(i++, Integer.parseInt(searchText));
+                }
+                else
+                {
+                    preparedStatement.setString(i++, "%"+searchText+"%");
+                    preparedStatement.setString(i++, "%"+searchText+"%");
+                }
+            }
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            
+            ObservableList<Movie> movies = FXCollections.observableArrayList();
+            Movie movie = new Movie();
+            while (rs.next())
+            {  
+                movie = createMovieFromDB(rs, movie);
+
+                if (!movies.contains(movie))
+                {
+                    movies.add(movie);
+                }
+
+            }
+            
+            return movies;
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            throw new DALException();
+        }
+        
+        
+    }
 }

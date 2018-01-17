@@ -179,7 +179,6 @@ public class MainWindowModel
             return categories.loadCategories();
     }
     
-    
     /**
      * Sends the category string to chosenCategories class to be added
      *

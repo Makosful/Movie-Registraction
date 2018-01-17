@@ -8,8 +8,16 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.image.ImageView;
 import movie.registraction.be.Movie;
@@ -23,8 +31,10 @@ import movie.registraction.dal.DALManager;
 public class BLLManager
 {
 
+    // Same Layer objects
     OmdbSearch omdb;
 
+    // DAL Layer manager
     DALManager dal;
 
     public BLLManager() throws BLLException, DALException
@@ -67,7 +77,9 @@ public class BLLManager
             String inputLine;
             String res = "";
             while ((inputLine = buffRead.readLine()) != null)
+            {
                 res += inputLine + "\n";
+            }
 
             return res;
         }
@@ -88,6 +100,7 @@ public class BLLManager
     public void openFileInNative(File file) throws BLLException
     {
         if (Desktop.isDesktopSupported())
+        {
             try
             {
                 Desktop.getDesktop().open(file);
@@ -96,8 +109,11 @@ public class BLLManager
             {
                 throw new BLLException();
             }
+        }
         else
+        {
             throw new UnsupportedOperationException("This feature is not supported on your platform");
+        }
     }
 
     /**
@@ -121,6 +137,15 @@ public class BLLManager
         }
     }
 
+    /**
+     * Loads the saved library directory
+     *
+     * @param path
+     *
+     * @return
+     *
+     * @throws BLLException
+     */
     public String loadDirectory(String path) throws BLLException
     {
         try
@@ -142,9 +167,13 @@ public class BLLManager
     public void closeMenuOrClick(ContextMenu contextMenu)
     {
         if (!contextMenu.isShowing())
+        {
             System.out.println("You clicked on the picture.");
+        }
         else
+        {
             contextMenu.hide();
+        }
     }
 
     /**
@@ -196,93 +225,285 @@ public class BLLManager
         }
     }
 
+    public void setDirectoryWatch()
+    {
+        dal.setDirectoryWatch();
+    }
+
     /**
-     * Adds a movie with the supplied metadata, the addmovie returns the
-     * inserted
-     * movie row id, which is used to inserting the movies categories
+     * Sends metadata to dataaccess layer to insert a movie
      *
      * @param movieMetaData
      *
      * @throws DALException
      */
-    public void addMovie(String[] movieMetaData) throws DALException
+    public void addMovie(String[] movieMetaData, String filePath) throws BLLException 
     {
-        dal.addMovie(movieMetaData);
-    }
-
-    public ObservableList<Movie> getAllMovies() throws DALException
-    {
-        return dal.getAllMovies();
-    }
-
-    public void imageIdMovieId(File files, ImageView imageView) throws DALException
-    {
-        for (Movie movie : getAllMovies())
+        try
         {
-            // Removing the dot and text after, so only the text is in the string.
-            String fileName = files.getName().split("\\.")[0];
-            
-            // If database movie title matches chosenfile name.
-            if (movie.getMovieTitle().equalsIgnoreCase(fileName)) 
-            {
-                // Changing integer to string, as imageview requires string.
-                String idToString = Integer.toString(movie.getId());
-                imageView.setId(idToString);
-
-                //  Finding the ID that belongs to the movie.
-                if (Integer.parseInt(imageView.getId()) == movie.getId()) 
-                {
-                    System.out.println("workeeeeeeeed");
-                    System.out.println(movie.getFileImg());
-                    System.out.println(movie.getPersonalRating());
-                    System.out.println(movie.getYear());
-                }
-            }
-
-            else 
-            {
-                System.out.println("ELSE WE CREATE DATA IN DATABASE. WAITING FOR CODE!!!!!");
-                System.out.println("nopeeeee");
-            }
+            dal.addMovie(movieMetaData, filePath);
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
         }
     }
-    
-    public Movie getMovieIdMatch(ImageView imageView) throws DALException
+
+    public ObservableList<Movie> getAllMovies() throws BLLException 
     {
-        Movie movieMatch = null;
-        
-            for (Movie movie : getAllMovies()) 
-            {
-                if (Integer.parseInt(imageView.getId()) == movie.getId()) 
-                {
-                   return movieMatch = movie;
-                }
-            }
-            return movieMatch;
+        try
+        {
+            return dal.getAllMovies();
+        }
+        catch (DALException ex)
+        {
+           throw new BLLException();
+        }
     }
 
+    public void setImageId(File files, ImageView imageView) throws BLLException
+    {
+            for (Movie movie : getAllMovies())
+            {
+                // Removing the dot and text after, so only the text is in the string.
+                String fileName = files.getName().split("\\.")[0];
+                
+                // If database movie title matches chosenfile name.
+                if (movie.getMovieTitle().equalsIgnoreCase(fileName))
+                {
+                    // Changing integer to string, as imageview requires string.
+                    String idToString = Integer.toString(movie.getId());
+                    imageView.setId(idToString);
+                }
+            }
+        }
+
+    public Movie getMovieIdMatch(ImageView imageView) throws BLLException
+    {
+        Movie movieMatch = null;
+
+        for (Movie movie : getAllMovies())
+        {
+            if (Integer.parseInt(imageView.getId()) == movie.getId())
+            {
+                return movieMatch = movie;
+            }
+        }
+        return movieMatch;
+    }
+
+    /**
+     * Formats the metadata from searchresult, so its ready to be put in the db
+     *
+     * @param searchLink
+     *
+     * @return
+     *
+     * @throws BLLException
+     */
     public String[] getSearchMetaData(URL searchLink) throws BLLException
     {
         String searchResult = this.getSearchResult(searchLink);
+
         searchResult = searchResult.replace("{", "")
                 .replace("}", "")
                 .replace("[", "")
                 .replace("]", "")
                 .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
-        for(int i = 0; i < meta.length; i++)
+        System.out.println(searchResult);
+        for (int i = 0; i < meta.length; i++)
+        //get title
         {
-           //remove ":"
-           meta[i] = meta[i].substring(meta[i].lastIndexOf(":")+1);
-           
-           //remove minutes
-           if(i == 4)
-           {
-               meta[i] = meta[i].substring(0, meta[i].lastIndexOf(" "));
-           }
+            if (meta[i].contains("Title:"))
+            {
+                meta[0] = meta[i];
+            }
+            //get year
+            else if (meta[i].contains("Year:"))
+            {
+                meta[1] = meta[i];
+            }
+            //remove "min" after number of minutes
+            else if (meta[i].contains("Runtime:"))
+            {
+                meta[2] = meta[i].substring(0, meta[i].lastIndexOf(" "));
+            }
+            //get imdb rating
+            else if (meta[i].contains("imdbRating:"))
+            {
+                meta[3] = meta[i];
+            }
+            //Poster
+            else if (meta[i].contains("Poster:"))
+            {
+                meta[4] = meta[i];
+            }
+            //get all the categories by using substring with genre and director as start and end index
+            else if (meta[i].contains("Genre:"))
+            {
+                meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
+                meta[5] = meta[i].replace(",", "");
+            }
+            //imdb id
+            else if (meta[i].contains("imdbID:"))
+            {
+                meta[6] = meta[i];
+            }
         }
-        
-        return meta;
+
+        //new array to hold final result
+        String[] metaData = new String[7];
+        for (int i = 0; i < metaData.length; i++)
+        //remove metadata title until ":" appears and one index after
+        {
+            metaData[i] = meta[i].substring(meta[i].lastIndexOf(":") + 1);
+        }
+        return metaData;
+    }
+
+    /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param movieName
+     *
+     * @return
+     *
+     * @throws DALException
+     */
+    public String getSpecificMovieImage(String movieName) throws BLLException
+    {
+        try
+        {
+            return dal.getSpecificMovieImage(movieName);
+        }
+        catch (DALException ex)
+        {
+           throw new BLLException();
+        }
+    }
+
+    public String splitDot(String stringToSplit)
+    {
+        return stringToSplit = stringToSplit.split("\\.")[0];
+    }
+
+    /**
+     * If there is a movie last seen over 2 years ago and the movie i rated
+     * under 6
+     * ask the user if the movie should be deleted
+     *
+     * @throws DALException
+     */
+    public void findOldAndBadMovies() throws BLLException
+    {
+        try
+        {
+            Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
+            for (Movie m : getAllMovies())
+            {
+                if (m.getLastView() != null)
+                {
+                    if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6)
+                    {
+                        Alert alert = new Alert(AlertType.WARNING,
+                                                "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
+                                                + " og du har givet den en rating på " + m.getPersonalRating()
+                                                + " , har du lyst til at slette den?",
+                                                ButtonType.YES, ButtonType.NO);
+
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.YES)
+                        {
+                            dal.removeMovie(m.getId());
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                }
+
+            }
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
+    }
+
+    public Movie getMovieInfo(ImageView imageView) throws BLLException
+    {
+        Movie movieObject = null;
+        for (Movie movie : getAllMovies())
+        {
+            //  Finding the ID that belongs to the movie.
+            if (Integer.parseInt(imageView.getId()) == movie.getId())
+            {
+                movieObject = movie;
+            }
+        }
+        return movieObject;
+    }
+
+    /**
+     * Check if movie already exists in the db
+     *
+     * @param movieTitle
+     *
+     * @return
+     *
+     * @throws DALException
+     */
+    public boolean movieAlreadyExisting(String movieTitle) throws BLLException
+    {
+        boolean isAlreadyInDataBase = false;
+
+            for (Movie m : getAllMovies())
+            {
+                if (m.getMovieTitle().equals(movieTitle))
+                {
+                    isAlreadyInDataBase = true;
+                }
+
+            }
+        return isAlreadyInDataBase;
+        }
+
+
+    public void removeMovie(int id) throws BLLException
+    {
+        try
+        {
+            dal.removeMovie(id);
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
+    }
+
+    /**
+     * Gets the list holding the changed files
+     *
+     * @return
+     */
+    public ObservableList<Path> getChangeList()
+    {
+        return dal.getChangeList();
+    }
+
+    public void updateLibrary()
+    {
+    }
+
+    public void updateLibrary(ArrayList<Path> movieList) throws BLLException
+    {
+        List<Movie> databaseList;
+        List<Path> LocalList;
+
+        databaseList = getAllMovies();
+        LocalList = movieList;
     }
 }
