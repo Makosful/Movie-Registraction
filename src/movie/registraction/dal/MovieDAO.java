@@ -447,7 +447,7 @@ public class MovieDAO {
      * @return
      * @throws DALException 
      */
-    public ObservableList<Movie> searchMovies(String sqlString,
+    public List<Movie> searchMovies(String sqlString,
                                               List<String> categories,
                                               HashMap<String, String> year,
                                               int rating,
@@ -516,7 +516,7 @@ public class MovieDAO {
             ResultSet rs = preparedStatement.executeQuery();
 
             
-            ObservableList<Movie> movies = FXCollections.observableArrayList();
+            List<Movie> movies = new ArrayList();
             Movie movie = new Movie();
             while (rs.next())
             {  

@@ -107,7 +107,7 @@ public class Search
         this.searchText = searchText;
     }
     
-    public ObservableList<Movie> prepareSearch() throws DALException
+    public List<Movie> prepareSearch() throws DALException
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
@@ -156,7 +156,7 @@ public class Search
         }
         
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
-        
+
         return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
 
     }

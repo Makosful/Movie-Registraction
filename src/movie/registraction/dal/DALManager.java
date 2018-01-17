@@ -429,7 +429,7 @@ public class DALManager
     }
 
 
-    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, HashMap<String, String> year, int rating, String searchText, boolean searchNumeric) throws DALException
+    public List<Movie> searchMovies(String sqlString, List<String> categories, HashMap<String, String> year, int rating, String searchText, boolean searchNumeric) throws DALException
     {
         return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
     }
