@@ -575,6 +575,18 @@ public class MainWindowController implements Initializable
         acdPanes.setExpandedPane(acdGenre);
         flpGenre.getChildren().setAll(model.getGenreList());
         flpYear.getChildren().setAll(model.getYearList());
+        
+        for(JFXCheckBox ck : model.getGenreList())
+        {
+            ck.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                public void handle(MouseEvent e) {
+                    imageClick();
+
+                }
+            });
+        }
+        
     }
 
 }

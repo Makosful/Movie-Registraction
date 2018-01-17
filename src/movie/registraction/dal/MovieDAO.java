@@ -286,6 +286,7 @@ public class MovieDAO {
     /**
      * Add a new movie to the database
      * @param movieMetaData
+     * @param filePath
      * @return
      * @throws DALException 
      */
