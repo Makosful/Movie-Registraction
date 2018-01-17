@@ -535,16 +535,17 @@ public class MainWindowController implements Initializable
 
     private void PlayMovieCustomPlayer() throws IOException
     {
-        File fxml = new File("src/movie/registraction/gui/view/MediaWindowController.fxml");
+        File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
         Parent root;
         root = fxmlLoader.load();
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(anchorPane.getScene().getWindow());
-        EditCategoriesController controller;
+        MediaWindowController controller;
         controller = fxmlLoader.getController();
 
+        
         stage.setScene(new Scene(root));
         stage.show();
         
