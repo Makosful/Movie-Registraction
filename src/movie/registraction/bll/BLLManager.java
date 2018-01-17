@@ -405,7 +405,7 @@ public class BLLManager
             {
                 if (m.getLastView() != null)
                 {
-                    if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6)
+                    if (m.getLastView().after(twoYearsBefore) && m.getPersonalRating() < 6)
                     {
                         Alert alert = new Alert(AlertType.WARNING,
                                                 "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","

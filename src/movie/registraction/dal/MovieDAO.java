@@ -471,7 +471,7 @@ public class MovieDAO {
                         + "FROM Movie "
                         + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
                         + "LEFT JOIN Category ON CatMovie.categoryId = Category.id "
-                        + "WHERE "+sqlString;
+                        + sqlString;
 
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             

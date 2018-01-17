@@ -525,6 +525,7 @@ public class MainWindowModel
                     @Override
                     public void handle(MouseEvent e) {
                         search.setSearchCategories(cb.getText()); 
+                        prepareSearch();
                     }
                 });
                 genres.add(cb);
@@ -554,6 +555,7 @@ public class MainWindowModel
                 @Override
                 public void handle(MouseEvent e) {
                     search.setSearchYears(cb.getText()); 
+                    prepareSearch();
                 }
             });
             
@@ -655,4 +657,32 @@ public class MainWindowModel
             System.out.println(ex);
         }
     }
+
+    public void setRatingSearch(String selectedItem)
+    {
+        search.setRating(selectedItem);
+    }
+
+    public void setSortOrder(String selectedItem)
+    {
+        search.setSort(selectedItem);
+    }
+
+    public void setOrderSearch(String selectedToggle)
+    {
+        search.setOrder(selectedToggle);
+    }
+    
+    public void prepareSearch()
+    {
+        try
+        {
+            search.prepareSearch();
+        }
+        catch (DALException ex)
+        {
+            System.out.println("Could not prepare search");
+        }
+    }
+    
 }
