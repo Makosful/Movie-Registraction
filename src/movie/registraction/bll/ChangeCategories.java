@@ -8,6 +8,8 @@ package movie.registraction.bll;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
@@ -71,14 +73,7 @@ public class ChangeCategories
      */
     public void removeChosenMovieCategory(String category)
     {
-        Iterator<String> i = chosenMovieCategories.iterator();
-        while (i.hasNext())
-        {
-            String cat = i.next();
-
-            if (cat.equals(category))
-                i.remove();
-        }
+        chosenMovieCategories.remove(category);
     }
 
     /**
@@ -101,10 +96,7 @@ public class ChangeCategories
     public void saveMovieCategories() throws DALException
     {
        
-        Iterator<String> in = movie.getCategories().iterator();
-        while (in.hasNext())
-        {
-            String cat = in.next();
+        for(String cat : movie.getCategories()){
 
             if (!chosenMovieCategories.contains(cat)){
                 removeMovieCategory.add(cat);
@@ -115,11 +107,11 @@ public class ChangeCategories
         }
 
         for (String cat : removeMovieCategory){
-            dal.removeMovieCategory(5, cat);
+            dal.removeMovieCategory(movie.getId(), cat);
         }
         
         for (String cat : chosenMovieCategories){
-            dal.addMovieCategory(5, cat);
+            dal.addMovieCategory(movie.getId(), cat);
         }
         removeMovieCategory.clear();
         chosenMovieCategories.clear();
@@ -154,15 +146,7 @@ public class ChangeCategories
      */
     public void removeChosenCategory(String category)
     {
-        Iterator<String> i = categories.iterator();
-        while (i.hasNext())
-        {
-
-            String cat = i.next();
-
-            if (cat.equals(category))
-                i.remove();
-        }
+        categories.remove(category);
     }
 
     /**
@@ -183,16 +167,10 @@ public class ChangeCategories
      */
     public void saveCategories() throws DALException
     {
-        Iterator<String> in;
-        try {
-            in = dal.getAllCategories().iterator();
-        } catch (DALException ex) {
-            throw new DALException();
-        }
+
         
-        while (in.hasNext())
-        {
-            String cat = in.next();
+        for(String cat : dal.getAllCategories()){
+
 
             if (!categories.contains(cat))
                 removeCategory.add(cat);
@@ -210,5 +188,18 @@ public class ChangeCategories
         }
         removeCategory.clear();
         categories.clear();
+    }
+
+    public ObservableList<String> loadCategories() throws BLLException
+    {
+        try
+        {
+            categories.addAll(dal.getAllCategories());
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
+        return categories;
     }
 }

@@ -33,6 +33,7 @@ import movie.registraction.bll.Search;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
+import sun.applet.AppletPanel;
 
 /**
  *
@@ -75,17 +76,17 @@ public class MainWindowController implements Initializable
     private TilePane tilePane;
     @FXML
     private Button btnSetLibrary;
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Instanciating">
-    private MainWindowModel model;
-
     @FXML
     private FlowPane flpGenre;
     @FXML
     private FlowPane flpYear;
     @FXML
     private FlowPane flpOther;
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Different Variables">
+    private MainWindowModel model;
+
 
     private int gridHeight;
     private int gridWidth;
@@ -221,8 +222,8 @@ public class MainWindowController implements Initializable
      * @throws MalformedURLException
      * @throws IOException
      */
-    @FXML
-    private void btnChangeMovieCategory(ActionEvent event) throws MalformedURLException, IOException
+    
+    private void openChangeMovieCategoriesWindow(Movie selectedMovie) throws MalformedURLException, IOException 
     {
         File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
@@ -233,7 +234,7 @@ public class MainWindowController implements Initializable
         stage.initOwner(anchorPane.getScene().getWindow());
         EditMovieCategoryController controller;
         controller = fxmlLoader.getController();
-
+        controller.changeMovieCategories(selectedMovie);
         stage.setScene(new Scene(root));
         stage.show();
     }
@@ -446,10 +447,9 @@ public class MainWindowController implements Initializable
     {
         contextMenu = new ContextMenu();
         playMovie = new MenuItem("Play Movie");
-        editData = new MenuItem("Edit Metadata TODO");
+        editData = new MenuItem("Edit Categories");
         deleteMovie = new MenuItem("Delete Movie");
         contextMenu.getItems().addAll(playMovie, editData, deleteMovie);
-
     }
 
     /**
@@ -476,7 +476,14 @@ public class MainWindowController implements Initializable
             @Override
             public void handle(ActionEvent event)
             {
-                System.out.println("2");
+                try
+                {
+                    openChangeMovieCategoriesWindow(movie);
+                }
+                catch (IOException ex)
+                {
+                    System.out.println("Cannot open changecategorywindow");
+                }
                 contextMenu.hide();
             }
         });

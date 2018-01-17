@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
@@ -424,16 +425,10 @@ public class DALManager
         mDAO.removeMovie(movieId);
     }
 
-    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, List<String> year, int rating, String searchText, boolean searchNumeric) throws DALException
+
+    public ObservableList<Movie> searchMovies(String sqlString, List<String> categories, HashMap<String, String> year, int rating, String searchText, boolean searchNumeric) throws DALException
     {
-        try
-        {
-            return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
+        return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
     }
 
     /**

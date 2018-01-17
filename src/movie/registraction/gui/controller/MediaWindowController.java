@@ -178,7 +178,7 @@ public class MediaWindowController implements Initializable
             btnPlayPause.setText("Pause");
             isPlaying = !isPlaying;
         }
-        else if (isPlaying && !mediaPlayable)
+        else if (isPlaying)
         {
             mediaPlayer.pause();
             btnPlayPause.setText("Play");
@@ -218,13 +218,13 @@ public class MediaWindowController implements Initializable
     {
         if (!mediaMuted)
         {
-            mediaPlayer.setVolume(0);
+            mediaPlayer.setMute(true);
             volumeSlider.setDisable(true);
             mediaMuted = !mediaMuted;
         }
         else if (mediaMuted)
         {
-            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
+            mediaPlayer.setMute(false);
             volumeSlider.setDisable(false);
             mediaMuted = !mediaMuted;
         }

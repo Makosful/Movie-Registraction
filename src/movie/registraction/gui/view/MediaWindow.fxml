@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.media.MediaView?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@../../css/media.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MediaWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@../../css/media.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MediaWindowController">
     <children>
         <SplitPane fx:id="splitPane" dividerPositions="0.9277" orientation="VERTICAL" prefHeight="640.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -36,7 +36,7 @@
                                           </HBox.margin>
                                       </JFXButton>
                               <Slider fx:id="volumeSlider" onDragDetected="#volumeDrag" prefHeight="40.0" prefWidth="200.0" />
-                              <Label fx:id="lblVolume" ellipsisString="888%" prefHeight="40.0" prefWidth="28.0" text="888%">
+                              <Label fx:id="lblVolume" ellipsisString="100%" prefHeight="40.0" prefWidth="28.0" text="100%">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>
