@@ -339,39 +339,38 @@ public class BLLManager
      */
     public void findOldAndBadMovies() throws BLLException
     {
-        
-        long oneYear = 365*24*60*60*1000;
-        
-        Date twoYearsBefore = new Date(System.currentTimeMillis()-(oneYear*2));
-        for (Movie m : getAllMovies())
+        try
         {
-            if (m.getLastView() != null)
+            Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
+            for (Movie m : getAllMovies())
             {
-                
-                if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6 && m.getPersonalRating() != -1)
+                if (m.getLastView() != null)
                 {
-                    Alert alert = new Alert(AlertType.WARNING,
-                    "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
-                    + " og du har givet den en rating på " + m.getPersonalRating()
-                    + " , har du lyst til at slette den?",
-                    ButtonType.YES, ButtonType.NO);
-                
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.YES)
-                {
-                    try
+                    if (m.getLastView().after(twoYearsBefore) && m.getPersonalRating() < 6)
                     {
-                        dal.removeMovie(m.getId());
-                    }
-                    catch (DALException ex)
-                    {
-                        throw new BLLException();
-                    }
-                }
-                              
-                }
-            }
+                        Alert alert = new Alert(AlertType.WARNING,
+                                                "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
+                                                + " og du har givet den en rating på " + m.getPersonalRating()
+                                                + " , har du lyst til at slette den?",
+                                                ButtonType.YES, ButtonType.NO);
 
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.YES)
+                        {
+                            dal.removeMovie(m.getId());
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                }
+
+            }
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
         }
     }
 
