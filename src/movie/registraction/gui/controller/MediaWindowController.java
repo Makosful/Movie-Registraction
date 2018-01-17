@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -71,6 +72,7 @@ public class MediaWindowController implements Initializable
     private SplitPane splitPane;
     @FXML
     private Label lblVolume;
+    private ImageView imageView;
 
     /**
      * Initializes the controller class.
@@ -340,5 +342,10 @@ public class MediaWindowController implements Initializable
                                      elapsedSeconds);
             }
         }
+    }
+
+    void setImageView(ImageView imageView)
+    {
+        this.imageView = imageView;
     }
 }
