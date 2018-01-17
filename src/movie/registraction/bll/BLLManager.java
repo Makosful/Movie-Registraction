@@ -340,9 +340,9 @@ public class BLLManager
     public void findOldAndBadMovies() throws BLLException
     {
         
-        long twoYears = 365*24*60*60*1000;
+        long oneYear = 365*24*60*60*1000;
         
-        Date twoYearsBefore = new Date(System.currentTimeMillis()-(twoYears*2));
+        Date twoYearsBefore = new Date(System.currentTimeMillis()-(oneYear*2));
         for (Movie m : getAllMovies())
         {
             if (m.getLastView() != null)
