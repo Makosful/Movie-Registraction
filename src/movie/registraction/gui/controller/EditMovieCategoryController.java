@@ -7,10 +7,7 @@ package movie.registraction.gui.controller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -18,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
@@ -44,39 +40,17 @@ public class EditMovieCategoryController implements Initializable {
     private Button btnSave;
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) 
+    {
     
-        try {
+        try
+        {
             m = new MainWindowModel();
-        } catch (DALException ex) {
+        }
+        catch (DALException ex)
+        {
             System.out.println(ex.getMessage());
         }
-  
-        listViewAll.setItems(m.getAllCategories());
-        try {
-            MovieDAO mDAO = new MovieDAO();
-            
-            ObservableList<Movie> movie = mDAO.getAllMovies();
-            listViewChosen.setItems(m.loadChosenMovieCategories(movie.get(0)));
-            
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
-        }
-        
-        
-        listViewAll.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-               
-                m.addChosenMovieCategory(newValue);
-
-            }
-            
-        });
-        
         
     }
 
@@ -92,6 +66,37 @@ public class EditMovieCategoryController implements Initializable {
         m.removeChosenMovieCategory(listViewChosen.getSelectionModel().getSelectedItem()); 
     }
     
+    public void changeMovieCategories(Movie selectedMovie)
+    {
+        listViewAll.setItems(m.getAllCategories());
+        try
+        {
+            MovieDAO mDAO = new MovieDAO();
 
-    
+            ObservableList<Movie> movie = mDAO.getAllMovies();
+            listViewChosen.setItems(m.loadChosenMovieCategories(selectedMovie));
+
+        }
+        catch (IOException ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        catch (DALException ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+
+        listViewAll.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
+
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+
+                m.addChosenMovieCategory(newValue);
+
+            }
+
+        });
+    }
 }
