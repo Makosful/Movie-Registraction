@@ -58,18 +58,17 @@ public class Search
     public void setSearchYears(String years)
     {
         String[] decade = years.split("-");
-        if(!year.containsKey(dal)){
+        if(!year.containsKey(decade[0])){
             year.put(decade[0], decade[1]);
         }
         else
         {
-            year.remove(decade[0]);
+            year.remove(decade[0], decade[1]);
         }
 
         
         for(Map.Entry<String, String> entry : year.entrySet()) {
-
-            System.out.println(entry.getKey()+"-"+entry.getValue());
+            System.out.println(entry.getKey()+"+"+entry.getValue()+" ->"+decade[0]+" "+decade[1]);
         }
         
         
