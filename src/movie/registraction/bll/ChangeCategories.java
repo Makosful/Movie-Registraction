@@ -93,7 +93,7 @@ public class ChangeCategories
      * adding/removing the categories in the database to this specific movie.
      * @throws movie.registraction.dal.DALException
      */
-    public void saveMovieCategories() throws DALException
+    public void saveMovieCategories() throws BLLException 
     {
        
         for(String cat : movie.getCategories()){
@@ -107,11 +107,25 @@ public class ChangeCategories
         }
 
         for (String cat : removeMovieCategory){
-            dal.removeMovieCategory(movie.getId(), cat);
+            try
+            {
+                dal.removeMovieCategory(movie.getId(), cat);
+            }
+            catch (DALException ex)
+            {
+                throw new BLLException();
+            }
         }
         
         for (String cat : chosenMovieCategories){
-            dal.addMovieCategory(movie.getId(), cat);
+            try
+            {
+                dal.addMovieCategory(movie.getId(), cat);
+            }
+            catch (DALException ex)
+            {
+                throw new BLLException();
+            }
         }
         removeMovieCategory.clear();
         chosenMovieCategories.clear();
@@ -120,11 +134,18 @@ public class ChangeCategories
     /**
      * Gets all categories from the db
      * @return ObservableList of strings
-     * @throws movie.registraction.dal.DALException
+     * @throws movie.registraction.bll.BLLException
      */
-    public ObservableList<String> allCategories() throws DALException 
+    public ObservableList<String> allCategories() throws BLLException 
     {
-        categories.addAll(dal.getAllCategories());
+        try
+        {
+            categories.addAll(dal.getAllCategories());
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
         return categories;
     }
 
@@ -165,29 +186,36 @@ public class ChangeCategories
      * through,
      * adding/removing the categories in the database to this specific movie.
      */
-    public void saveCategories() throws DALException
-    {
-
-        
-        for(String cat : dal.getAllCategories()){
-
-
-            if (!categories.contains(cat))
-                removeCategory.add(cat);
-            else
-                categories.remove(cat);
-
-        }
-
-        for (String cat : removeCategory){
+    public void saveCategories() throws BLLException
+    {        
+        try
+        {
+            for(String cat : dal.getAllCategories()){
+                
+                
+                if (!categories.contains(cat))
+                    removeCategory.add(cat);
+                else
+                    categories.remove(cat);
+                
+            }
             
-            dal.removeCategory(cat);
+            for (String cat : removeCategory){
+                
+                dal.removeCategory(cat);
+            }
+            for (String cat : categories){
+                dal.addCategory(cat);
+            }
+            
+            removeCategory.clear();
+            categories.clear();
+            
         }
-        for (String cat : categories){
-            dal.addCategory(cat);
+        catch (DALException ex)
+        {
+            throw new BLLException();
         }
-        removeCategory.clear();
-        categories.clear();
     }
 
     public ObservableList<String> loadCategories() throws BLLException

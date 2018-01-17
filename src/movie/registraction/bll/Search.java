@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.dal.DALManager;
@@ -102,7 +104,7 @@ public class Search
     
     
     
-    public List<Movie> prepareSearch() throws DALException
+    public List<Movie> prepareSearch() throws BLLException
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
@@ -157,7 +159,14 @@ public class Search
         
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
 
-        return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
+        try
+        {
+            return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
 
     }
     

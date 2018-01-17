@@ -38,7 +38,9 @@ public class BLLManager
     
     //Filter search
     Search search;
-
+    
+    //
+    ChangeCategories categories;
     public BLLManager() throws BLLException, DALException
     {
         try
@@ -46,6 +48,7 @@ public class BLLManager
             search = new Search();
             dal = new DALManager();
             omdb = new OmdbSearch();
+            categories = new ChangeCategories();
         }
         catch (DALException ex)
         {
@@ -504,13 +507,54 @@ public class BLLManager
 
     public List<Movie> prepareSearch() throws BLLException
     {
-        try
-        {
+  
             return search.prepareSearch();
-        }
-        catch (DALException ex)
-        {
-            throw new BLLException();
-        }
+
     }
+
+    public ObservableList<String> allCategories() throws BLLException
+    {
+        return categories.allCategories();
+    }
+
+    public ObservableList<String> loadCategories() throws BLLException
+    {
+       return categories.loadCategories();
+    }
+
+    public void addChosenCategory(String category)
+    {
+        categories.addChosenCategory(category);
+    }
+
+    public void removeChosenCategory(String category)
+    {
+        categories.removeChosenCategory(category);
+    }
+
+    public void saveCategories() throws BLLException
+    {
+        categories.saveCategories();
+    }
+
+    public ObservableList<String> loadChosenMovieCategories(Movie movie)
+    {
+        return categories.loadChosenMovieCategories(movie);
+    }
+
+    public void addChosenMovieCategory(String category)
+    {
+        categories.addChosenMovieCategory(category);
+    }
+
+    public void removeChosenMovieCategory(String category)
+    {
+        categories.removeChosenMovieCategory(category);
+    }
+
+    public void saveMovieCategories() throws BLLException
+    {
+        categories.saveMovieCategories();
+    }
+
 }

@@ -46,7 +46,7 @@ public class MainWindowModel
 
     private final ArrayList<String> extensionList;
 
-    private ChangeCategories categories;
+
 
     public MainWindowModel() throws DALException
     {
@@ -65,7 +65,7 @@ public class MainWindowModel
         genres = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
         changeList = bll.getChangeList();
-        categories = new ChangeCategories();
+       
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
 
@@ -168,9 +168,9 @@ public class MainWindowModel
     {
         try
         {
-            allCategories.addAll(categories.allCategories());
+            allCategories.addAll(bll.allCategories());
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
             System.out.println("Could not get the list of categories");
         }
@@ -184,7 +184,7 @@ public class MainWindowModel
      */
     public ObservableList<String> loadCategories() throws BLLException
     {
-        return categories.loadCategories();
+            return bll.loadCategories();
     }
 
     /**
@@ -194,7 +194,7 @@ public class MainWindowModel
      */
     public void addChosenCategory(String category)
     {
-        categories.addChosenCategory(category);
+        bll.addChosenCategory(category);
     }
 
     /**
@@ -204,7 +204,7 @@ public class MainWindowModel
      */
     public void removeChosenCategory(String category)
     {
-        categories.removeChosenCategory(category);
+        bll.removeChosenCategory(category);
     }
 
     /**
@@ -212,15 +212,17 @@ public class MainWindowModel
      */
     public void saveCategories()
     {
+
         try
         {
-            categories.saveCategories();
+            bll.saveCategories();
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
             System.out.println("Could not save categories");
         }
 
+        
     }
 
     /**
@@ -232,7 +234,7 @@ public class MainWindowModel
      */
     public ObservableList<String> loadChosenMovieCategories(Movie movie)
     {
-        return categories.loadChosenMovieCategories(movie);
+        return bll.loadChosenMovieCategories(movie);
     }
 
     /**
@@ -243,7 +245,7 @@ public class MainWindowModel
      */
     public void addChosenMovieCategory(String category)
     {
-        categories.addChosenMovieCategory(category);
+        bll.addChosenMovieCategory(category);
     }
 
     /**
@@ -254,7 +256,7 @@ public class MainWindowModel
      */
     public void removeChosenMovieCategory(String category)
     {
-        categories.removeChosenMovieCategory(category);
+        bll.removeChosenMovieCategory(category);
     }
 
     /**
@@ -264,12 +266,13 @@ public class MainWindowModel
     {
         try
         {
-            categories.saveMovieCategories();
+            bll.saveMovieCategories();
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
             System.out.println("Could not save the movie categories");
         }
+        
     }
 
     /**
@@ -524,14 +527,14 @@ public class MainWindowModel
     {
         try
         {
-            for (String category : categories.allCategories())
+            for (String category : bll.allCategories())
             {
                 JFXCheckBox cb = new JFXCheckBox(category);
                 
                 genres.add(cb);
             }
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
             System.out.println("Could not get the list of categories");
         }
