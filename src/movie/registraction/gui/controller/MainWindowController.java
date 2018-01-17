@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,7 +26,6 @@ import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
-import sun.applet.AppletPanel;
 
 /**
  *
@@ -86,6 +83,8 @@ public class MainWindowController implements Initializable
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
+    
+    Movie moviePoster;
 
     VBox vBox;
     Hyperlink imdbURL;
@@ -401,15 +400,14 @@ public class MainWindowController implements Initializable
     {
         model.GetImageViewList().forEach((imageView) ->
         {
-            Movie moviePoster = model.getMovieInfo(imageView);
-
             imageView.setOnMouseClicked((MouseEvent event) ->
             {
                 MouseButton mouseButton = event.getButton();
                 
                 if (mouseButton == MouseButton.PRIMARY)
                 {
-                    
+                    // getting movieInfo everytime u click, to stay updated with database.
+                    moviePoster =  model.getMovieInfo(imageView);
                     PopOverSetup(moviePoster, event);
                     System.out.println(moviePoster.getMovieLength());
                     model.contextMenuOpenOrNot(contextMenu);
@@ -417,6 +415,7 @@ public class MainWindowController implements Initializable
                 
                 else if (mouseButton == MouseButton.SECONDARY)
                 {
+                    moviePoster = model.getMovieInfo(imageView);
                     closePopOverIfRightClick();
                     contextMenuAction(imageView, moviePoster);
                     model.contextMenuOpenOrNot(contextMenu);
@@ -465,8 +464,6 @@ public class MainWindowController implements Initializable
                 System.out.println(movie.getFilePath());
                 model.openFileInNative(new File(movie.getFilePath()));
                 model.setLastView(movie.getId());
-                imageClick();
-                
                 contextMenu.hide();
             }
         });
