@@ -525,6 +525,30 @@ public class MainWindowController implements Initializable
         }
     }
 
+
+    @FXML
+    private void comBoxMinRatingHandler(ActionEvent event)
+    {
+      model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
+      model.prepareSearch();
+    }
+
+    @FXML
+    private void setOrderHandler(ActionEvent event)
+    {
+        
+        RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
+        model.setOrderSearch(orderRadiobtn.getText());
+        model.prepareSearch();
+    }
+
+    @FXML
+    private void comBoxSortOrderHandler(ActionEvent event)
+    {
+        model.setSortOrder(comBoxSortOrder.getSelectionModel().getSelectedItem());
+        model.prepareSearch();
+    }
+
     private void PlayMovieCustomPlayer() throws IOException
     {
         File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");

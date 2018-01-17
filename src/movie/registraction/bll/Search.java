@@ -25,6 +25,10 @@ public class Search
     private DALManager dal;
     private List<String> categories = new ArrayList();
     private HashMap<String, String> year = new HashMap();
+    private int rating;
+    private String order;
+    private String sort;
+    private String searchText;
     
     public Search() throws DALException
     {
@@ -36,6 +40,11 @@ public class Search
         {
             throw new DALException();
         }
+        
+        order = "Title";
+        sort = "Decending";
+        searchText = "";
+        rating = -1;
     }
     
     public void setSearchCategories(String category)
@@ -48,7 +57,7 @@ public class Search
         {
             categories.remove(category);
         }
-        
+        System.out.println("-------------------------------------------------");
         for(String c : categories)
         {
             System.out.println(c);        
@@ -66,7 +75,7 @@ public class Search
             year.remove(decade[0], decade[1]);
         }
 
-        
+        System.out.println("-------------------------------------------------");
         for(Map.Entry<String, String> entry : year.entrySet()) {
             System.out.println(entry.getKey()+"+"+entry.getValue()+" ->"+decade[0]+" "+decade[1]);
         }
@@ -74,11 +83,31 @@ public class Search
         
     }
     
+    public void setRating(String rating)
+    {
+        String number = rating.replaceAll("\\D+","");
+        this.rating = Integer.parseInt(number);
+    }
     
-    public ObservableList<Movie> prepareSearch(String order,
-                                               String sort,
-                                               int rating,
-                                               String searchText) throws DALException
+    public void setOrder(String order)
+    {
+        System.out.println(order);
+        this.order = order;
+    }
+    
+    public void setSort(String sort)
+    {
+        System.out.println(sort);
+        this.sort = sort;
+    }
+    
+    public void setSearchText(String searchText)
+    {
+        System.out.println(searchText);
+        this.searchText = searchText;
+    }
+    
+    public ObservableList<Movie> prepareSearch() throws DALException
     {
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
@@ -87,14 +116,14 @@ public class Search
         String sqlRating = "";
         boolean searchNumeric = false;
         
-
-        sqlSearchCategory = setSqlSearchCategory(categories, sqlSearchCategory);
         
-        sqlSearchYear = setSqlSearchYear(year, sqlSearchYear);
-
-        sqlOrderBy = setSqlSearchOrder(order, sort, sqlOrderBy);
+        sqlSearchCategory = setSqlSearchCategory(sqlSearchCategory);
         
-        sqlRating = setSqlSearchRating(rating, sqlRating);
+        sqlSearchYear = setSqlSearchYear(sqlSearchYear);
+
+        sqlOrderBy = setSqlSearchOrder(sqlOrderBy);
+        
+        sqlRating = setSqlSearchRating(sqlRating);
         
         if(!searchText.isEmpty())
         {  
@@ -127,10 +156,9 @@ public class Search
         }
         
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
-        System.out.println(sqlString);
-        return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
- 
         
+        return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
+
     }
     
     /**
@@ -153,13 +181,13 @@ public class Search
         return true;
     }
     
-    private String setSqlSearchCategory(List<String> categories, String sqlSearchCategory)
+    private String setSqlSearchCategory(String sqlSearchCategory)
     {
         for(String criteria : categories) {
 
             if(sqlSearchCategory.isEmpty())
             {
-                sqlSearchCategory = "(";
+                sqlSearchCategory += "WHERE (";
             }
             else
             {   
@@ -171,18 +199,22 @@ public class Search
         
         if(!sqlSearchCategory.isEmpty())
         {
-            sqlSearchCategory = ")";
+            sqlSearchCategory += ")";
         }
         
         return sqlSearchCategory; 
     }
     
     
-    private String setSqlSearchYear(HashMap<String, String> year, String sqlSearchYear)
+    private String setSqlSearchYear(String sqlSearchYear)
     {
         for(Map.Entry<String, String> entry : year.entrySet()) {
 
-            if(sqlSearchYear.isEmpty())
+            if(categories.isEmpty() && sqlSearchYear.isEmpty())
+            {
+                sqlSearchYear = "WHERE (";
+            }
+            else if(sqlSearchYear.isEmpty())
             {
                 sqlSearchYear = "(";
             }
@@ -191,7 +223,7 @@ public class Search
                 sqlSearchYear += " OR ";
             }
 
-            sqlSearchYear += "Movie.year > ? AND Movie.year < ?" ;
+            sqlSearchYear += "(Movie.year > ? AND Movie.year < ?)" ;
         }
         
         if(!sqlSearchYear.isEmpty())
@@ -202,8 +234,9 @@ public class Search
         return sqlSearchYear;
     }
     
-    private String setSqlSearchOrder(String order, String sort, String sqlOrderBy)
+    private String setSqlSearchOrder(String sqlOrderBy)
     {
+        
         if(order.equals("Title"))
         {
             sqlOrderBy = " ORDER BY Movie.name";
@@ -212,18 +245,18 @@ public class Search
         {
             sqlOrderBy = " ORDER BY Movie.personalRating";
         }
-        if(sort.equals("DESC"))
+        if(sort.equals("Descending"))
         {
             sqlOrderBy += " DESC";
         }
-        else if(sort.equals("ASC"))
+        else if(sort.equals("Ascending"))
         {
             sqlOrderBy += " ASC";
         }
         return sqlOrderBy;
     }
     
-    private String setSqlSearchRating(int rating, String sqlRating)
+    private String setSqlSearchRating(String sqlRating)
     {
         if(rating != -1)
         {
@@ -231,5 +264,5 @@ public class Search
         }
         return sqlRating;
     }
-    
+   
 }
