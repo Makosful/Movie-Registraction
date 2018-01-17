@@ -22,6 +22,8 @@ public class MovieRegistraction extends Application
 
         stage.setScene(scene);
         stage.show();
+        stage.setMinHeight(700);
+        stage.setMinWidth(825);
     }
 
     /**
