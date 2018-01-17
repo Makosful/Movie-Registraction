@@ -3,12 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package movie.registraction.bll;
+package movie.registraction.gui.model;
+
+import javafx.util.Duration;
 
 /**
  *
  * @author Storm
  */
-public class NewClass {
+public class MediaWindowModel
+{
+    public MediaWindowModel()
+    {
+
+    }
     
 }

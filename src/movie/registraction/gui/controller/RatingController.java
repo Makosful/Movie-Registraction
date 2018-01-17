@@ -19,6 +19,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import movie.registraction.bll.Rating;
+import movie.registraction.dal.DALException;
+import movie.registraction.gui.model.MainWindowModel;
 
 /**
  * FXML Controller class
@@ -29,7 +31,7 @@ public class RatingController implements Initializable {
 
     @FXML
     private GridPane gridPaneRating;
-    private Rating r;
+ 
     @FXML
     private Label lblRating;
 
@@ -38,10 +40,12 @@ public class RatingController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+           
         try {
-            r = new Rating(10, "personalRating", gridPaneRating, lblRating);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            MainWindowModel m = new MainWindowModel();
+            m.setUpRating(6.6, "imdb", gridPaneRating, lblRating);
+        } catch (DALException ex) {
         }
         
         

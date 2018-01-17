@@ -5,45 +5,39 @@
  */
 package movie.registraction.bll;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
-import movie.registraction.dal.MovieDAO;
+import movie.registraction.dal.DALManager;
 
 /**
  *
  * @author B
  */
-public class changeCategories
+public class ChangeCategories
 {
-
     private Movie movie;
-    private MovieDAO mDAO;
+    private DALManager dal;
     private List<String> removeCategory;
     private List<String> removeMovieCategory;
     ObservableList<String> categories = FXCollections.observableArrayList();
     ObservableList<String> chosenMovieCategories = FXCollections.observableArrayList();
 
-    public changeCategories() throws BLLException
+    public ChangeCategories() throws DALException 
     {
-        try
-        {
-            mDAO = new MovieDAO();
-            removeCategory = new ArrayList();
-            removeMovieCategory = new ArrayList();
+
+        try {
+            dal = new DALManager();
+        } catch (DALException ex) {
+            throw new DALException();
         }
-        catch (IOException ex)
-        {
-            throw new BLLException();
-        }
+
+        removeCategory = new ArrayList();
+        removeMovieCategory = new ArrayList();
     }
 
     /**
@@ -121,19 +115,11 @@ public class changeCategories
         }
 
         for (String cat : removeMovieCategory){
-            try {
-                mDAO.removeMovieCategory(5, cat);
-            } catch (DALException ex) {
-                throw new DALException();
-            }
+            dal.removeMovieCategory(5, cat);
         }
         
         for (String cat : chosenMovieCategories){
-            try {
-                mDAO.addMovieCategory(5, cat);
-            } catch (DALException ex) {
-                throw new DALException();
-            }
+            dal.addMovieCategory(5, cat);
         }
         removeMovieCategory.clear();
         chosenMovieCategories.clear();
@@ -146,11 +132,7 @@ public class changeCategories
      */
     public ObservableList<String> allCategories() throws DALException 
     {
-        try {
-            categories.addAll(mDAO.getAllCategories());
-        } catch (DALException ex) {
-                throw new DALException();
-        }
+        categories.addAll(dal.getAllCategories());
         return categories;
     }
 
@@ -201,7 +183,13 @@ public class changeCategories
      */
     public void saveCategories() throws DALException
     {
-        Iterator<String> in = mDAO.getAllCategories().iterator();
+        Iterator<String> in;
+        try {
+            in = dal.getAllCategories().iterator();
+        } catch (DALException ex) {
+            throw new DALException();
+        }
+        
         while (in.hasNext())
         {
             String cat = in.next();
@@ -215,21 +203,12 @@ public class changeCategories
 
         for (String cat : removeCategory){
             
-            try {
-                 mDAO.removeCategory(cat);
-            } catch (DALException ex) {
-                throw new DALException();
-            }
+            dal.removeCategory(cat);
         }
         for (String cat : categories){
-            try {
-                mDAO.addCategory(cat);
-            } catch (DALException ex) {
-                throw new DALException();
-            }
+            dal.addCategory(cat);
         }
         removeCategory.clear();
         categories.clear();
     }
-
 }
