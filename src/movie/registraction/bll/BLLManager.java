@@ -234,20 +234,6 @@ public class BLLManager
         }
     }
 
-    public Movie getMovieIdMatch(ImageView imageView) throws BLLException
-    {
-        Movie movieMatch = null;
-
-        for (Movie movie : getAllMovies())
-        {
-            if (Integer.parseInt(imageView.getId()) == movie.getId())
-            {
-                return movie;
-            }
-        }
-        return movieMatch;
-    }
-
     /**
      * Formats the metadata from searchresult, so its ready to be put in the db
      *
