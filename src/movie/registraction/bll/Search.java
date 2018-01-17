@@ -156,7 +156,7 @@ public class Search
         }
         
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
-
+        System.out.println(sqlString);
         return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
 
     }

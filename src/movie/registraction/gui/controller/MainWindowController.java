@@ -602,6 +602,17 @@ public class MainWindowController implements Initializable
         flpGenre.getChildren().setAll(model.getGenreList(tilePane));
         flpYear.getChildren().setAll(model.getYearList(tilePane));
         
+        for(JFXCheckBox ck : model.getGenreList(tilePane))
+        {
+            ck.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                public void handle(MouseEvent e) {
+                    imageClick();
+
+                }
+            });
+        }
+        
     }
 
 }
