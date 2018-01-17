@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -41,7 +43,7 @@ public class MainWindowModel
 
     private BLLManager bll;
     private Search search = new Search();
-            
+
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
     private final ObservableList<JFXCheckBox> others;
@@ -153,7 +155,6 @@ public class MainWindowModel
     {
     }
 
-
     /**
      * Gets all categories from changeCategories class
      *
@@ -173,16 +174,16 @@ public class MainWindowModel
         return allCategories;
     }
 
-    
     /**
      * Gets all categories, is used in EditCategoryController
+     *
      * @return all categories in observable list
      */
     public ObservableList<String> loadCategories() throws BLLException
     {
-            return categories.loadCategories();
+        return categories.loadCategories();
     }
-    
+
     /**
      * Sends the category string to chosenCategories class to be added
      *
@@ -398,7 +399,7 @@ public class MainWindowModel
             contextMenu.hide();
         }
     }
-    
+
     /**
      * Checks whether contextmenu is open or not, if yes, it closes.
      * Incase user dobbleclicks several times, so it doesnt stack.
@@ -414,7 +415,7 @@ public class MainWindowModel
             System.out.println("closed menu");
         }
     }
-    
+
     /**
      * Loads the movies from the library
      */
@@ -497,7 +498,7 @@ public class MainWindowModel
         return imageViewList;
     }
 
-    public ObservableList<Movie> getAllMovies() 
+    public ObservableList<Movie> getAllMovies()
     {
         ObservableList<Movie> movies = FXCollections.observableArrayList();
         try
@@ -511,9 +512,7 @@ public class MainWindowModel
         return movies;
     }
 
-    
-    
-        /**
+    /**
      * Gets the list of Genres
      *
      * @return Observablelist of checkboxes
@@ -525,10 +524,12 @@ public class MainWindowModel
             for (String category : categories.allCategories())
             {
                 JFXCheckBox cb = new JFXCheckBox(category);
-                cb.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                cb.setOnMouseClicked(new EventHandler<MouseEvent>()
+                {
                     @Override
-                    public void handle(MouseEvent e) {
-                        search.setSearchCategories(cb.getText()); 
+                    public void handle(MouseEvent e)
+                    {
+                        search.setSearchCategories(cb.getText());
                     }
                 });
                 genres.add(cb);
@@ -541,8 +542,8 @@ public class MainWindowModel
 
         return genres;
     }
-    
-        /**
+
+    /**
      * Returns the list of CheckBoxes for the years
      *
      * @return Returns the list CheckBoxes for the years
@@ -551,23 +552,24 @@ public class MainWindowModel
     {
         for (int i = 0; i < 12; i++)
         {
-            int j = 1900+(i*10);
-            int q = 1900+((1+i)*10);
-            JFXCheckBox cb = new JFXCheckBox(j+"-"+q);
-            cb.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            int j = 1900 + (i * 10);
+            int q = 1900 + ((1 + i) * 10);
+            JFXCheckBox cb = new JFXCheckBox(j + "-" + q);
+            cb.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
                 @Override
-                public void handle(MouseEvent e) {
-                    search.setSearchYears(cb.getText()); 
+                public void handle(MouseEvent e)
+                {
+                    search.setSearchYears(cb.getText());
                 }
             });
-            
-        years.add(cb);
+
+            years.add(cb);
 
         }
-        
+
         return years;
     }
-
 
     /**
      * Tries to match ids of image and movie.
@@ -653,6 +655,18 @@ public class MainWindowModel
         try
         {
             bll.openFileInNative(file);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+    }
+
+    public void setLastView(int movieId)
+    {
+        try
+        {
+            bll.setLastView(movieId);
         }
         catch (BLLException ex)
         {
