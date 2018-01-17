@@ -339,38 +339,39 @@ public class BLLManager
      */
     public void findOldAndBadMovies() throws BLLException
     {
-        try
+        
+        long oneYear = 365*24*60*60*1000;
+        
+        Date twoYearsBefore = new Date(System.currentTimeMillis()-(oneYear*2));
+        for (Movie m : getAllMovies())
         {
-            Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
-            for (Movie m : getAllMovies())
+            if (m.getLastView() != null)
             {
-                if (m.getLastView() != null)
+                
+                if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6 && m.getPersonalRating() != -1)
                 {
-                    if (m.getLastView().after(twoYearsBefore) && m.getPersonalRating() < 6)
+                    Alert alert = new Alert(AlertType.WARNING,
+                    "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
+                    + " og du har givet den en rating på " + m.getPersonalRating()
+                    + " , har du lyst til at slette den?",
+                    ButtonType.YES, ButtonType.NO);
+                
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.YES)
+                {
+                    try
                     {
-                        Alert alert = new Alert(AlertType.WARNING,
-                                                "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
-                                                + " og du har givet den en rating på " + m.getPersonalRating()
-                                                + " , har du lyst til at slette den?",
-                                                ButtonType.YES, ButtonType.NO);
-
-                        Optional<ButtonType> result = alert.showAndWait();
-                        if (result.get() == ButtonType.YES)
-                        {
-                            dal.removeMovie(m.getId());
-                        }
-                        else
-                        {
-
-                        }
+                        dal.removeMovie(m.getId());
+                    }
+                    catch (DALException ex)
+                    {
+                        throw new BLLException();
                     }
                 }
-
+                              
+                }
             }
-        }
-        catch (DALException ex)
-        {
-            throw new BLLException();
+
         }
     }
 
