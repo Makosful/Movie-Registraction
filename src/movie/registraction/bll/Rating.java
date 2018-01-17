@@ -80,17 +80,7 @@ public class Rating {
     private void initRating(String ratingType, double rating)
     {
         if(ratingType.equals("imdb")){
-            if(rating-Math.floor(rating) < 0.75){
-                if(rating-Math.floor(rating) > 0.25)
-                {
-                    half = true;
-                }
-                wholeNumber = (int) Math.floor(rating); 
-            }
-            else
-            {
-                wholeNumber = (int) Math.ceil(rating);
-            }
+            initIMDb(rating);
         }
         else
         {
@@ -98,6 +88,24 @@ public class Rating {
         }
     }
     
+    /**
+     * 
+     * @param rating 
+     */
+    private void initIMDb(double rating)
+    {
+        if(rating-Math.floor(rating) < 0.75){
+           if(rating-Math.floor(rating) > 0.25)
+           {
+               half = true;
+           }
+           wholeNumber = (int) Math.floor(rating); 
+       }
+       else
+       {
+           wholeNumber = (int) Math.ceil(rating);
+       }
+    }
     
     /**
      * Sets the gridpanes nodes as stars according to the rating. 

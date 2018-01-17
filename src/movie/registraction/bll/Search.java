@@ -120,11 +120,11 @@ public class Search
 
         sqlOrderBy = setSqlSearchOrder(sqlOrderBy);
         
-        sqlRating = setSqlSearchRating(sqlRating);
+        sqlRating = setSqlSearchRating(sqlRating, sqlSearchCategory, sqlSearchYear);
         
         if(!searchText.isEmpty())
         {  
-            if(sqlSearchCategory.isEmpty() && sqlSearchYear.isEmpty())
+            if(sqlSearchCategory.isEmpty() && sqlSearchYear.isEmpty() && sqlRating.isEmpty())
             {
                 sqlSearch += "WHERE ";
             }
@@ -158,7 +158,7 @@ public class Search
         }
         
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
-
+        System.out.println(sqlString);
         try
         {
             return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
@@ -265,13 +265,29 @@ public class Search
         return sqlOrderBy;
     }
     
-    private String setSqlSearchRating(String sqlRating)
+    private String setSqlSearchRating(String sqlRating, String sqlSearchYear, String sqlSearchCategory)
     {
         if(rating != -1)
         {
-            sqlRating = "Movie.personalRating > ?";
+            if(sqlSearchCategory.isEmpty() && sqlSearchYear.isEmpty())
+            {
+                sqlRating += "WHERE ";
+            }
+            sqlRating += "Movie.personalRating > ?";
         }
         return sqlRating; 
+    }
+
+    public void clearFilters() throws BLLException
+    {
+        System.out.println("HDWHD");
+        categories.clear();
+        year.clear();
+        order = "Title";
+        sort = "Decending";
+        searchText = "";
+        rating = -1;
+        
     }
    
 }

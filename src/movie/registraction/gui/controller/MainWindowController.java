@@ -177,6 +177,19 @@ public class MainWindowController implements Initializable
     private void clearFilters(ActionEvent event)
     {
         model.fxmlClearFilters();
+        model.prepareSearch(tilePane);
+        
+        for(CheckBox cb: model.getGenreList(tilePane))
+        {
+            cb.selectedProperty().set(false);
+        }
+        for(CheckBox cb: model.getYearList(tilePane))
+        {
+            cb.selectedProperty().set(false);
+        }
+        
+        //comBoxSortOrder.getSelectionModel().clearSelection();
+        //comBoxMinRating.getSelectionModel().clearSelection();
     }
 
     /**

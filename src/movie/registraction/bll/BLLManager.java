@@ -475,6 +475,9 @@ public class BLLManager
         }
     }
 
+    //Search
+    
+    
     public void setSearchText(String text)
     {
         search.setSearchText(text);
@@ -508,10 +511,17 @@ public class BLLManager
     public List<Movie> prepareSearch() throws BLLException
     {
   
-            return search.prepareSearch();
+        return search.prepareSearch();
 
     }
-
+    
+    public void clearFilters()
+    {
+        search.clearFilters();
+    }
+    
+    //Categories
+    
     public ObservableList<String> allCategories() throws BLLException
     {
         return categories.allCategories();
@@ -556,5 +566,6 @@ public class BLLManager
     {
         categories.saveMovieCategories();
     }
+
 
 }

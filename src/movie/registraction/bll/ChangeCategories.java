@@ -218,6 +218,11 @@ public class ChangeCategories
         }
     }
 
+    /**
+     * 
+     * @return
+     * @throws BLLException 
+     */
     public ObservableList<String> loadCategories() throws BLLException
     {
         try
