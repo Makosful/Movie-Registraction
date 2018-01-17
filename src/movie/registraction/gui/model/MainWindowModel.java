@@ -665,4 +665,16 @@ public class MainWindowModel
             System.out.println(ex);
         }
     }
+
+    public void setLastView(int movieId)
+    {
+        try
+        {
+            bll.setLastView(movieId);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+    }
 }

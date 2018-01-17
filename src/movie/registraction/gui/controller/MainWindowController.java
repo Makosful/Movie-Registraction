@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,7 +26,6 @@ import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
-import sun.applet.AppletPanel;
 
 /**
  *
@@ -82,10 +79,11 @@ public class MainWindowController implements Initializable
     //<editor-fold defaultstate="collapsed" desc="Different Variables">
     private MainWindowModel model;
 
-
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
+    
+    Movie moviePoster;
 
     VBox vBox;
     Hyperlink imdbURL;
@@ -141,7 +139,6 @@ public class MainWindowController implements Initializable
         acdPanes.setExpandedPane(acdGenre);
         flpGenre.getChildren().setAll(model.getGenreList());
         flpYear.getChildren().setAll(model.getYearList());
-       
 
         //Initializing methods
         comboBoxSetup();
@@ -217,8 +214,7 @@ public class MainWindowController implements Initializable
      * @throws MalformedURLException
      * @throws IOException
      */
-    
-    private void openChangeMovieCategoriesWindow(Movie selectedMovie) throws MalformedURLException, IOException 
+    private void openChangeMovieCategoriesWindow(Movie selectedMovie) throws MalformedURLException, IOException
     {
         File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
@@ -289,8 +285,8 @@ public class MainWindowController implements Initializable
                 genreCategories += movie.getCategories().get(i);
             }
         }
-        //</editor-fold>
 
+        //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="PopOver Content">
         lblMovieTitle = new Label();
         lblGenre = new Label();
@@ -300,9 +296,8 @@ public class MainWindowController implements Initializable
         lblImdbRating = new Label();
         lblYear = new Label();
         imdbURL = new Hyperlink();
-        
-        //</editor-fold>
 
+        //</editor-fold>
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
         lblMovieTitle.setText("Title: " + movie.getMovieTitle());
         lblMovieTitle.setStyle("-fx-text-fill: black");
@@ -389,33 +384,36 @@ public class MainWindowController implements Initializable
 
     /**
      * Loops through all the images in the image view and pulls the moviePoster
-     * meta data. Stores them and allows us to click the moviePoster poster in our image
-     * view and display the Popover info panel which in turn displays all the relevant moviePoster information 
+     * meta data. Stores them and allows us to click the moviePoster poster in
+     * our image
+     * view and display the Popover info panel which in turn displays all the
+     * relevant moviePoster information
      * (apart from production team, actor + actress list and plot)
      * Also allows us to display a context menu where we enable the ability to
      * 1: Play the moviePoster (with systems standard media player)
-     * 2: Edit data for each moviePoster and lastly 3: Delete the moviePoster from the database
+     * 2: Edit data for each moviePoster and lastly 3: Delete the moviePoster
+     * from the database
      */
     private void imageClick()
     {
         model.GetImageViewList().forEach((imageView) ->
         {
-            Movie moviePoster = model.getMovieInfo(imageView);
-
             imageView.setOnMouseClicked((MouseEvent event) ->
             {
                 MouseButton mouseButton = event.getButton();
-                
+
                 if (mouseButton == MouseButton.PRIMARY)
                 {
-                    
+                    // getting movieInfo everytime u click, to stay updated with database.
+                    moviePoster =  model.getMovieInfo(imageView);
                     PopOverSetup(moviePoster, event);
                     System.out.println(moviePoster.getMovieLength());
                     model.contextMenuOpenOrNot(contextMenu);
                 }
-                
+
                 else if (mouseButton == MouseButton.SECONDARY)
                 {
+                    moviePoster = model.getMovieInfo(imageView);
                     closePopOverIfRightClick();
                     contextMenuAction(imageView, moviePoster);
                     model.contextMenuOpenOrNot(contextMenu);
@@ -424,9 +422,10 @@ public class MainWindowController implements Initializable
             });
         });
     }
-    
+
     /**
      * Sets the library
+     *
      * @param event
      */
     @FXML
@@ -445,11 +444,11 @@ public class MainWindowController implements Initializable
         editData = new MenuItem("Edit Categories");
         deleteMovie = new MenuItem("Delete Movie");
         contextMenu.getItems().addAll(playMovie, editData, deleteMovie);
-
     }
 
     /**
      * Making the setOnActions for context menu.
+     *
      * @param imageView
      * @param movie
      */
@@ -463,6 +462,15 @@ public class MainWindowController implements Initializable
             {
                 System.out.println(movie.getFilePath());
                 model.openFileInNative(new File(movie.getFilePath()));
+                model.setLastView(movie.getId());
+                try
+                {
+                    PlayMovieCustomPlayer();
+                }
+                catch (IOException ex)
+                {
+                    System.out.println(ex);
+                }
                 contextMenu.hide();
             }
         });
@@ -498,6 +506,7 @@ public class MainWindowController implements Initializable
 
     /**
      * Deletes movie.
+     *
      * @param imageView
      * @param movie
      */
@@ -518,4 +527,25 @@ public class MainWindowController implements Initializable
             popOver.hide();
         }
     }
+
+    private void PlayMovieCustomPlayer() throws IOException
+    {
+        File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+        Parent root;
+        root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(anchorPane.getScene().getWindow());
+        MediaWindowController controller;
+        controller = fxmlLoader.getController();
+
+        
+        stage.setScene(new Scene(root));
+        stage.show();
+        
+        stage.setMinHeight(700);
+        stage.setMinWidth(825);
+    }
+
 }

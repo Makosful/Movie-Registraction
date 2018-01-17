@@ -12,6 +12,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -464,5 +466,17 @@ public class BLLManager
         localList.removeAll(databaseList);
 
         return localList;
+    }
+    
+    public void setLastView(int movieId) throws BLLException
+    {
+        try
+        {
+            dal.setLastView(movieId);
+        }
+        catch (DALException ex)
+        {
+            throw new BLLException();
+        }
     }
 }
