@@ -469,7 +469,7 @@ public class MainWindowController implements Initializable
                 try
                 {
                     imageClick();
-                    
+
                     PlayMovieCustomPlayer();
                 }
                 catch (IOException ex)
@@ -547,6 +547,9 @@ public class MainWindowController implements Initializable
 
         stage.setScene(new Scene(root));
         stage.show();
+        
+        stage.setMinHeight(700);
+        stage.setMinWidth(825);
     }
 
 }
