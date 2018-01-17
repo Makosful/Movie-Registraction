@@ -580,6 +580,10 @@ public class MainWindowModel
         return idMatchMovie;
     }
 
+    /**
+     * Call to findOldAndBadMovies in bll, 
+     * in order to find old and bad movies to remove
+     */
     public void findOldAndBadMovies()
     {
         try
@@ -624,6 +628,11 @@ public class MainWindowModel
         }
     }
     
+    /**
+     * Passes the movie ID to bll and further down to dataaccess 
+     * in order to delete it in the db
+     * @param id 
+     */
     public void removeMovie(int id)
     {
         try
@@ -648,22 +657,38 @@ public class MainWindowModel
         }
     }
 
-
-    public void setRatingSearch(String selectedItem)
+    /**
+     * passes the rating filter number as string to search class through bll
+     * @param rating 
+     */
+    public void setRatingSearch(String rating)
     {
-        bll.setRating(selectedItem);
+        bll.setRating(rating);
     }
 
+    /**
+     * Passes the sort ASC/DESC to search class through bll
+     * @param selectedItem 
+     */
     public void setSortOrder(String selectedItem)
     {
         bll.setSort(selectedItem);
     }
 
+    /**
+     * Passes the selected order used in search
+     * @param selectedToggle 
+     */
     public void setOrderSearch(String selectedToggle)
     {
         bll.setOrder(selectedToggle);
     }
     
+    /**
+     * Gets the seach result in form of a list of movies, which is looped throuh
+     * adding a new imageView/poster to the tilePane
+     * @param tilePane 
+     */
     public void prepareSearch(TilePane tilePane)
     {
         imageViewList.clear();
@@ -684,6 +709,10 @@ public class MainWindowModel
         }
     }
     
+    /**
+     * Passes the movieId to set the date of the last view
+     * @param movieId 
+     */
     public void setLastView(int movieId)
     {
         try
@@ -696,6 +725,11 @@ public class MainWindowModel
         }
     }
     
+    /**
+     * Sets the imageView/poster dimentions and id
+     * @param imageView
+     * @param movie 
+     */
     public void imageViewSizeAndId(ImageView imageView, Movie movie)
     {
         imageView.setFitHeight(IMAGE_HEIGHT);
@@ -703,16 +737,28 @@ public class MainWindowModel
         imageView.setId("" + movie.getId());
     }
 
+    /**
+     * Passes and sets the movie genre in search through bll
+     * @param categories 
+     */
     public void setSearchCategories(String categories)
     {
         bll.setSearchCategories(categories); 
     }
 
+    /**
+     * Passes and sets the selected filter years
+     * @param years 
+     */
     public void setSearchYears(String years)
     {
         bll.setSearchYears(years);
     }
 
+    /**
+     * Sends the searched text to seach class to prepare a sql query 
+     * @param text 
+     */
     public void setSearchText(String text)
     {
         bll.setSearchText(text);
