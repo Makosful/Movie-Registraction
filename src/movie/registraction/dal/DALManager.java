@@ -1,6 +1,5 @@
 package movie.registraction.dal;
 
-import movie.registraction.dal.exception.DALException;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
+import movie.registraction.dal.exception.DALException;
 
 /**
  *
@@ -17,13 +17,16 @@ import movie.registraction.be.Movie;
 public class DALManager
 {
 
-    MovieDAO mDAO;
+    private MovieDAO mDAO;
+    private LibraryScan lib;
 
-    ObservableList<Path> changes;
     private List<Path> folders;
+    private ObservableList<Path> changes;
 
-    LibraryScan lib;
-
+    /**
+     *
+     * @throws DALException
+     */
     public DALManager() throws DALException
     {
         try
@@ -216,11 +219,14 @@ public class DALManager
             return config.equalsIgnoreCase(":\\WindowsApps");
         }
     }
+
     /**
      * IF fits with the filter, returns true.
-     * @param file 
+     *
+     * @param file
      * @param filter
-     * @return 
+     *
+     * @return
      */
     private boolean positiveFilter(File file, ArrayList<String> filter)
     {
@@ -233,9 +239,11 @@ public class DALManager
         }
         return false;
     }
+
     /**
      * @return a list of movie objects.
-     * @throws DALException 
+     *
+     * @throws DALException
      */
     public ObservableList<Movie> getAllMovies() throws DALException
     {
@@ -384,7 +392,6 @@ public class DALManager
         mDAO.removeMovie(movieId);
     }
 
-
     public List<Movie> searchMovies(String sqlString, List<String> categories, HashMap<String, String> year, int rating, String searchText, boolean searchNumeric) throws DALException
     {
         return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
@@ -399,16 +406,17 @@ public class DALManager
     {
         return this.changes;
     }
-    
-     /**
+
+    /**
      * Sets when you last saw the video.
+     *
      * @param movieId
-     * @throws DALException 
+     *
+     * @throws DALException
      */
-    public void setLastView(int movieId) throws DALException 
-    { 
-            mDAO.setLastView(movieId);
+    public void setLastView(int movieId) throws DALException
+    {
+        mDAO.setLastView(movieId);
     }
-        
 
 }
