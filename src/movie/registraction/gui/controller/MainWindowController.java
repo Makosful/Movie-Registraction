@@ -831,10 +831,11 @@ public class MainWindowController implements Initializable
             for(File chosenFile : model.chooseFile())
             {
                 String nameOfMovie = model.splitDot(chosenFile.getName());
-
-                if (!model.movieAlreadyExisting(nameOfMovie.toLowerCase()))
+                String[] metaData = model.getMovieMetaData(nameOfMovie);
+                
+                if (!model.movieAlreadyExisting(metaData[0].toLowerCase()))
                 {
-                    model.addMovie(nameOfMovie, chosenFile.getPath());
+                    model.addMovie(metaData, chosenFile.getPath());
                     String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
                     imgPath = "https:" + imgPath;
                     setPictures(chosenFile, imgPath);

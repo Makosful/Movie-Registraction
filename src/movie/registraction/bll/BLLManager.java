@@ -472,11 +472,13 @@ public class BLLManager
     public boolean movieAlreadyExisting(String title) throws BLLException
     {
         boolean isAlreadyInDataBase = false;
-
+        
         for (Movie m : getAllMovies())
         {
+            System.out.println(m.getMovieTitle());
             if (m.getMovieTitle().toLowerCase().equals(title.toLowerCase()))
             {
+                
                 isAlreadyInDataBase = true;
             }
 

@@ -103,7 +103,8 @@ public class MainWindowModel
                 updateLibrary.forEach((filePath) ->
                 {
                     String fileName = new File(filePath).toPath().getFileName().toString();
-                    this.addMovie(fileName, filePath);
+                    String[] metaData = getMovieMetaData(fileName);
+                    this.addMovie(metaData, filePath);
                 });
             }
         }
@@ -113,26 +114,17 @@ public class MainWindowModel
     }
 
     /**
-     * Makes a search on movies titles
+     * Sends the movie information to dal 
      *
-     * @param title    The title of the movie to add
+     * @param metaData
      * @param filePath The local path of the movie to add
      */
-    public void addMovie(String title, String filePath)
+    public void addMovie(String[] metaData, String filePath)
     {
-        // Replace all the whitespaces with plus signs to make it URL friendly
-        title = title.replaceAll(" ", "+");
 
-        // Uses the API url + our fixed search index to display us all the
-        // metadata of the movie searched for - if possible.
-        URL searchLink;
         try
         {
-            searchLink = bll.getOmdbTitleResult(title);
-
-            String[] metaData = bll.getSearchMetaData(searchLink);
             bll.addMovie(metaData, filePath);
-
         }
         catch (BLLException ex)
         {
@@ -140,11 +132,43 @@ public class MainWindowModel
             System.out.println("Could not add the movie in the database");
             System.out.println(ex);
         }
+
+    }
+
+    /**
+     * Calls to getOmdbTitleResult method that creates the searchlink and
+     * passes it to getSearchMetaData method which gets the movie metadata 
+     * 
+     * @param title The title of the movie to add
+     * @return String array of movie metadata
+     */
+    public String[] getMovieMetaData(String title)
+    {
+        String[] metaData = new String[7];
+        try
+        {
+            // Replace all the whitespaces with plus signs to make it URL friendly
+            title = title.replaceAll(" ", "+");
+
+            // Uses the API url + our fixed search index to display us all the
+            // metadata of the movie searched for - if possible.
+            URL searchLink;
+            
+            searchLink = bll.getOmdbTitleResult(title);
+            
+            metaData = bll.getSearchMetaData(searchLink);
+        }
+        catch (BLLException ex)
+        {
+            System.out.println("Could not retrieve metadata");
+        }
+        
+        return metaData;
     }
 
     /**
      * Clears the filters.
-     * Not in use
+     * 
      */
     public void fxmlClearFilters()
     {
@@ -154,6 +178,7 @@ public class MainWindowModel
         }
         catch (BLLException ex)
         {
+            System.out.println("Could not clear filters");
         }
     }
 
