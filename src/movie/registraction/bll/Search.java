@@ -159,13 +159,13 @@ public class Search
             {
                 sqlSearch += "WHERE ";
             }
-            
+            //if the seachtext is numeric only seach in years
             if(isNumeric(searchText))
             {
                 sqlSearch += "Movie.year = ?";
                 searchNumeric = true;
             }
-            else
+            else // if the seachtext is not numeric only seach in categories and movie titles
             {
                 sqlSearch += "(Category.name LIKE ? OR Movie.name LIKE ?)";
                 searchNumeric = false;
@@ -248,7 +248,8 @@ public class Search
             {   
                 sqlSearchCategory += " AND ";
             }
-
+            //subselect to select movies that contains all the chosen categories
+            //and not only one of the categories
             sqlSearchCategory += "EXISTS( SELECT CatMovie.categoryId, CatMovie.movieId "
                                + "FROM CatMovie JOIN Category ON Category.id = CatMovie.categoryId"
                                + " WHERE Movie.id = CatMovie.movieId AND Category.name IN (?) )" ;
@@ -335,7 +336,7 @@ public class Search
             {
                 sqlRating += "WHERE ";
             }
-            
+            //gets the movies with a rating above the chosen value 
             sqlRating += "Movie.personalRating > ?";
         }
         return sqlRating; 
