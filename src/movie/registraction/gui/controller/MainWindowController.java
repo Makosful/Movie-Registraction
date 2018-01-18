@@ -8,7 +8,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -115,11 +118,20 @@ public class MainWindowController implements Initializable
     Label lblLastView;
     Label lblIMDBId;
     //</editor-fold>
-
+    
+    //<editor-fold defaultstate="collapsed" desc="JFXCheckboxlists">
+    private final ObservableList<JFXCheckBox> genres;
+    private final ObservableList<JFXCheckBox> years;
+//</editor-fold>
+   
+    
     public MainWindowController()
     {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 200;
+       
+        years = FXCollections.observableArrayList();
+        genres = FXCollections.observableArrayList();
     }
     /**
      * Our initializer, which is run when the program has its initial start up.
@@ -186,11 +198,11 @@ public class MainWindowController implements Initializable
         model.fxmlClearFilters();
         prepareSearch();
 
-        for (CheckBox cb : model.getGenreList())
+        for (CheckBox cb : getGenreList())
         {
             cb.selectedProperty().set(false);
         }
-        for (CheckBox cb : model.getYearList())
+        for (CheckBox cb : getYearList())
         {
             cb.selectedProperty().set(false);
         }
@@ -290,7 +302,7 @@ public class MainWindowController implements Initializable
      */
     private void setChosenFilesWithPicture()
     {
-        model.chooseFile(tilePane);
+        chooseFiles();
         imageClick();
     }
 
@@ -448,7 +460,7 @@ public class MainWindowController implements Initializable
      */
     private void imageClick()
     {
-        model.getImageViewList().forEach((imageView) ->
+        imageViewList.forEach((imageView) ->
         {
             imageView.setOnMouseClicked((MouseEvent event) ->
             {
@@ -535,7 +547,7 @@ public class MainWindowController implements Initializable
             @Override
             public void handle(ActionEvent event)
             {
-                deleteMovie(imageView, movie);
+                removeMovie(imageView, movie);
                 contextMenu.hide();
             }
         });
@@ -550,10 +562,10 @@ public class MainWindowController implements Initializable
      * @param imageView The ImageView to delete
      * @param movie     The Movie within
      */
-    private void deleteMovie(ImageView imageView, Movie movie)
+    private void removeMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
-        model.removeMovie(movie.getId(), imageView);
+        model.removeMovie(movie.getId(), imageView, imageViewList);
        
     }
 
@@ -660,10 +672,10 @@ public class MainWindowController implements Initializable
     {
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreList());
-        flpYear.getChildren().setAll(model.getYearList());
+        flpGenre.getChildren().setAll(getGenreList());
+        flpYear.getChildren().setAll(getYearList());
 
-        for (CheckBox cb : model.getGenreList())
+        for (CheckBox cb : getGenreList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
@@ -676,7 +688,7 @@ public class MainWindowController implements Initializable
             });
         }
 
-        for (CheckBox cb : model.getYearList())
+        for (CheckBox cb : getYearList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
@@ -741,5 +753,99 @@ public class MainWindowController implements Initializable
                 tilePane.getChildren().add(imageView);
             }
         }
+    
+            /**
+     * Returns the list of CheckBoxes for the years
+     *
+     * @return Returns a List of JFXCheckBoxes with all the
+     */
+    public ObservableList<JFXCheckBox> getYearList()
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            int j = 1900 + (i * 10);
+            int q = 1900 + ((1 + i) * 10);
+            JFXCheckBox cb = new JFXCheckBox(j + "-" + q);
+
+            years.add(cb);
+        }
+
+        return years;
     }
+    
+        /**
+     * Gets the list of Genres
+     *
+     * @return Returns a List of JFXCheckBoxes with all the genres
+     */
+    public ObservableList<JFXCheckBox> getGenreList()
+    {
+            for (String category : model.allCategories())
+            {
+                JFXCheckBox cb = new JFXCheckBox(category);
+
+                genres.add(cb);
+            }
+        return genres;
+    }
+    
+    
+    /**
+     * Making imageViews, setting their sizes, adding them to an arraylist,
+     * adding them to our tilepane, and finally giving the imageviews an id,
+     * that will refer to the actual movie.
+     *
+     * @param tilePane The tilePane to set the image into
+     * @param image    The picture to set in
+     * @param url      The URL of the image
+     */
+    public void setPictures(File image, String url)
+    {
+        ImageView imageView = new ImageView(url);
+        imageView.setFitHeight(IMAGE_HEIGHT);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageViewList.add(imageView);
+
+        tilePane.getChildren().add(imageView);
+        model.setImageId(image, imageView);
+    }
+    
+    private void chooseFiles()
+    {
+        if(model.chooseFile() != null)
+        {
+            for(File chosenFile : model.chooseFile())
+            {
+            String nameOfMovie = model.splitDot(chosenFile.getName());
+
+                    if (!model.movieAlreadyExisting(nameOfMovie.toLowerCase()))
+                    {
+
+                        model.addMovie(nameOfMovie, chosenFile.getPath());
+                        String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
+                        imgPath = "https:" + imgPath;
+                        setPictures(chosenFile, imgPath);
+
+                    }
+                    else
+                    {
+                        alertButtonMovieAlreadyExist();
+                    }
+                }
+        }
+    }
+    
+    private void alertButtonMovieAlreadyExist()
+    {
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Selected Movie(s) has already been added",
+                                okButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == okButton)
+        {
+            alert.close();
+        }
+    }
+}
 
