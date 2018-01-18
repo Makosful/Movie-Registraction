@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -57,14 +58,17 @@ public class MediaWindowController implements Initializable
 
     private Media media;
     private MediaPlayer mediaPlayer;
+    private Duration duration;
+
+    private boolean mediaMuted;
     private boolean isPlaying;
     private boolean mediaPlayable;
-    private boolean mediaMuted;
-    private double MovieLengthMillis;
-    private Duration duration;
-    private String movieLength;
 
-    private MainWindowModel mdl;
+    private Image playImg;
+    private Image pauseImg;
+    private Image stopImg;
+    private Image speakerOnImg;
+    private Image speakerOffImg;
 
     @FXML
     private AnchorPane anchorPane;
@@ -75,6 +79,12 @@ public class MediaWindowController implements Initializable
     @FXML
     private Label lblVolume;
     private ImageView imageView;
+    @FXML
+    private JFXButton btnStop;
+    @FXML
+    private JFXButton btnMute;
+    @FXML
+    private JFXButton btnFullscreen;
 
     /**
      * Initializes the controller class.
@@ -85,17 +95,14 @@ public class MediaWindowController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        setupMediaControls();
+
         volumeSlider.setValue(100);
-        volumeSlider.setDisable(true);
-        progressSlider.setDisable(true);
-        lblTimer.setDisable(true);
-        lblVolume.setDisable(true);
 
         volumeSlider.getParent().getParent().toFront();
 
         progressSliderSetup();
 
-        //MediaSetup(mdl);
         MediaDoubleClick();
 
         splitPane.setDividerPosition(0, 0.95);
@@ -138,44 +145,29 @@ public class MediaWindowController implements Initializable
             {
                 progressSliderUpdater();
             });
-
-//            MovieLengthMillis = mediaPlayer.getTotalDuration().toMillis();
-//
-//            System.out.println("Length of movie (before format): " + MovieLengthMillis);
-//
-//            movieLength = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours((long) MovieLengthMillis),
-//                                        TimeUnit.MILLISECONDS.toMinutes((long) MovieLengthMillis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours((long) MovieLengthMillis)),
-//                                        TimeUnit.MILLISECONDS.toSeconds((long) MovieLengthMillis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) MovieLengthMillis)));
-//
-//            System.out.println("Length of movie: " + movieLength);
             mediaPlayable = true;
         });
 
         mediaPlayer.setOnEndOfMedia(() ->
         {
-            mediaPlayer.stop();
             resetControls();
+            mediaPlayer.pause();
         });
     }
 
     @FXML
     private void moviePlayPause(ActionEvent event)
     {
-        volumeSlider.setDisable(false);
-        progressSlider.setDisable(false);
-        lblTimer.setDisable(false);
-        lblVolume.setDisable(false);
-
         if (!isPlaying && mediaPlayable)
         {
             mediaPlayer.play();
-            btnPlayPause.setText("Pause");
+            btnPlayPause.setGraphic(new ImageView(pauseImg));
             isPlaying = !isPlaying;
         }
         else if (isPlaying)
         {
             mediaPlayer.pause();
-            btnPlayPause.setText("Play");
+            btnPlayPause.setGraphic(new ImageView(playImg));
             isPlaying = !isPlaying;
         }
     }
@@ -183,17 +175,22 @@ public class MediaWindowController implements Initializable
     @FXML
     private void movieStop(ActionEvent event)
     {
-        resetControls();
         mediaPlayer.pause();
         mediaPlayer.seek(mediaPlayer.getStartTime());
+        resetControls();
+    }
+
+    public void movieTerminate()
+    {
+        mediaPlayer.stop();
     }
 
     private void resetControls()
     {
+        lblTimer.setText(formatTime(mediaPlayer.getStartTime(), duration));
+        System.out.println(duration);
         progressSlider.setValue(0.0);
         btnPlayPause.setText("Play");
-        lblTimer.setText("00:00:00 / " + movieLength);
-        System.out.println(movieLength);
     }
 
     @FXML
@@ -214,13 +211,16 @@ public class MediaWindowController implements Initializable
         if (!mediaMuted)
         {
             mediaPlayer.setMute(true);
-            volumeSlider.setDisable(true);
+            btnMute.setGraphic(new ImageView(speakerOffImg));
+            volumeSlider.setOpacity(0.5);
             mediaMuted = !mediaMuted;
         }
         else if (mediaMuted)
         {
             mediaPlayer.setMute(false);
-            volumeSlider.setDisable(false);
+            btnMute.setGraphic(new ImageView(speakerOnImg));
+            volumeSlider.setOpacity(1);
+
             mediaMuted = !mediaMuted;
         }
     }
@@ -349,5 +349,23 @@ public class MediaWindowController implements Initializable
     void setImageView(ImageView imageView)
     {
         this.imageView = imageView;
+    }
+
+    private void setupMediaControls()
+    {
+        playImg = new Image(getClass().getResourceAsStream("/movie/registraction/rsx/play-button.png"));
+        pauseImg = new Image(getClass().getResourceAsStream("/movie/registraction/rsx/pause-button.png"));
+        stopImg = new Image(getClass().getResourceAsStream("/movie/registraction/rsx/stop-button.png"));
+        speakerOnImg = new Image(getClass().getResourceAsStream("/movie/registraction/rsx/speaker-on.png"));
+        speakerOffImg = new Image(getClass().getResourceAsStream("/movie/registraction/rsx/speaker-off.png"));
+
+        btnPlayPause.setGraphic(new ImageView(playImg));
+        btnPlayPause.setText("");
+
+        btnStop.setGraphic(new ImageView(stopImg));
+        btnStop.setText("");
+
+        btnMute.setGraphic(new ImageView(speakerOnImg));
+        btnMute.setText("");
     }
 }
