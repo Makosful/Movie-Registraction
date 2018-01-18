@@ -24,6 +24,7 @@ public class DALManager
     private ObservableList<Path> changes;
 
     /**
+     * Constructor
      *
      * @throws DALException
      */
@@ -51,7 +52,7 @@ public class DALManager
      *
      * @param path The String containing the path to the library
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to write the file
      */
     public void saveDirectory(String path) throws DALException
     {
@@ -69,15 +70,15 @@ public class DALManager
     /**
      * Loads the saved library
      *
-     * @param path
+     * @param name The name of the file to read
      *
      * @return A String object containing the path to the library
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to read the file
      */
-    public String loadDirectory(String path) throws DALException
+    public String loadDirectory(String name) throws DALException
     {
-        try (BufferedReader br = new BufferedReader(new FileReader(path)))
+        try (BufferedReader br = new BufferedReader(new FileReader(name)))
         {
             String s = br.readLine();
 
@@ -99,11 +100,12 @@ public class DALManager
      * This method will look through the specified library folder and retrive
      * all items with the ending .jpg and .png
      *
-     * @param filter
+     * @param filter A List of filters to allow through
      *
      * @return An ArrayList containing paths
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to go through the
+     *                      folders
      */
     public ArrayList<Path> getMovieList(ArrayList<String> filter) throws DALException
     {
@@ -116,6 +118,9 @@ public class DALManager
         return list;
     }
 
+    /**
+     * Puts a watcher on the library
+     */
     public void setDirectoryWatch()
     {
         //
@@ -137,12 +142,15 @@ public class DALManager
     }
 
     /**
-     * Uses file.listFiles()
+     * Loops through all folders and and them to a list
+     * Setting startPath as the root, it'll loop through all files, as well as
+     * all the files in subfolders and add them to a list
      *
-     * @param startPath
-     * @param list
+     * @param startPath The root folder from where to start
+     * @param list      The list which will get all the files added to it
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access a
+     *                      file/folder
      */
     private void fileTreeSearch(Path startPath,
                                 ArrayList<Path> list,
@@ -161,11 +169,9 @@ public class DALManager
             }
             else if (systemFilter(file))
             {
-                // Do nothing
             }
             else if (file.isDirectory())
             {
-//                System.out.println("Going into folder");
                 fileTreeSearch(file.toPath(), list, filter);
             }
             else if (positiveFilter(file, filter))
@@ -181,6 +187,8 @@ public class DALManager
      *
      * Returns true if any system or drive specific file is given. Returns false
      * is none has been found
+     *
+     * Filters are hardcoded, do to lacking any other method
      *
      * @param file The file to check for
      *
@@ -256,6 +264,7 @@ public class DALManager
      * movie row id, which is used to inserting the movies categories
      *
      * @param movieMetaData
+     * @param filePath
      *
      * @throws DALException
      */
