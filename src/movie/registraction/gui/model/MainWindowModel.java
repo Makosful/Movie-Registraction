@@ -18,10 +18,10 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
-import movie.registraction.bll.BLLException;
+import movie.registraction.bll.exception.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.Rating;
-import movie.registraction.dal.DALException;
+import movie.registraction.dal.exception.DALException;
 
 /**
  *
@@ -195,7 +195,7 @@ public class MainWindowModel
      *
      * @return all categories in observable list
      *
-     * @throws movie.registraction.bll.BLLException
+     * @throws movie.registraction.bll.exception.BLLException
      */
     public ObservableList<String> loadCategories() throws BLLException
     {
@@ -592,28 +592,6 @@ public class MainWindowModel
         }
 
         return years;
-    }
-
-    /**
-     * Tries to match ids of image and movie.
-     *
-     * @param imageView The ImageView which Movie to find
-     *
-     * @return Returns the Movie object with the same ID as the provided
-     *         ImageView
-     */
-    public Movie getMovieIdMatch(ImageView imageView)
-    {
-        Movie idMatchMovie = null;
-        try
-        {
-            idMatchMovie = bll.getMovieInfo(imageView);
-        }
-        catch (BLLException ex)
-        {
-            System.out.println(ex);
-        }
-        return idMatchMovie;
     }
 
     /**

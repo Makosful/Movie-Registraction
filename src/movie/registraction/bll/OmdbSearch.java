@@ -1,5 +1,6 @@
 package movie.registraction.bll;
 
+import movie.registraction.bll.exception.BLLException;
 import java.net.MalformedURLException;
 import java.net.URL;
 

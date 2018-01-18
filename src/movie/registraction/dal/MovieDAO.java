@@ -5,6 +5,7 @@
  */
 package movie.registraction.dal;
 
+import movie.registraction.dal.exception.DALException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

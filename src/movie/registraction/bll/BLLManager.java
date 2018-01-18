@@ -1,5 +1,6 @@
 package movie.registraction.bll;
 
+import movie.registraction.bll.exception.BLLException;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,7 +19,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.DALException;
+import movie.registraction.dal.exception.DALException;
 import movie.registraction.dal.DALManager;
 
 /**

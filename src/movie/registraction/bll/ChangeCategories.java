@@ -5,6 +5,7 @@
  */
 package movie.registraction.bll;
 
+import movie.registraction.bll.exception.BLLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.DALException;
+import movie.registraction.dal.exception.DALException;
 import movie.registraction.dal.DALManager;
 
 /**
@@ -91,7 +92,7 @@ public class ChangeCategories
      * The removeMovieCategory list and chosenMovieCategory list is then looped
      * through,
      * adding/removing the categories in the database to this specific movie.
-     * @throws movie.registraction.dal.DALException
+     * @throws movie.registraction.dal.exception.DALException
      */
     public void saveMovieCategories() throws BLLException 
     {

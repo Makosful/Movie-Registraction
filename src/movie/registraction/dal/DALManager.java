@@ -1,5 +1,6 @@
 package movie.registraction.dal;
 
+import movie.registraction.dal.exception.DALException;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;

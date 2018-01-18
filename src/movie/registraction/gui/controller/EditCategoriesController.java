@@ -17,8 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import movie.registraction.bll.BLLException;
-import movie.registraction.dal.DALException;
+import movie.registraction.bll.exception.BLLException;
+import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**

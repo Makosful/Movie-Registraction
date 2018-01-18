@@ -6,6 +6,7 @@
 package movie.registraction.bll;
 
 
+import movie.registraction.bll.exception.BLLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.DALException;
+import movie.registraction.dal.exception.DALException;
 import movie.registraction.dal.DALManager;
 
 
