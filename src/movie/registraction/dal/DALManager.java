@@ -17,11 +17,11 @@ import movie.registraction.dal.exception.DALException;
 public class DALManager
 {
 
-    private MovieDAO mDAO;
-    private LibraryScan lib;
+    private final MovieDAO mDAO;
+    private final LibraryScan lib;
 
-    private List<Path> folders;
-    private ObservableList<Path> changes;
+    private final List<Path> folders;
+    private final ObservableList<Path> changes;
 
     /**
      * Constructor
@@ -30,11 +30,11 @@ public class DALManager
      */
     public DALManager() throws DALException
     {
-            mDAO = new MovieDAO();
-            this.lib = new LibraryScan();
+        mDAO = new MovieDAO();
+        this.lib = new LibraryScan();
 
-            this.changes = lib.getObsList();
-            this.folders = new ArrayList();
+        this.changes = lib.getObsList();
+        this.folders = new ArrayList();
     }
 
     /**
@@ -222,12 +222,13 @@ public class DALManager
     }
 
     /**
-     * IF fits with the filter, returns true.
+     * Compares the extension of the file with the filters list.
      *
-     * @param file
-     * @param filter
+     * @param file   The file to compare
+     * @param filter The list of extensions to compare to
      *
-     * @return
+     * @return If the file's extension matches any on the list, return try.
+     *         Otherwise return false
      */
     private boolean positiveFilter(File file, ArrayList<String> filter)
     {
@@ -244,7 +245,7 @@ public class DALManager
     /**
      * @return a list of movie objects.
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it can't access the database
      */
     public ObservableList<Movie> getAllMovies() throws DALException
     {
@@ -253,20 +254,20 @@ public class DALManager
 
     /**
      * Adds a movie with the supplied metadata, the addmovie returns the
-     * inserted
-     * movie row id, which is used to inserting the movies categories
+     * inserted movie row id, which is used to inserting the movies categories
      *
-     * @param movieMetaData
-     * @param filePath
+     * @param meta     A String Array containing the MetaData of a movie
+     * @param filePath The local file path for the movie
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
      */
-    public void addMovie(String[] movieMetaData, String filePath) throws DALException
+    public void addMovie(String[] meta, String filePath) throws DALException
     {
 
-        int id = mDAO.addMovie(movieMetaData, filePath);
+        int id = mDAO.addMovie(meta, filePath);
 
-        String[] metaMovieCategories = movieMetaData[5].split(" ");
+        String[] metaMovieCategories = meta[5].split(" ");
         for (String cat : metaMovieCategories)
         {
             mDAO.addMovieCategory(id, cat);
@@ -276,14 +277,14 @@ public class DALManager
     /**
      * Add a change listener to a folder and all sub folders
      *
-     * @param folders
+     * @param root The root of the folders to watch
      */
-    public void directoryWatcher(ArrayList folders)
+    public void directoryWatcher(ArrayList root)
     {
         System.out.println("Before thread");
 
         // Sets the folders in the library scanner
-        this.lib.setFolders(folders);
+        this.lib.setFolders(root);
 
         // Initiates the thread the scanner will run on
         Thread scan;
@@ -378,31 +379,61 @@ public class DALManager
      * This method is to get a imgPath from a specific movie. So that it can be
      * thrown into the tilepane.
      *
-     * @param movieName
+     * @param title The title of the Movie
      *
-     * @return
+     * @return Returns a String containing the URL for the movie image
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the API
      */
-    public String getSpecificMovieImage(String movieName) throws DALException
+    public String getSpecificMovieImage(String title) throws DALException
     {
-        return mDAO.getSpecificMovieImage(movieName);
+        return mDAO.getSpecificMovieImage(title);
     }
 
-    public void removeMovie(int movieId) throws DALException
+    /**
+     * Removes a Movie from the database
+     *
+     * @param id The ID of the Movie to remove
+     *
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
+     */
+    public void removeMovie(int id) throws DALException
     {
-        mDAO.removeMovie(movieId);
+        mDAO.removeMovie(id);
     }
 
-    public List<Movie> searchMovies(String sqlString, List<String> categories, HashMap<String, String> year, int rating, String searchText, boolean searchNumeric) throws DALException
+    /**
+     * Search the database for Movies matching the criteria
+     *
+     * @param sqlString     TODO
+     * @param categories    TODO
+     * @param year          TODO
+     * @param rating        TODO
+     * @param searchText    TODO
+     * @param searchNumeric TODO
+     *
+     * @return Returns a List of all Movies matching the cireteria
+     *
+     * @throws DALException Thorws an exception if it fails to access the
+     *                      database
+     */
+    public List<Movie> searchMovies(String sqlString,
+                                    List<String> categories,
+                                    HashMap<String, String> year,
+                                    int rating,
+                                    String searchText,
+                                    boolean searchNumeric)
+            throws DALException
     {
         return mDAO.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
     }
 
     /**
-     * Retrieves the list that hold the changes
+     * Gets the list holding the Paths to the files changed in the library
      *
-     * @return
+     * @return Returns an ObservableList of Paths with all the files changed in
+     *         the library
      */
     public ObservableList<Path> getChangeList()
     {
@@ -412,13 +443,14 @@ public class DALManager
     /**
      * Sets when you last saw the video.
      *
-     * @param movieId
+     * @param id The ID of the movie to change
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
      */
-    public void setLastView(int movieId) throws DALException
+    public void setLastView(int id) throws DALException
     {
-        mDAO.setLastView(movieId);
+        mDAO.setLastView(id);
     }
 
 }
