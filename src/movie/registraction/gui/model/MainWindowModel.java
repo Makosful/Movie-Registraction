@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -20,7 +18,9 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
-import movie.registraction.bll.*;
+import movie.registraction.bll.BLLException;
+import movie.registraction.bll.BLLManager;
+import movie.registraction.bll.Rating;
 import movie.registraction.dal.DALException;
 
 /**
@@ -46,8 +46,11 @@ public class MainWindowModel
 
     private final ArrayList<String> extensionList;
 
-
-
+    /**
+     * The constructor
+     *
+     * @throws DALException
+     */
     public MainWindowModel() throws DALException
     {
         IMAGE_HEIGHT = 200;
@@ -65,7 +68,7 @@ public class MainWindowModel
         genres = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
         changeList = bll.getChangeList();
-       
+
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
 
@@ -81,7 +84,7 @@ public class MainWindowModel
     }
 
     /**
-     * Sets up a listener to the List connected to the Library Watcher
+     * Sets up a listner on the library
      */
     private void setupLibraryListener()
     {
@@ -96,6 +99,9 @@ public class MainWindowModel
         });
     }
 
+    /**
+     * Updates the library
+     */
     private void updateLibrary()
     {
         try
@@ -124,19 +130,20 @@ public class MainWindowModel
     /**
      * Makes a search on movies titles
      *
-     * @param text
+     * @param title    The title of the movie to add
+     * @param filePath The local path of the movie to add
      */
-    public void addMovie(String text, String filePath)
+    public void addMovie(String title, String filePath)
     {
         // Replace all the whitespaces with plus signs to make it URL friendly
-        text = text.replaceAll(" ", "+");
+        title = title.replaceAll(" ", "+");
 
         // Uses the API url + our fixed search index to display us all the
         // metadata of the movie searched for - if possible.
         URL searchLink;
         try
         {
-            searchLink = bll.getOmdbTitleResult(text);
+            searchLink = bll.getOmdbTitleResult(title);
 
             String[] metaData = bll.getSearchMetaData(searchLink);
             bll.addMovie(metaData, filePath);
@@ -156,14 +163,19 @@ public class MainWindowModel
      */
     public void fxmlClearFilters()
     {
-        bll.clearFilters();
+        try
+        {
+            bll.clearFilters();
+        }
+        catch (BLLException ex)
+        {
+        }
     }
 
     /**
      * Gets all categories from changeCategories class
      *
-     * @return
-     *
+     * @return Returns a List of Strings with all categories
      */
     public ObservableList<String> getAllCategories()
     {
@@ -182,16 +194,19 @@ public class MainWindowModel
      * Gets all categories, is used in EditCategoryController
      *
      * @return all categories in observable list
+     *
+     * @throws movie.registraction.bll.BLLException
      */
     public ObservableList<String> loadCategories() throws BLLException
     {
-            return bll.loadCategories();
+        return bll.loadCategories();
     }
 
     /**
+     * Adds a category
      * Sends the category string to chosenCategories class to be added
      *
-     * @param category
+     * @param category The category to add
      */
     public void addChosenCategory(String category)
     {
@@ -199,9 +214,10 @@ public class MainWindowModel
     }
 
     /**
+     * Removes a category
      * Sends the category string to chosenCategories class to be removed
      *
-     * @param category
+     * @param category The category to remove
      */
     public void removeChosenCategory(String category)
     {
@@ -223,13 +239,13 @@ public class MainWindowModel
             System.out.println("Could not save categories");
         }
 
-        
     }
 
     /**
+     * Gets the categories for a movie
      * Gets the allready exsisting categories for a specific movie
      *
-     * @param movie
+     * @param movie The movie which category to get
      *
      * @return Observable list of category strings
      */
@@ -239,10 +255,11 @@ public class MainWindowModel
     }
 
     /**
+     * Adds a category to a movie
      * Sends the category string to chosenCategories class to be added for a
      * movie
      *
-     * @param category
+     * @param category The category to add
      */
     public void addChosenMovieCategory(String category)
     {
@@ -250,10 +267,11 @@ public class MainWindowModel
     }
 
     /**
+     * Removes a category from a movie
      * Sends the category string to chosenCategories class to be removed for a
      * movie
      *
-     * @param category
+     * @param category The category to remove
      */
     public void removeChosenMovieCategory(String category)
     {
@@ -273,7 +291,7 @@ public class MainWindowModel
         {
             System.out.println("Could not save the movie categories");
         }
-        
+
     }
 
     /**
@@ -307,10 +325,7 @@ public class MainWindowModel
     /**
      * Setting the tile setup.
      *
-     * @param tilePane
-     * @param fileList
-     *
-     * @throws movie.registraction.dal.DALException
+     * @param tilePane The TilePane which to setup
      */
     public void chooseFile(TilePane tilePane)
     {
@@ -371,9 +386,18 @@ public class MainWindowModel
         }
     }
 
-    public void setPictures(TilePane tilePane, File chosenFile, String imgUrl) throws DALException
+    /**
+     * Sets the picture in the TilePane
+     *
+     * @param tilePane The tilePane to set the image into
+     * @param image    The picture to set in
+     * @param url      The URL of the image
+     *
+     * @throws DALException
+     */
+    public void setPictures(TilePane tilePane, File image, String url) throws DALException
     {
-        ImageView imageView = new ImageView(imgUrl);
+        ImageView imageView = new ImageView(url);
         imageView.setFitHeight(IMAGE_HEIGHT);
         imageView.setFitWidth(IMAGE_WIDTH);
         imageViewList.add(imageView);
@@ -381,7 +405,7 @@ public class MainWindowModel
         tilePane.getChildren().add(imageView);
         try
         {
-            bll.setImageId(chosenFile, imageView);
+            bll.setImageId(image, imageView);
         }
         catch (BLLException ex)
         {
@@ -393,17 +417,17 @@ public class MainWindowModel
      * Closes the menu incase the context menu is open
      * or else the user clicks normally.
      *
-     * @param contextMenu
+     * @param cm The ContextMenu to close
      */
-    public void closeMenuOrClick(ContextMenu contextMenu)
+    public void closeMenuOrClick(ContextMenu cm)
     {
-        if (!contextMenu.isShowing())
+        if (!cm.isShowing())
         {
             System.out.println("You clicked on the picture.");
         }
         else
         {
-            contextMenu.hide();
+            cm.hide();
         }
     }
 
@@ -411,14 +435,14 @@ public class MainWindowModel
      * Checks whether contextmenu is open or not, if yes, it closes.
      * Incase user dobbleclicks several times, so it doesnt stack.
      *
-     * @param contextMenu
+     * @param cm The ContextMenu to check
      */
-    public void contextMenuOpenOrNot(ContextMenu contextMenu)
+    public void contextMenuOpenOrNot(ContextMenu cm)
     {
         // So the contextMenu doesnt stack.
-        if (contextMenu.isShowing())
+        if (cm.isShowing())
         {
-            contextMenu.hide();
+            cm.hide();
             System.out.println("closed menu");
         }
     }
@@ -468,10 +492,10 @@ public class MainWindowModel
     /**
      * Sets up a new rating instance with the given values
      *
-     * @param rating
-     * @param ratingType
-     * @param gridPaneRating
-     * @param lblRating
+     * @param rating         The rating to set, as a double
+     * @param ratingType     The type of rating
+     * @param gridPaneRating The GridPane in which to set the rating
+     * @param lblRating      The label in which to set the rating
      */
     public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating)
     {
@@ -488,7 +512,7 @@ public class MainWindowModel
     /**
      * Gets the movie list
      *
-     * @return
+     * @return Returns a List of Paths to all the movies
      */
     public ObservableList<Path> getMovieList()
     {
@@ -498,13 +522,18 @@ public class MainWindowModel
     /**
      * Returns list of the imageviews. // The images the user puts in.
      *
-     * @return
+     * @return Return a List of ImageViews
      */
-    public List<ImageView> GetImageViewList()
+    public List<ImageView> getImageViewList()
     {
         return imageViewList;
     }
 
+    /**
+     * Gets the list of all movies
+     *
+     * @return Returns a List with all Movies
+     */
     public ObservableList<Movie> getAllMovies()
     {
         ObservableList<Movie> movies = FXCollections.observableArrayList();
@@ -522,16 +551,16 @@ public class MainWindowModel
     /**
      * Gets the list of Genres
      *
-     * @return Observablelist of checkboxes
+     * @return Returns a List of JFXCheckBoxes with all the genres
      */
-    public ObservableList<JFXCheckBox> getGenreList(TilePane tilePane)
+    public ObservableList<JFXCheckBox> getGenreList()
     {
         try
         {
             for (String category : bll.allCategories())
             {
                 JFXCheckBox cb = new JFXCheckBox(category);
-                
+
                 genres.add(cb);
             }
         }
@@ -546,16 +575,16 @@ public class MainWindowModel
     /**
      * Returns the list of CheckBoxes for the years
      *
-     * @return Returns the list CheckBoxes for the years
+     * @return Returns a List of JFXCheckBoxes with all the
      */
-    public ObservableList<JFXCheckBox> getYearList(TilePane tilePane)
+    public ObservableList<JFXCheckBox> getYearList()
     {
         for (int i = 0; i < 12; i++)
         {
             int j = 1900 + (i * 10);
             int q = 1900 + ((1 + i) * 10);
             JFXCheckBox cb = new JFXCheckBox(j + "-" + q);
-            
+
             years.add(cb);
 
         }
@@ -566,9 +595,10 @@ public class MainWindowModel
     /**
      * Tries to match ids of image and movie.
      *
-     * @param imageView
+     * @param imageView The ImageView which Movie to find
      *
-     * @return
+     * @return Returns the Movie object with the same ID as the provided
+     *         ImageView
      */
     public Movie getMovieIdMatch(ImageView imageView)
     {
@@ -585,7 +615,7 @@ public class MainWindowModel
     }
 
     /**
-     * Call to findOldAndBadMovies in bll, 
+     * Call to findOldAndBadMovies in bll,
      * in order to find old and bad movies to remove
      */
     public void findOldAndBadMovies()
@@ -600,6 +630,13 @@ public class MainWindowModel
         }
     }
 
+    /**
+     * Gets the info of a Movie in the given ImageView
+     *
+     * @param imageView The ImageView which Movie to get info on
+     *
+     * @return Returns a Movie with the same ID as the ImageView
+     */
     public Movie getMovieInfo(ImageView imageView)
     {
         Movie movieObject = null;
@@ -617,13 +654,14 @@ public class MainWindowModel
     /**
      * This loads all the movies from start.
      *
-     * @param tilePane
+     * @param tilePane The TilePane in which to add the Movies
+     * @param movies   The List of Movies to add to the TilePane
      */
-    public void loadMovies(TilePane tilePane, List<Movie> movieObjects)
+    public void loadMovies(TilePane tilePane, List<Movie> movies)
     {
         ImageView imageView;
         imageViewList = new ArrayList();
-        for (Movie movie : movieObjects)
+        for (Movie movie : movies)
         {
             imageView = new ImageView("https:" + movie.getImgPath());
             imageViewSizeAndId(imageView, movie);
@@ -631,11 +669,12 @@ public class MainWindowModel
             tilePane.getChildren().add(imageView);
         }
     }
-    
+
     /**
-     * Passes the movie ID to bll and further down to dataaccess 
+     * Passes the movie ID to bll and further down to dataaccess
      * in order to delete it in the db
-     * @param id 
+     *
+     * @param id The IF of the Movie to remove
      */
     public void removeMovie(int id)
     {
@@ -649,6 +688,11 @@ public class MainWindowModel
         }
     }
 
+    /**
+     * Opens a File in the system's default application
+     *
+     * @param file The file to try and open
+     */
     public void openFileInNative(File file)
     {
         try
@@ -662,8 +706,10 @@ public class MainWindowModel
     }
 
     /**
+     * Sets the minimum rating to search for
      * passes the rating filter number as string to search class through bll
-     * @param rating 
+     *
+     * @param rating The Rating for which to search
      */
     public void setRatingSearch(String rating)
     {
@@ -672,26 +718,30 @@ public class MainWindowModel
 
     /**
      * Passes the sort ASC/DESC to search class through bll
-     * @param selectedItem 
+     *
+     * @param sort A String containing either Ascending or Descending
      */
-    public void setSortOrder(String selectedItem)
+    public void setSortOrder(String sort)
     {
-        bll.setSort(selectedItem);
+        bll.setSort(sort);
     }
 
     /**
      * Passes the selected order used in search
-     * @param selectedToggle 
+     *
+     * @param order A String dictating the search order
      */
-    public void setOrderSearch(String selectedToggle)
+    public void setOrderSearch(String order)
     {
-        bll.setOrder(selectedToggle);
+        bll.setOrder(order);
     }
-    
+
     /**
+     * Adds Movies to the TilePane
      * Gets the seach result in form of a list of movies, which is looped throuh
      * adding a new imageView/poster to the tilePane
-     * @param tilePane 
+     *
+     * @param tilePane The TilePane which will be given the ImageViews
      */
     public void prepareSearch(TilePane tilePane)
     {
@@ -699,7 +749,7 @@ public class MainWindowModel
         tilePane.getChildren().clear();
         try
         {
-            for(Movie movie : bll.prepareSearch())
+            for (Movie movie : bll.prepareSearch())
             {
                 ImageView imageView = new ImageView("https:" + movie.getImgPath());
                 imageViewSizeAndId(imageView, movie);
@@ -712,27 +762,29 @@ public class MainWindowModel
             System.out.println("Could not retrieve the searchresult of movies");
         }
     }
-    
+
     /**
      * Passes the movieId to set the date of the last view
-     * @param movieId 
+     *
+     * @param id The ID of the Movie last viewed
      */
-    public void setLastView(int movieId)
+    public void setLastView(int id)
     {
         try
         {
-            bll.setLastView(movieId);
+            bll.setLastView(id);
         }
         catch (BLLException ex)
         {
             System.out.println(ex);
         }
     }
-    
+
     /**
      * Sets the imageView/poster dimentions and id
-     * @param imageView
-     * @param movie 
+     *
+     * @param imageView The ImageView to set
+     * @param movie     The Movie from which to get the data
      */
     public void imageViewSizeAndId(ImageView imageView, Movie movie)
     {
@@ -743,16 +795,18 @@ public class MainWindowModel
 
     /**
      * Passes and sets the movie genre in search through bll
-     * @param categories 
+     *
+     * @param categories The String of categories
      */
     public void setSearchCategories(String categories)
     {
-        bll.setSearchCategories(categories); 
+        bll.setSearchCategories(categories);
     }
 
     /**
      * Passes and sets the selected filter years
-     * @param years 
+     *
+     * @param years The String of years
      */
     public void setSearchYears(String years)
     {
@@ -760,8 +814,9 @@ public class MainWindowModel
     }
 
     /**
-     * Sends the searched text to seach class to prepare a sql query 
-     * @param text 
+     * Sends the searched text to seach class to prepare a sql query
+     *
+     * @param text The String of text to search
      */
     public void setSearchText(String text)
     {
