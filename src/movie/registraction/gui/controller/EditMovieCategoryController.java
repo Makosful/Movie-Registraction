@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package movie.registraction.gui.controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -69,9 +66,13 @@ public class EditMovieCategoryController implements Initializable
             listViewChosen.setItems(m.loadChosenMovieCategories(selectedMovie));
 
         }
-        catch (IOException | DALException ex)
+        catch (DALException ex)
         {
             System.out.println(ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(EditMovieCategoryController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         listViewAll.getSelectionModel().selectedItemProperty()

@@ -1,16 +1,15 @@
 package movie.registraction.gui.model;
 
-import com.jfoenix.controls.JFXCheckBox;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -30,20 +29,15 @@ import movie.registraction.dal.exception.DALException;
 public class MainWindowModel
 {
 
-    List<ImageView> imageViewList;
 
     private BLLManager bll;
 
-    private final ObservableList<JFXCheckBox> genres;
-    private final ObservableList<JFXCheckBox> years;
-    private final ObservableList<JFXCheckBox> others;
     private final ObservableList<String> allCategories;
     private final ObservableList<Path> moviePaths;
     private final ObservableList<Path> changeList;
-
-    private final int IMAGE_HEIGHT;
-    private final int IMAGE_WIDTH;
-
+    private final int IMAGE_HEIGHT = 200;
+    private final int IMAGE_WIDTH = 150;
+    
     private final ArrayList<String> extensionList;
 
     /**
@@ -51,9 +45,6 @@ public class MainWindowModel
      */
     public MainWindowModel()
     {
-        IMAGE_HEIGHT = 200;
-        IMAGE_WIDTH = 150;
-
         try
         {
             bll = new BLLManager();
@@ -62,9 +53,6 @@ public class MainWindowModel
         {
         }
 
-        years = FXCollections.observableArrayList();
-        genres = FXCollections.observableArrayList();
-        others = FXCollections.observableArrayList();
         changeList = bll.getChangeList();
 
         moviePaths = FXCollections.observableArrayList();
@@ -331,9 +319,8 @@ public class MainWindowModel
     /**
      * Setting the tile setup.
      *
-     * @param tilePane The TilePane which to setup
      */
-    public void chooseFile(TilePane tilePane)
+    public List<File> chooseFile()
     {
         // Creates a new FileChooser object
         FileChooser fc = new FileChooser();
@@ -351,45 +338,14 @@ public class MainWindowModel
         // Checks if any files where chosen
         if (chosenFiles != null)
         {
-            for (File chosenFile : chosenFiles)
-            {
-                String nameOfMovie = bll.splitDot(chosenFile.getName());
-
-                try
-                {
-                    if (!bll.movieAlreadyExisting(nameOfMovie.toLowerCase()))
-                    {
-
-                        addMovie(nameOfMovie, chosenFile.getPath());
-                        String imgPath = bll.getSpecificMovieImage(bll.splitDot(chosenFile.getName()));
-                        imgPath = "https:" + imgPath;
-                        setPictures(tilePane, chosenFile, imgPath);
-
-                    }
-                    else
-                    {
-                        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-                        Alert alert = new Alert(AlertType.ERROR, "Selected Movie(s) has already been added",
-                                                okButton);
-
-                        Optional<ButtonType> result = alert.showAndWait();
-                        if (result.get() == okButton)
-                        {
-                            alert.close();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    System.out.println(e);
-                }
-            }
+            return chosenFiles;
         }
         else
         {
             // Otherwise return
             System.out.println("One or more invalid file(s) / None selected");
         }
+        return chosenFiles;
     }
 
     /**
@@ -397,21 +353,14 @@ public class MainWindowModel
      * adding them to our tilepane, and finally giving the imageviews an id,
      * that will refer to the actual movie.
      *
-     * @param tilePane The tilePane to set the image into
-     * @param image    The picture to set in
-     * @param url      The URL of the image
+     * @param fileImage    The picture to set in
+     * @param imageView  The image to set imageId to.
      */
-    public void setPictures(TilePane tilePane, File image, String url)
+    public void setImageId(File fileImage, ImageView imageView)
     {
-        ImageView imageView = new ImageView(url);
-        imageView.setFitHeight(IMAGE_HEIGHT);
-        imageView.setFitWidth(IMAGE_WIDTH);
-        imageViewList.add(imageView);
-
-        tilePane.getChildren().add(imageView);
         try
         {
-            bll.setImageId(image, imageView);
+            bll.setImageId(fileImage, imageView);
         }
         catch (BLLException ex)
         {
@@ -518,15 +467,6 @@ public class MainWindowModel
         return moviePaths;
     }
 
-    /**
-     * Returns list of the imageviews. // The images the user puts in.
-     *
-     * @return Return a List of ImageViews
-     */
-    public List<ImageView> getImageViewList()
-    {
-        return imageViewList;
-    }
 
     /**
      * Gets the list of all movies
@@ -545,50 +485,6 @@ public class MainWindowModel
             System.out.println(ex);
         }
         return movies;
-    }
-
-    /**
-     * Gets the list of Genres
-     *
-     * @return Returns a List of JFXCheckBoxes with all the genres
-     */
-    public ObservableList<JFXCheckBox> getGenreList()
-    {
-        try
-        {
-            for (String category : bll.allCategories())
-            {
-                JFXCheckBox cb = new JFXCheckBox(category);
-
-                genres.add(cb);
-            }
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Could not get the list of categories");
-        }
-
-        return genres;
-    }
-
-    /**
-     * Returns the list of CheckBoxes for the years
-     *
-     * @return Returns a List of JFXCheckBoxes with all the
-     */
-    public ObservableList<JFXCheckBox> getYearList()
-    {
-        for (int i = 0; i < 12; i++)
-        {
-            int j = 1900 + (i * 10);
-            int q = 1900 + ((1 + i) * 10);
-            JFXCheckBox cb = new JFXCheckBox(j + "-" + q);
-
-            years.add(cb);
-
-        }
-
-        return years;
     }
 
     /**
@@ -631,31 +527,13 @@ public class MainWindowModel
     }
 
     /**
-     * This loads all the movies from start.
-     *
-     * @param tilePane The TilePane in which to add the Movies
-     * @param movies   The List of Movies to add to the TilePane
-     */
-    public void loadMovies(TilePane tilePane, List<Movie> movies)
-    {
-        ImageView imageView;
-        imageViewList = new ArrayList();
-        for (Movie movie : movies)
-        {
-            imageView = new ImageView("https:" + movie.getImgPath());
-            imageViewSizeAndId(imageView, movie);
-            imageViewList.add(imageView);
-            tilePane.getChildren().add(imageView);
-        }
-    }
-
-    /**
      * Passes the movie ID to bll and further down to dataaccess
      * in order to delete it in the db
      *
      * @param id The IF of the Movie to remove
+     * @param imageView
      */
-    public void removeMovie(int id, ImageView imageView)
+    public void removeMovie(int id, ImageView imageView, List<ImageView> imageViewList)
     {
         try
         {
@@ -717,33 +595,6 @@ public class MainWindowModel
     }
 
     /**
-     * Adds Movies to the TilePane
-     * Gets the seach result in form of a list of movies, which is looped throuh
-     * adding a new imageView/poster to the tilePane
-     *
-     * @param tilePane The TilePane which will be given the ImageViews
-     */
-    public void prepareSearch(TilePane tilePane)
-    {
-        imageViewList.clear();
-        tilePane.getChildren().clear();
-        try
-        {
-            for (Movie movie : bll.prepareSearch())
-            {
-                ImageView imageView = new ImageView("https:" + movie.getImgPath());
-                imageViewSizeAndId(imageView, movie);
-                imageViewList.add(imageView);
-                tilePane.getChildren().add(imageView);
-            }
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Could not retrieve the searchresult of movies");
-        }
-    }
-
-    /**
      * Passes the movieId to set the date of the last view
      *
      * @param id The ID of the Movie last viewed
@@ -802,5 +653,92 @@ public class MainWindowModel
     {
         bll.setSearchText(text);
     }
+        /**
+     * TODO
+     * @return TODO
+     */
+    public List<Movie> prepareSearch()
+    {
+        List<Movie> movies = new ArrayList();
+        try
+        {
+            movies = bll.prepareSearch();
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+        return movies;
+    }
 
+    public ObservableList<String> allCategories()
+    {
+        ObservableList<String> allCategories = null;
+        try
+        {
+            allCategories = bll.allCategories();
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+        return allCategories;
+    }
+        /**
+     * Splits a String up every time it sees a . (peroid)
+     *
+     * @param string The String to split up
+     *
+     * @return Returns the same String, but now plit up
+     */
+    public String splitDot(String stringToSplit)
+    {
+        return bll.splitDot(stringToSplit);
+    }
+        /**
+     * Check if movie already exists in the database
+     *
+     * @param title The title of the Movie
+     *
+     * @return Returns true if it found a match, false if the movie doesn't
+     *         exist in the database
+     *
+     * @throws BLLException Throws an excption if it fails to access the storage
+     */
+    public boolean movieAlreadyExisting(String title)
+    {
+        Boolean ifMovieExist = false;
+        try
+        {
+            ifMovieExist = bll.movieAlreadyExisting(title);
+        }
+        catch (BLLException ex)
+        {
+            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ifMovieExist;
+    }
+        /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param title The title of the movie
+     *
+     * @return Returnd a String containing the URL for the Movie image
+     *
+     * @throws BLLException Throws an exception if it fails to acces the API
+     */
+    public String getSpecificMovieImage(String title)
+    {
+        String movieTitle = null;
+        try
+        {
+            movieTitle = bll.getSpecificMovieImage(title);
+        }
+        catch (BLLException ex)
+        {
+            Logger.getLogger(MainWindowModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return movieTitle;
+    }
 }
