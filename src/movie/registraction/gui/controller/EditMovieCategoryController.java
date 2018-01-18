@@ -51,7 +51,10 @@ public class EditMovieCategoryController implements Initializable
     {
         m.removeChosenMovieCategory(listViewChosen.getSelectionModel().getSelectedItem());
     }
-
+/**
+ * Todo
+ * @param selectedMovie 
+ */
     public void changeMovieCategories(Movie selectedMovie)
     {
         listViewAll.setItems(m.getAllCategories());
