@@ -216,7 +216,12 @@ public class DALManager
             return config.equalsIgnoreCase(":\\WindowsApps");
         }
     }
-
+    /**
+     * IF fits with the filter, returns true.
+     * @param file 
+     * @param filter
+     * @return 
+     */
     private boolean positiveFilter(File file, ArrayList<String> filter)
     {
         for (int i = 0; i < filter.size(); i++)
@@ -228,7 +233,10 @@ public class DALManager
         }
         return false;
     }
-
+    /**
+     * @return a list of movie objects.
+     * @throws DALException 
+     */
     public ObservableList<Movie> getAllMovies() throws DALException
     {
         return mDAO.getAllMovies();

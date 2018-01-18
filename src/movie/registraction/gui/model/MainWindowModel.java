@@ -51,7 +51,7 @@ public class MainWindowModel
      *
      * @throws DALException
      */
-    public MainWindowModel() throws DALException
+    public MainWindowModel()
     {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 150;
@@ -62,6 +62,7 @@ public class MainWindowModel
         }
         catch (BLLException ex)
         {
+            System.out.println(ex);
         }
 
         years = FXCollections.observableArrayList();

@@ -23,6 +23,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
+import movie.registraction.bll.exception.BLLException;
 import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
@@ -132,7 +133,7 @@ public class MainWindowController implements Initializable
             model.loadMovies(tilePane, model.getAllMovies());
             imageClick();
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
             System.out.println(ex);
         }
@@ -250,7 +251,7 @@ public class MainWindowController implements Initializable
      * @param event The event that called this method
      */
     @FXML
-    private void uploadFiles(ActionEvent event) throws DALException
+    private void uploadFiles(ActionEvent event) throws BLLException
     {
         setChosenFilesWithPicture();
     }
