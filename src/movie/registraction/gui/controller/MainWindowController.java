@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,7 +26,6 @@ import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.Action;
 
 /**
  *
@@ -84,7 +82,7 @@ public class MainWindowController implements Initializable
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
-    
+
     Movie moviePoster;
 
     VBox vBox;
@@ -138,7 +136,7 @@ public class MainWindowController implements Initializable
         }
 
         defaultValues();
-        
+
         //Initializing methods
         comboBoxSetup();
 
@@ -178,16 +176,16 @@ public class MainWindowController implements Initializable
     {
         model.fxmlClearFilters();
         model.prepareSearch(tilePane);
-        
-        for(CheckBox cb: model.getGenreList(tilePane))
+
+        for (CheckBox cb : model.getGenreList())
         {
             cb.selectedProperty().set(false);
         }
-        for(CheckBox cb: model.getYearList(tilePane))
+        for (CheckBox cb : model.getYearList())
         {
             cb.selectedProperty().set(false);
         }
-        
+
         //comBoxSortOrder.getSelectionModel().clearSelection();
         //comBoxMinRating.getSelectionModel().clearSelection();
     }
@@ -294,7 +292,7 @@ public class MainWindowController implements Initializable
             {
                 genreCategories = movie.getCategories().get(i);
             }
-            else if(i <= 3)
+            else if (i <= 3)
             {
                 genreCategories += " " + movie.getCategories().get(i);
             }
@@ -414,7 +412,7 @@ public class MainWindowController implements Initializable
      */
     private void imageClick()
     {
-        model.GetImageViewList().forEach((imageView) ->
+        model.getImageViewList().forEach((imageView) ->
         {
             imageView.setOnMouseClicked((MouseEvent event) ->
             {
@@ -423,7 +421,7 @@ public class MainWindowController implements Initializable
                 if (mouseButton == MouseButton.PRIMARY)
                 {
                     // getting movieInfo everytime u click, to stay updated with database.
-                    moviePoster =  model.getMovieInfo(imageView);
+                    moviePoster = model.getMovieInfo(imageView);
                     PopOverSetup(moviePoster, event);
                     System.out.println(moviePoster.getMovieLength());
                     model.contextMenuOpenOrNot(contextMenu);
@@ -546,23 +544,22 @@ public class MainWindowController implements Initializable
         }
     }
 
-
     @FXML
     private void comBoxMinRatingHandler(ActionEvent event)
     {
-      model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
-      model.prepareSearch(tilePane);
-      imageClick();
+        model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
+        model.prepareSearch(tilePane);
+        imageClick();
     }
 
     @FXML
     private void setOrderHandler(ActionEvent event)
     {
-        
+
         RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
         model.setOrderSearch(orderRadiobtn.getText());
         model.prepareSearch(tilePane);
-        imageClick();       
+        imageClick();
     }
 
     @FXML
@@ -586,39 +583,41 @@ public class MainWindowController implements Initializable
         controller = fxmlLoader.getController();
 
         controller.setImageView(imageView);
-        
+
         stage.setScene(new Scene(root));
         stage.show();
-        
+
         stage.setMinHeight(700);
         stage.setMinWidth(825);
     }
-    
+
     private void defaultValues()
     {
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreList(tilePane));
-        flpYear.getChildren().setAll(model.getYearList(tilePane));
-        
-        for(CheckBox cb: model.getGenreList(tilePane))
+        flpGenre.getChildren().setAll(model.getGenreList());
+        flpYear.getChildren().setAll(model.getYearList());
+
+        for (CheckBox cb : model.getGenreList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                public void handle(MouseEvent e) {
-                    model.setSearchCategories(cb.getText()); 
+                public void handle(MouseEvent e)
+                {
+                    model.setSearchCategories(cb.getText());
                     model.prepareSearch(tilePane);
                     imageClick();
                 }
             });
         }
-        
-        for(CheckBox cb: model.getYearList(tilePane))
+
+        for (CheckBox cb : model.getYearList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                public void handle(MouseEvent e) {
-                    model.setSearchYears(cb.getText()); 
+                public void handle(MouseEvent e)
+                {
+                    model.setSearchYears(cb.getText());
                     model.prepareSearch(tilePane);
                     imageClick();
                 }
