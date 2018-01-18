@@ -837,6 +837,10 @@ public class MainWindowController implements Initializable
             Boolean movieNotInDatabase = false;
             String[] metaData = null;
             String nameOfMovie = model.splitDot(chosenFile.getName());
+            /**
+             * Tries to execute this code (basically a check to whether this movie
+             * can be found on imdb or not)
+             */
             try
             {
              metaData = model.getMovieMetaData(nameOfMovie);
@@ -845,7 +849,7 @@ public class MainWindowController implements Initializable
             catch(Exception e)
             {
                 imdbMovie = false;
-                alertButtonMovieAlreadyExist("Movie(s) does not exist on IMDB");
+                alertButtonMovieAlreadyExist(nameOfMovie + " does not exist on IMDB");
             }
 
             if (imdbMovie && !model.movieAlreadyExisting(metaData[0].toLowerCase()))
@@ -858,7 +862,7 @@ public class MainWindowController implements Initializable
             }
             if(!movieNotInDatabase && imdbMovie)
             {
-                alertButtonMovieAlreadyExist("Selected Movie(s) has already been added");
+                alertButtonMovieAlreadyExist(nameOfMovie + " has already been added");
             }
         }
     }
