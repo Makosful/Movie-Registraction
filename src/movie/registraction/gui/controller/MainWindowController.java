@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,7 +26,6 @@ import movie.registraction.be.Movie;
 import movie.registraction.dal.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.Action;
 
 /**
  *
@@ -286,6 +284,8 @@ public class MainWindowController implements Initializable
         /**
          * Creates a for each loop for all the movie categories and allows us to
          * display them.
+         * Code makes a new line, and throws the remaining genres down,
+         * once 4, 8 or 12 categories have been added. This is due to space.
          */
         String genreCategories = null;
         for (int i = 0; i < movie.getCategories().size(); i++)
@@ -294,13 +294,13 @@ public class MainWindowController implements Initializable
             {
                 genreCategories = movie.getCategories().get(i);
             }
-            else if(i <= 3)
+            else if(i == 4 || i == 8 || i == 12)
             {
-                genreCategories += " " + movie.getCategories().get(i);
+                genreCategories += "\n" + movie.getCategories().get(i);
             }
             else
             {
-                genreCategories += "\n" + movie.getCategories().get(i);
+                genreCategories += " " + movie.getCategories().get(i);
             }
         }
 
@@ -523,15 +523,15 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Deletes movie.
-     *
+     * Deletes movie from database, tilepane and arraylist which cointains imageviews.
      * @param imageView
      * @param movie
      */
     private void deleteMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
-        model.removeMovie(movie.getId());
+        model.removeMovie(movie.getId(), imageView);
+       
     }
 
     /**
@@ -546,7 +546,10 @@ public class MainWindowController implements Initializable
         }
     }
 
-
+    /**
+     * Filtering after minimum stars.
+     * @param event 
+     */
     @FXML
     private void comBoxMinRatingHandler(ActionEvent event)
     {
@@ -554,7 +557,10 @@ public class MainWindowController implements Initializable
       model.prepareSearch(tilePane);
       imageClick();
     }
-
+    /**
+     * Filtering after the radiobuttons, "title" or "rating"
+     * @param event 
+     */
     @FXML
     private void setOrderHandler(ActionEvent event)
     {
@@ -564,7 +570,10 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();       
     }
-
+    /**
+     * Filtering after descending or ascending, based on title or rating.
+     * @param event 
+     */
     @FXML
     private void comBoxSortOrderHandler(ActionEvent event)
     {
@@ -572,7 +581,11 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();
     }
-
+    /**
+     * MediaPlayer window.
+     * @param imageView
+     * @throws IOException 
+     */
     private void PlayMovieCustomPlayer(ImageView imageView) throws IOException
     {
         File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
@@ -594,6 +607,13 @@ public class MainWindowController implements Initializable
         stage.setMinWidth(825);
     }
     
+    /**
+     *Expanding the accordion panes to the titledpane.
+     * Adding genre and year checkboxes to the different flowpanes.
+     * Mouse events, everytime click is registerede on checkbox,
+     * we make the filtering and register contextmenues, popovers etc to the
+     * images/movie.
+     */
     private void defaultValues()
     {
         // Set default values
@@ -625,5 +645,4 @@ public class MainWindowController implements Initializable
             });
         }
     }
-
 }
