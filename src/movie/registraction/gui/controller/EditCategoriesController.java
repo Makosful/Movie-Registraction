@@ -60,7 +60,7 @@ public class EditCategoriesController implements Initializable
     }
 
     @FXML
-    private void btnAddCategory(ActionEvent event) throws SQLException
+    private void btnAddCategory(ActionEvent event)
     {
         m.addChosenCategory(txtFieldCategory.getText());
     }

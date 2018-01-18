@@ -57,7 +57,7 @@ public class MovieDAO {
     /**
      * Removes the provided category
      * @param category
-     * @throws movie.registraction.dal.DALException
+     * @throws movie.registraction.dal.exception.DALException
      */
     public void removeCategory(String category) throws DALException
     {
@@ -78,7 +78,7 @@ public class MovieDAO {
      * Adds a category to a specific movie
      * @param movieId
      * @param category
-     * @throws movie.registraction.dal.DALException
+     * @throws movie.registraction.dal.exception.DALException
      */
     public void addMovieCategory(int movieId, String category) throws DALException 
     {
@@ -135,7 +135,7 @@ public class MovieDAO {
     /**
      * Returns all categories
      * @return List of strings
-     * @throws movie.registraction.dal.DALException
+     * @throws movie.registraction.dal.exception.DALException
      */
     public List<String> getAllCategories() throws DALException 
     {
@@ -379,7 +379,8 @@ public class MovieDAO {
     
     
     /**
-     * 
+     * When playing a movie this mehtod is called,
+     * it sets the last view of the specified movie with the given movie ID 
      * @param movieId
      * @throws DALException 
      */
@@ -436,22 +437,25 @@ public class MovieDAO {
 
         
     /**
-     * 
+     * Adds the given sql String to the sql query. 
+     * Then it dynamically creates the prepared statemens according to the criterias
+     * Such as the list of categories. Then it calls the createMovieFromDB to instantiate 
+     * Movie objects from the resultset and returns a list of the resulting movies.
      * @param sqlString
      * @param categories
      * @param year
      * @param rating
      * @param searchText
      * @param searchNumeric
-     * @return
+     * @return ArrayList of movies 
      * @throws DALException 
      */
     public List<Movie> searchMovies(String sqlString,
-                                              List<String> categories,
-                                              HashMap<String, String> year,
-                                              int rating,
-                                              String searchText,
-                                              boolean searchNumeric) throws DALException
+                                    List<String> categories,
+                                    HashMap<String, String> year,
+                                    int rating,
+                                    String searchText,
+                                    boolean searchNumeric) throws DALException
     {
         try (Connection con = db.getConnection())
         {
