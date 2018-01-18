@@ -346,7 +346,7 @@ public class Search
      *
      * @param sqlRating         String which is added a sql query to
      *
-     * @return TODO
+     * @return String containing sql
      */
     private String setSqlSearchRating(String sqlRating)
     {
@@ -366,7 +366,7 @@ public class Search
     /**
      * Clear the search filters
      *
-     * @throws BLLException TODO
+     * @throws BLLException
      */
     public void clearFilters() throws BLLException
     {

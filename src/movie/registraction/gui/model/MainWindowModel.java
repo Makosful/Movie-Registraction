@@ -343,7 +343,7 @@ public class MainWindowModel
     /**
      * Setting the tile setup.
      *
-     * @return TODO
+     * @return List of files
      */
     public List<File> chooseFile()
     {
@@ -569,9 +569,9 @@ public class MainWindowModel
      * Passes the movie ID to bll and further down to dataaccess
      * in order to delete it in the db
      *
-     * @param id            The IF of the Movie to remove
-     * @param imageView     TODO
-     * @param imageViewList TODO
+     * @param id            The ID of the Movie to remove
+     * @param imageView     The imageView of the movie to remove
+     * @param imageViewList The list to remove imageView from
      */
     public void removeMovie(int id, ImageView imageView, List<ImageView> imageViewList)
     {
@@ -696,9 +696,9 @@ public class MainWindowModel
 
 
     /**
-     * TODO
-     *
-     * @return TODO
+     * Calls to bll, which calls to the search class, to create a new query
+     * form the given criteria
+     * @return List of movies from the resultset
      */
     public List<Movie> prepareSearch()
     {
@@ -715,9 +715,10 @@ public class MainWindowModel
     }
 
     /**
-     * TODO
+     * Calls to bll and from there further down to the db in order to 
+     * retrieve all categories
      *
-     * @return TODO
+     * @return An observable List containing all the categories
      */
     public ObservableList<String> allCategories()
     {
@@ -737,9 +738,9 @@ public class MainWindowModel
      * Splits a String up every time it sees a . (peroid)
      *
      *
-     * @param stringToSplit TODO
+     * @param stringToSplit String which may contain periods
      *
-     * @return Returns the same String, but now plit up
+     * @return Returns the same String, but now slit up
      */
     public String splitDot(String stringToSplit)
     {
