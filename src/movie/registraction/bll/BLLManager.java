@@ -197,8 +197,7 @@ public class BLLManager
      *
      * @param movieMetaData
      * @param filePath
-     *
-     * @throws movie.registraction.bll.BLLException
+     * @throws movie.registraction.bll.exception.BLLException
      */
     public void addMovie(String[] movieMetaData, String filePath) throws BLLException
     {
@@ -319,8 +318,7 @@ public class BLLManager
      * @param movieName
      *
      * @return
-     *
-     * @throws movie.registraction.bll.BLLException
+     * @throws movie.registraction.bll.exception.BLLException
      */
     public String getSpecificMovieImage(String movieName) throws BLLException
     {
@@ -344,7 +342,7 @@ public class BLLManager
      * under 6
      * ask the user if the movie should be deleted
      *
-     * @throws movie.registraction.bll.BLLException
+     * @throws movie.registraction.bll.exception.BLLException
      */
     public void findOldAndBadMovies() throws BLLException
     {
