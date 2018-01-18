@@ -34,8 +34,6 @@ public class MainWindowModel
     private final ObservableList<String> allCategories;
     private final ObservableList<Path> moviePaths;
     private final ObservableList<Path> changeList;
-    private final int IMAGE_HEIGHT = 200;
-    private final int IMAGE_WIDTH = 150;
 
     private final ArrayList<String> extensionList;
 
@@ -351,11 +349,11 @@ public class MainWindowModel
         FileChooser fc = new FileChooser();
 
         // Defines what files it will look for
-        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Video Files", "*.mp4", ".mpeg4");
-        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
+        FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Supported Video Files", "*.mp4", ".mpeg4", ".wav", ".flv");
+        //FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
 
         // Adds the filters
-        fc.getExtensionFilters().addAll(videoFilter, imageFilter);
+        fc.getExtensionFilters().addAll(videoFilter/*, imageFilter*/);
 
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
@@ -649,19 +647,6 @@ public class MainWindowModel
         {
             System.out.println(ex);
         }
-    }
-
-    /**
-     * Sets the imageView/poster dimentions and id
-     *
-     * @param imageView The ImageView to set
-     * @param movie     The Movie from which to get the data
-     */
-    public void imageViewSizeAndId(ImageView imageView, Movie movie)
-    {
-        imageView.setFitHeight(IMAGE_HEIGHT);
-        imageView.setFitWidth(IMAGE_WIDTH);
-        imageView.setId("" + movie.getId());
     }
 
     /**
