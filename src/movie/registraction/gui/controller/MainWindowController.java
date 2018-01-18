@@ -81,13 +81,13 @@ public class MainWindowController implements Initializable
 
     //<editor-fold defaultstate="collapsed" desc="Different Variables">
     private MainWindowModel model;
-
+    
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
-
+    
     Movie moviePoster;
-
+    
     VBox vBox;
     Hyperlink imdbURL;
     PopOver popOver;
@@ -132,12 +132,12 @@ public class MainWindowController implements Initializable
         model = new MainWindowModel();
         model.loadMovies(tilePane, model.getAllMovies());
         imageClick();
-
+        
         defaultValues();
 
         //Initializing methods
         comboBoxSetup();
-
+        
         model.findOldAndBadMovies();
     }
 
@@ -174,7 +174,7 @@ public class MainWindowController implements Initializable
     {
         model.fxmlClearFilters();
         model.prepareSearch(tilePane);
-
+        
         for (CheckBox cb : model.getGenreList())
         {
             cb.selectedProperty().set(false);
@@ -195,7 +195,7 @@ public class MainWindowController implements Initializable
      *
      */
     @FXML
-    private void btnChangeCategories(ActionEvent event) 
+    private void btnChangeCategories(ActionEvent event)    
     {
         File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
         FXMLLoader fxmlLoader;
@@ -209,7 +209,7 @@ public class MainWindowController implements Initializable
             stage.initOwner(anchorPane.getScene().getWindow());
             EditCategoriesController controller;
             controller = fxmlLoader.getController();
-
+            
             stage.setScene(new Scene(root));
             stage.show();
         }
@@ -265,7 +265,7 @@ public class MainWindowController implements Initializable
      * @param event The event that called this method
      */
     @FXML
-    private void uploadFiles(ActionEvent event) 
+    private void uploadFiles(ActionEvent event)    
     {
         setChosenFilesWithPicture();
     }
@@ -317,7 +317,7 @@ public class MainWindowController implements Initializable
             {
                 genreCategories = movie.getCategories().get(i);
             }
-            else if(i == 4 || i == 8 || i == 12)
+            else if (i == 4 || i == 8 || i == 12)
             {
                 genreCategories += "\n" + movie.getCategories().get(i);
             }
@@ -342,22 +342,22 @@ public class MainWindowController implements Initializable
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
         lblMovieTitle.setText("Title: " + movie.getMovieTitle());
         lblMovieTitle.setStyle("-fx-text-fill: black");
-
+        
         lblGenre.setText("Genres: " + genreCategories);
         lblGenre.setStyle("-fx-text-fill: black");
-
+        
         lblYear.setText("Release year: " + movie.getYear());
         lblYear.setStyle("-fx-text-fill: black");
-
+        
         lblMovieLength.setText("Length: " + movie.getMovieLength() + "minutes");
         lblMovieLength.setStyle("-fx-text-fill: black");
-
+        
         lblImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
         lblImdbRating.setStyle("-fx-text-fill: black");
-
+        
         lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating() + "/10");
         lblPersonalRating.setStyle("-fx-text-fill: black");
-
+        
         lblLastView.setText("Last viewed on: " + movie.getLastView());
         lblLastView.setStyle("-fx-text-fill: black");
 
@@ -372,7 +372,7 @@ public class MainWindowController implements Initializable
         popGrid.setPadding(new Insets(30));
         popGrid.setHgap(20);
         popGrid.setVgap(10);
-
+        
         popGrid.add(lblMovieTitle, 0, 0);
         popGrid.add(lblGenre, 0, 1);
         popGrid.add(lblYear, 0, 2);
@@ -380,7 +380,7 @@ public class MainWindowController implements Initializable
         popGrid.add(lblPersonalRating, 0, 4);
         popGrid.add(lblLastView, 0, 5);
         popGrid.add(imdbURL, 0, 6);
-
+        
         gridHeight = 300;
         gridWidth = 400;
         popGrid.setPrefSize(gridWidth, gridHeight);
@@ -399,7 +399,7 @@ public class MainWindowController implements Initializable
             popOver = new PopOver(popGrid);
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
         }
-
+        
         if (popOverVisible)
         {
             popOverVisible = true;
@@ -411,7 +411,7 @@ public class MainWindowController implements Initializable
         popOver.setDetachable(false);
         popOver.setDetached(false);
         popOver.setHeaderAlwaysVisible(true);
-
+        
         popOver.setTitle("Movie Metadata");
 
         /**
@@ -442,7 +442,7 @@ public class MainWindowController implements Initializable
             imageView.setOnMouseClicked((MouseEvent event) ->
             {
                 MouseButton mouseButton = event.getButton();
-
+                
                 if (mouseButton == MouseButton.PRIMARY)
                 {
                     // getting movieInfo everytime u click, to stay updated with database.
@@ -451,7 +451,7 @@ public class MainWindowController implements Initializable
                     System.out.println(moviePoster.getMovieLength());
                     model.contextMenuOpenOrNot(contextMenu);
                 }
-
+                
                 else if (mouseButton == MouseButton.SECONDARY)
                 {
                     moviePoster = model.getMovieInfo(imageView);
@@ -508,7 +508,7 @@ public class MainWindowController implements Initializable
                 contextMenu.hide();
             }
         });
-
+        
         editData.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -518,7 +518,7 @@ public class MainWindowController implements Initializable
                 contextMenu.hide();
             }
         });
-
+        
         deleteMovie.setOnAction(new EventHandler<ActionEvent>()
         {
             @Override
@@ -534,7 +534,7 @@ public class MainWindowController implements Initializable
     /**
      * @param imageView
      * @param movie
-     * Deletes movie.
+     *                  Deletes movie.
      *
      * @param imageView The ImageView to delete
      * @param movie     The Movie within
@@ -543,7 +543,7 @@ public class MainWindowController implements Initializable
     {
         tilePane.getChildren().remove(imageView);
         model.removeMovie(movie.getId(), imageView);
-       
+        
     }
 
     /**
@@ -560,8 +560,9 @@ public class MainWindowController implements Initializable
 
     /**
      * Filtering after minimum stars.
-     * @param event 
-     * Handles the minimun rating
+     *
+     * @param event
+     *              Handles the minimun rating
      *
      * @param event The event that called this method
      */
@@ -572,26 +573,30 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();
     }
+
     /**
      * Filtering after the radiobuttons, "title" or "rating"
-     * @param event 
-    /**
-     * Handles the sort order
+     *
+     * @param event
+     *              /**
+     *              Handles the sort order
      *
      * @param event The event that called this method
      */
     @FXML
     private void setOrderHandler(ActionEvent event)
     {
-
+        
         RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
         model.setOrderSearch(orderRadiobtn.getText());
         model.prepareSearch(tilePane);
         imageClick();
     }
+
     /**
      * Filtering after descending or ascending, based on title or rating.
      * Handles the sot order in the comboboc
+     *
      * @param event The event that called this method
      */
     @FXML
@@ -601,44 +606,45 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();
     }
+
     /**
      * Opens a Movie in our custom media player
+     *
      * @param imageView The ImageView with the Movie to play
      */
     private void PlayMovieCustomPlayer(ImageView imageView)
     {
-        File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
+//        String fxml = new File("/movie/registraction/gui/view/MediaWindow.fxml");
         FXMLLoader fxmlLoader;
         try
         {
-            fxmlLoader = new FXMLLoader(fxml.toURL());
-                    Parent root;
-        root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(anchorPane.getScene().getWindow());
-        MediaWindowController controller;
-        controller = fxmlLoader.getController();
-
-        controller.setImageView(imageView);
-
-        stage.setScene(new Scene(root));
-        stage.show();
-
-        stage.setMinHeight(700);
-        stage.setMinWidth(825);
-        }
-        catch (MalformedURLException ex)
-        {
-            System.out.println(ex);
+            fxmlLoader = new FXMLLoader(getClass().getResource("/movie/registraction/gui/view/MediaWindow.fxml"));
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            MediaWindowController controller;
+            controller = fxmlLoader.getController();
+            
+            controller.setImageView(imageView);
+            controller.MediaSetup(model);
+            
+            stage.setScene(new Scene(root));
+            stage.show();
+            
+            stage.setMinHeight(700);
+            stage.setMinWidth(825);
         }
         catch (IOException ex)
         {
-            System.out.println(ex);
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
     }
+
     /**
-     *Expanding the accordion panes to the titledpane.
+     * Expanding the accordion panes to the titledpane.
      * Adding genre and year checkboxes to the different flowpanes.
      * Mouse events, everytime click is registerede on checkbox,
      * we make the filtering and register contextmenues, popovers etc to the
@@ -651,7 +657,7 @@ public class MainWindowController implements Initializable
         acdPanes.setExpandedPane(acdGenre);
         flpGenre.getChildren().setAll(model.getGenreList());
         flpYear.getChildren().setAll(model.getYearList());
-
+        
         for (CheckBox cb : model.getGenreList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
@@ -664,7 +670,7 @@ public class MainWindowController implements Initializable
                 }
             });
         }
-
+        
         for (CheckBox cb : model.getYearList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()

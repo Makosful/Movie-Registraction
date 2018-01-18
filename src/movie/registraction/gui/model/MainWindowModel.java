@@ -21,6 +21,7 @@ import movie.registraction.be.Movie;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.Rating;
 import movie.registraction.bll.exception.BLLException;
+import movie.registraction.dal.exception.DALException;
 
 /**
  *
@@ -502,16 +503,9 @@ public class MainWindowModel
      * @param gridPaneRating The GridPane in which to set the rating
      * @param lblRating      The label in which to set the rating
      */
-    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating)
+    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating) throws DALException
     {
-        try
-        {
-            Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Could not create new rating");
-        }
+        Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
     }
 
     /**

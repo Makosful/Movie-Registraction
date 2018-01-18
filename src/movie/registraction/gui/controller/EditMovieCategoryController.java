@@ -43,14 +43,7 @@ public class EditMovieCategoryController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) 
     {
     
-        try
-        {
-            m = new MainWindowModel();
-        }
-        catch (DALException ex)
-        {
-            System.out.println(ex.getMessage());
-        }
+        m = new MainWindowModel();
         
     }
 
