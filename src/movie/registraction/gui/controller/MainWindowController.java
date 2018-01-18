@@ -6,9 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,7 +26,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
 import movie.registraction.bll.exception.BLLException;
-import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
 
@@ -81,11 +80,17 @@ public class MainWindowController implements Initializable
 
     //<editor-fold defaultstate="collapsed" desc="Different Variables">
     private MainWindowModel model;
+    
+    private final int IMAGE_HEIGHT;
+    private final int IMAGE_WIDTH;
 
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
 
+    List<ImageView> imageViewList;
+    
+    
     Movie moviePoster;
 
     VBox vBox;
@@ -111,6 +116,11 @@ public class MainWindowController implements Initializable
     Label lblIMDBId;
     //</editor-fold>
 
+    public MainWindowController()
+    {
+        IMAGE_HEIGHT = 200;
+        IMAGE_WIDTH = 200;
+    }
     /**
      * Our initializer, which is run when the program has its initial start up.
      * We create our tile pane and also our context menu for the image view
@@ -124,13 +134,14 @@ public class MainWindowController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+        
         SetupTilePane();
         setupContextMenu();
         popOverVisible = false;
 
         // Access the Model
         model = new MainWindowModel();
-        model.loadMovies(tilePane, model.getAllMovies());
+        loadMovies(model.getAllMovies());
         imageClick();
 
         defaultValues();
@@ -160,7 +171,7 @@ public class MainWindowController implements Initializable
     private void titleSearch(ActionEvent event)
     {
         model.setSearchText(txtTitleSearch.getText());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
 
@@ -173,7 +184,7 @@ public class MainWindowController implements Initializable
     private void clearFilters(ActionEvent event)
     {
         model.fxmlClearFilters();
-        model.prepareSearch(tilePane);
+        prepareSearch();
 
         for (CheckBox cb : model.getGenreList())
         {
@@ -569,7 +580,7 @@ public class MainWindowController implements Initializable
     private void comBoxMinRatingHandler(ActionEvent event)
     {
         model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
     /**
@@ -586,7 +597,7 @@ public class MainWindowController implements Initializable
 
         RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
         model.setOrderSearch(orderRadiobtn.getText());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
     /**
@@ -598,7 +609,7 @@ public class MainWindowController implements Initializable
     private void comBoxSortOrderHandler(ActionEvent event)
     {
         model.setSortOrder(comBoxSortOrder.getSelectionModel().getSelectedItem());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
     /**
@@ -659,7 +670,7 @@ public class MainWindowController implements Initializable
                 public void handle(MouseEvent e)
                 {
                     model.setSearchCategories(cb.getText());
-                    model.prepareSearch(tilePane);
+                    prepareSearch();
                     imageClick();
                 }
             });
@@ -672,10 +683,63 @@ public class MainWindowController implements Initializable
                 public void handle(MouseEvent e)
                 {
                     model.setSearchYears(cb.getText());
-                    model.prepareSearch(tilePane);
+                    prepareSearch();
                     imageClick();
                 }
             });
         }
     }
-}
+    
+        /**
+     * This loads all the movies from start.
+     * @param tilePane The TilePane in which to add the Movies
+     * @param movies   The List of Movies to add to the TilePane
+     */
+    public void loadMovies(List<Movie> movies)
+    {
+        ImageView imageView;
+        imageViewList = new ArrayList();
+        for (Movie movie : movies)
+        {
+            imageView = new ImageView("https:" + movie.getImgPath());
+            imageViewSizeAndId(imageView, movie);
+            imageViewList.add(imageView);
+            tilePane.getChildren().add(imageView);
+        }
+    }
+
+    /**
+     * Sets the imageView/poster dimentions and id
+     *
+     * @param imageView The ImageView to set
+     * @param movie     The Movie from which to get the data
+     */
+    public void imageViewSizeAndId(ImageView imageView, Movie movie)
+    {
+        imageView.setFitHeight(IMAGE_HEIGHT);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageView.setId("" + movie.getId());
+    }
+    
+        /**
+     * Adds Movies to the TilePane
+     * Gets the seach result in form of a list of movies, which is looped throuh
+     * adding a new imageView/poster to the tilePane
+     *
+     * @param tilePane The TilePane which will be given the ImageViews
+     */
+    public void prepareSearch()
+    {
+        imageViewList.clear();
+        tilePane.getChildren().clear();
+
+            for (Movie movie : model.prepareSearch())
+            {
+                ImageView imageView = new ImageView("https:" + movie.getImgPath());
+                imageViewSizeAndId(imageView, movie);
+                imageViewList.add(imageView);
+                tilePane.getChildren().add(imageView);
+            }
+        }
+    }
+
