@@ -461,17 +461,14 @@ public class BLLManager
 
     /**
      * Check if movie already exists in the database
-     *
      * @param title The title of the Movie
-     *
      * @return Returns true if it found a match, false if the movie doesn't
      *         exist in the database
-     *
      * @throws BLLException Throws an excption if it fails to access the storage
      */
     public boolean movieAlreadyExisting(String title) throws BLLException
     {
-        boolean isAlreadyInDataBase = false;
+        boolean isAlreadyInDataBase = false; 
 
         for (Movie m : getAllMovies())
         {
