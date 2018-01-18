@@ -1,4 +1,4 @@
-package movie.registraction.bll;
+package movie.registraction.bll.exception;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

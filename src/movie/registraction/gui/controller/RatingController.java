@@ -19,7 +19,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import movie.registraction.bll.Rating;
-import movie.registraction.dal.DALException;
+import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
