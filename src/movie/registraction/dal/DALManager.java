@@ -30,18 +30,10 @@ public class DALManager
      */
     public DALManager() throws DALException
     {
-        try
-        {
-            mDAO = new MovieDAO();
-            this.lib = new LibraryScan();
-
-            this.changes = lib.getObsList();
-            this.folders = new ArrayList();
-        }
-        catch (IOException ex)
-        {
-            throw new DALException();
-        }
+        mDAO = new MovieDAO();
+        this.lib = new LibraryScan();
+        this.changes = lib.getObsList();
+        this.folders = new ArrayList();
     }
 
     /**

@@ -1,10 +1,7 @@
 package movie.registraction.gui.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,7 +34,7 @@ public class EditMovieCategoryController implements Initializable
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
-    {    
+    {
         m = new MainWindowModel();
     }
 
@@ -54,10 +51,12 @@ public class EditMovieCategoryController implements Initializable
     {
         m.removeChosenMovieCategory(listViewChosen.getSelectionModel().getSelectedItem());
     }
-/**
- * Todo
- * @param selectedMovie 
- */
+
+    /**
+     * Todo
+     *
+     * @param selectedMovie
+     */
     public void changeMovieCategories(Movie selectedMovie)
     {
         listViewAll.setItems(m.getAllCategories());
@@ -72,10 +71,6 @@ public class EditMovieCategoryController implements Initializable
         catch (DALException ex)
         {
             System.out.println(ex.getMessage());
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(EditMovieCategoryController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         listViewAll.getSelectionModel().selectedItemProperty()
