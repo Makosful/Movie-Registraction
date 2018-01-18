@@ -472,7 +472,7 @@ public class MainWindowController implements Initializable
                     moviePoster = model.getMovieInfo(imageView);
                     PopOverSetup(moviePoster, event);
                     System.out.println(moviePoster.getMovieLength());
-                    model.contextMenuOpenOrNot(contextMenu);
+                    contextMenuOpenOrNot();
                 }
                 
                 else if (mouseButton == MouseButton.SECONDARY)
@@ -480,7 +480,7 @@ public class MainWindowController implements Initializable
                     moviePoster = model.getMovieInfo(imageView);
                     closePopOverIfRightClick();
                     contextMenuAction(imageView, moviePoster);
-                    model.contextMenuOpenOrNot(contextMenu);
+                    contextMenuOpenOrNot();
                     contextMenu.show(tilePane, event.getScreenX() - 5, event.getScreenY() - 5);
                 }
             });
@@ -853,6 +853,21 @@ public class MainWindowController implements Initializable
         if (result.get() == okButton)
         {
             alert.close();
+        }
+    }
+    
+    /**
+     * Checks whether contextmenu is open or not, if yes, it closes.
+     * Incase user dobbleclicks several times, so it doesnt stack.
+     *
+     * @param cm The ContextMenu to check
+     */
+    public void contextMenuOpenOrNot()
+    {
+        // So the contextMenu doesnt stack.
+        if (contextMenu.isShowing())
+        {
+            contextMenu.hide();
         }
     }
 }
