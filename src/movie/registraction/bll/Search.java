@@ -52,7 +52,7 @@ public class Search
      * already there,
      * if it already existing remove it from the list
      *
-     * @param category TODO
+     * @param category String containing category
      */
     public void setSearchCategories(String category)
     {
@@ -71,7 +71,7 @@ public class Search
      * Sets the given decades to hashmap year, by splitting the string
      * if its already in the hashmap remove it
      *
-     * @param years TODO
+     * @param years String containing decade e.g. 1910-1920
      */
     public void setSearchYears(String years)
     {
@@ -91,7 +91,7 @@ public class Search
      * Sets the given rating, by removing all charecters in string
      * and converting the string to int
      *
-     * @param rating TODO
+     * @param rating String of selected rating number
      */
     public void setRating(String rating)
     {
@@ -109,7 +109,7 @@ public class Search
     /**
      * Sets the specific order type as string
      *
-     * @param order TODO
+     * @param order String of order by e.g. "Rating"
      */
     public void setOrder(String order)
     {
@@ -119,7 +119,7 @@ public class Search
     /**
      * Sets the given sort type as string
      *
-     * @param sort TODO
+     * @param sort String of sorting e.g. "Ascending"
      */
     public void setSort(String sort)
     {
@@ -129,7 +129,7 @@ public class Search
     /**
      * Sets the given search string
      *
-     * @param searchText TODO
+     * @param searchText String of searched text
      */
     public void setSearchText(String searchText)
     {
@@ -137,11 +137,11 @@ public class Search
     }
 
     /**
-     * TODO
-     *
-     * @return TODO
-     *
-     * @throws BLLException TODO
+     * Stitches together a sql query as a string corresponding to the search criteria,
+     * this sql query is then sent to dal together with the search criteria 
+     * @return ArrayList List of movies
+     * 
+     * @throws BLLException
      */
     public List<Movie> prepareSearch() throws BLLException
     {
@@ -159,7 +159,7 @@ public class Search
 
         sqlOrderBy = setSqlSearchOrder(sqlOrderBy);
 
-        sqlRating = setSqlSearchRating(sqlRating, sqlSearchCategory, sqlSearchYear);
+        sqlRating = setSqlSearchRating(sqlRating);
 
         //Stitches together the sql string for the searchText filter
         if (!searchText.isEmpty())
@@ -224,9 +224,9 @@ public class Search
     /**
      * Checks if a given string is numeric
      *
-     * @param str TODO
+     * @param str String to check if its numeric
      *
-     * @return TODO
+     * @return boolean 
      */
     public boolean isNumeric(String str)
     {
@@ -244,9 +244,9 @@ public class Search
     /**
      * Stitches together the sql string for the categories filter
      *
-     * @param sqlSearchCategory TODO
+     * @param sqlSearchCategory String which is added a sql query to
      *
-     * @return TODO
+     * @return String containing sql
      */
     private String setSqlSearchCategory(String sqlSearchCategory)
     {
@@ -275,9 +275,9 @@ public class Search
     /**
      * Stitches together the sql string for the years(DECADES) filter
      *
-     * @param sqlSearchYear TODO
+     * @param sqlSearchYear String which is added a sql query to
      *
-     * @return TODO
+     * @return String containing sql
      */
     private String setSqlSearchYear(String sqlSearchYear)
     {
@@ -312,9 +312,9 @@ public class Search
     /**
      * Stitches together the sql string for the order filter
      *
-     * @param sqlOrderBy TODO
+     * @param sqlOrderBy String which is added a sql query to
      *
-     * @return TODO
+     * @return String containing sql
      */
     private String setSqlSearchOrder(String sqlOrderBy)
     {
@@ -341,18 +341,16 @@ public class Search
     /**
      * Stitches together the sql string for the rating filter
      *
-     * @param sqlRating         TODO
-     * @param sqlSearchYear     TODO
-     * @param sqlSearchCategory TODO
+     * @param sqlRating         String which is added a sql query to
      *
      * @return TODO
      */
-    private String setSqlSearchRating(String sqlRating, String sqlSearchYear, String sqlSearchCategory)
+    private String setSqlSearchRating(String sqlRating)
     {
         if (rating != -1)
         {
             //If its the first filter add where clause in first iteration
-            if (sqlSearchCategory.isEmpty() && sqlSearchYear.isEmpty())
+            if (categories.isEmpty() && year.isEmpty())
             {
                 sqlRating += "WHERE ";
             }
