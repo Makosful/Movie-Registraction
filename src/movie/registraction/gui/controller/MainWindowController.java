@@ -831,19 +831,34 @@ public class MainWindowController implements Initializable
     {
         for (File chosenFile : model.chooseFile())
         {
+            // Boolean for if it is a IMDB movie.
+            Boolean imdbMovie = false;
+            // Boolean for if movie is not in database;
+            Boolean movieNotInDatabase = false;
+            String[] metaData = null;
             String nameOfMovie = model.splitDot(chosenFile.getName());
-            String[] metaData = model.getMovieMetaData(nameOfMovie);
-
-            if (!model.movieAlreadyExisting(metaData[0].toLowerCase()))
+            try
             {
+             metaData = model.getMovieMetaData(nameOfMovie);
+             imdbMovie = true;
+            }
+            catch(Exception e)
+            {
+                imdbMovie = false;
+                alertButtonMovieAlreadyExist("Movie(s) does not exist on IMDB");
+            }
+
+            if (imdbMovie && !model.movieAlreadyExisting(metaData[0].toLowerCase()))
+            {
+                movieNotInDatabase = true;
                 model.addMovie(metaData, chosenFile.getPath());
                 String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
                 imgPath = "https:" + imgPath;
                 setPictures(chosenFile, imgPath);
             }
-            else
+            if(!movieNotInDatabase && imdbMovie)
             {
-                alertButtonMovieAlreadyExist();
+                alertButtonMovieAlreadyExist("Selected Movie(s) has already been added");
             }
         }
     }
@@ -851,10 +866,10 @@ public class MainWindowController implements Initializable
     /**
      * Alert if movie already exists.
      */
-    private void alertButtonMovieAlreadyExist()
+    private void alertButtonMovieAlreadyExist(String message)
     {
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Selected Movie(s) has already been added",
+        Alert alert = new Alert(Alert.AlertType.ERROR, message,
                                 okButton);
 
         Optional<ButtonType> result = alert.showAndWait();
