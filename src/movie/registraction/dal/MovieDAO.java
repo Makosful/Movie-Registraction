@@ -97,8 +97,8 @@ public class MovieDAO
             PreparedStatement preparedStatement = con.prepareStatement(sql);
 
             preparedStatement.setInt(1, categoryId);
-            preparedStatement.setInt(2, id);
 
+            preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
         }
         catch (SQLException ex)
@@ -282,39 +282,32 @@ public class MovieDAO
      * @throws SQLException Throws and exception if it fails to access the
      *                      database
      */
-    private Movie createMovieFromDB(ResultSet rs, Movie previousMovie) throws DALException
+    private Movie createMovieFromDB(ResultSet rs, Movie previousMovie) throws SQLException
     {
 
-        try
+        if (previousMovie.getId() == rs.getInt("id"))
         {
-            if (previousMovie.getId() == rs.getInt("id"))
-            {
-                previousMovie.setCategories(rs.getString("categoryName"));
-                return previousMovie;
-            }
-            else
-            {
-
-                Movie movie = new Movie();
-                movie.setId(rs.getInt("id"));
-                movie.setMovieTitle(rs.getString("name"));
-                movie.setYear(rs.getInt("year"));
-                movie.setPersonalRating(rs.getDouble("personalRating"));
-                movie.setImdbRating(rs.getDouble("imdbRating"));
-                movie.setLastView(rs.getDate("lastView"));
-                movie.setFilePath(rs.getString("filePath"));
-                movie.setImgPath(rs.getString("imgPath"));
-                movie.setMovieLength(rs.getInt("movieLength"));
-                movie.setImdbLink(rs.getString("imdbLink"));
-                movie.setCategories(rs.getString("categoryName"));
-
-                return movie;
-
-            }
+            previousMovie.setCategories(rs.getString("categoryName"));
+            return previousMovie;
         }
-        catch (SQLException ex)
+        else
         {
-            throw new DALException();
+
+            Movie movie = new Movie();
+            movie.setId(rs.getInt("id"));
+            movie.setMovieTitle(rs.getString("name"));
+            movie.setYear(rs.getInt("year"));
+            movie.setPersonalRating(rs.getDouble("personalRating"));
+            movie.setImdbRating(rs.getDouble("imdbRating"));
+            movie.setLastView(rs.getDate("lastView"));
+            movie.setFilePath(rs.getString("filePath"));
+            movie.setImgPath(rs.getString("imgPath"));
+            movie.setMovieLength(rs.getInt("movieLength"));
+            movie.setImdbLink(rs.getString("imdbLink"));
+            movie.setCategories(rs.getString("categoryName"));
+
+            return movie;
+
         }
     }
 
@@ -376,7 +369,6 @@ public class MovieDAO
      */
     public void setPersonalRating(int id, int personalRating) throws DALException
     {
-
         try (Connection con = db.getConnection())
         {
 
@@ -435,7 +427,6 @@ public class MovieDAO
      */
     public void setLastView(int id) throws DALException
     {
-
         try (Connection con = db.getConnection())
         {
             String sqlInsert = "UPDATE Movie "
@@ -586,13 +577,18 @@ public class MovieDAO
                 {
                     movies.add(movie);
                 }
+
             }
+
             return movies;
+
         }
         catch (SQLException ex)
         {
             System.out.println(ex.getMessage());
             throw new DALException();
         }
+
     }
+
 }
