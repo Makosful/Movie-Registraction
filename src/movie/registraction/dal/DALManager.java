@@ -399,7 +399,7 @@ public class DALManager
      */
     public void setLastView(int movieId) throws DALException 
     { 
-            mDAO.setLastView(movieId);
+       mDAO.setLastView(movieId);
     }
         
 

@@ -5,17 +5,16 @@
  */
 package movie.registraction.bll;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import movie.registraction.bll.exception.BLLException;
 import movie.registraction.dal.exception.DALException;
 import movie.registraction.dal.DALManager;
 
@@ -26,40 +25,39 @@ import movie.registraction.dal.DALManager;
  */
 public class Rating {
     
-    private boolean half;
     private int wholeNumber;
     private DALManager dal;
     private Label lblRating;
-    List<Label> stars;
-    List<Label> emptyStars;
-    private Label lblHalf;
+    List<ImageView> stars;
+    List<ImageView> emptyStars;
     
     
-    public Rating(double rating, String ratingType, GridPane gridPane, Label lblRating) throws DALException 
+    public Rating(int movieId, double rating, GridPane gridPane, Label lblRating) throws BLLException, FileNotFoundException 
     {
 
         try {
             dal = new DALManager();
         } catch (DALException ex) {
-            throw new DALException();
+            throw new BLLException();
         }
 
         stars = new ArrayList();
         emptyStars = new ArrayList();
         this.lblRating = lblRating;
+        wholeNumber = (int) rating;
         
-        
-        lblHalf = new Label("half");
         for(int i = 0; i < 10; i++)
         {
-            Label star = new Label("*");
-            saveRatingChangesHandler(star, gridPane, ratingType);
+            ImageView star = new ImageView("/movie/registraction/rsx/star.png");
+            
+            saveRatingChangesHandler(star, gridPane, movieId);
             setOnMouseEnteredHandler(star, gridPane);
             stars.add(star);
             
             
-            Label emptyStar = new Label("0");
-            saveRatingChangesHandler(emptyStar, gridPane, ratingType);
+            ImageView emptyStar = new ImageView("/movie/registraction/rsx/emptyStar.png");
+            
+            saveRatingChangesHandler(emptyStar, gridPane, movieId);
             setOnMouseEnteredHandler(emptyStar, gridPane);
             emptyStars.add(emptyStar);
             
@@ -67,45 +65,9 @@ public class Rating {
         
         
         setOnMouseExitedHandler(gridPane);
-        initRating(ratingType, rating);
         setRatingStars(gridPane);
     }
-    
-    /**
-     * Depending on the type of rating, set the whole number. If its a imdb rating, 
-     * it is possible to have half a star.
-     * @param ratingType
-     * @param rating 
-     */
-    private void initRating(String ratingType, double rating)
-    {
-        if(ratingType.equals("imdb")){
-            initIMDb(rating);
-        }
-        else
-        {
-            wholeNumber = (int) rating;
-        }
-    }
-    
-    /**
-     * 
-     * @param rating 
-     */
-    private void initIMDb(double rating)
-    {
-        if(rating-Math.floor(rating) < 0.75){
-           if(rating-Math.floor(rating) > 0.25)
-           {
-               half = true;
-           }
-           wholeNumber = (int) Math.floor(rating); 
-       }
-       else
-       {
-           wholeNumber = (int) Math.ceil(rating);
-       }
-    }
+
     
     /**
      * Sets the gridpanes nodes as stars according to the rating. 
@@ -120,12 +82,6 @@ public class Rating {
             {
                 gridPane.setColumnIndex(stars.get(i-1), i-1);
                 gridPane.getChildren().add(stars.get(i-1)); 
-            }
-            else if(i == wholeNumber+1 && half == true)
-            {
-                gridPane.setColumnIndex(lblHalf, i-1);
-                gridPane.getChildren().add(lblHalf);
-                setOnMouseEnteredHandler(lblHalf, gridPane);
             }
             else
             {  
@@ -165,9 +121,9 @@ public class Rating {
      * @param label
      * @param gridPane 
      */
-    private void setOnMouseEnteredHandler(Label label, GridPane gridPane)
+    private void setOnMouseEnteredHandler(ImageView image, GridPane gridPane)
     {
-        label.setOnMouseMoved(new EventHandler<MouseEvent>() {
+        image.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 Node node = (Node)e.getSource();
@@ -200,35 +156,28 @@ public class Rating {
      * @param gridPane 
      * @param ratingType 
      */
-    private void saveRatingChangesHandler(Label label, GridPane gridPane, String ratingType)
+    private void saveRatingChangesHandler(ImageView image, GridPane gridPane, int movieId) throws BLLException 
     {
-        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        image.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                if(ratingType.equals("imdb"))
+                Node node = (Node)e.getSource();
+                try
                 {
-                    try {
-                        Desktop.getDesktop().browse(new URI("https://www.imdb.com/registration/signin?u=http%3A%2F%2Fwww.imdb.com%2Ftitle%2Ftt0368226%2F"));
-                    } catch (URISyntaxException ex) {
-                        
-                    }  catch (IOException ex) {
-                       
-                    }
+                    dal.setPersonalRating(movieId, gridPane.getColumnIndex(node)+1);
                 }
-                else
+                catch (DALException ex)
                 {
-                    Node node = (Node)e.getSource();
-                    //Test movie id
-                    int movieId = 1;
-                    try {
-                        dal.setPersonalRating(movieId, gridPane.getColumnIndex(node)+1);
-                    } catch (DALException ex) {
-                    }
-                    wholeNumber = gridPane.getColumnIndex(node)+1;
-                    setOnMouseExitedHandler(gridPane); 
+
                 }
+                wholeNumber = gridPane.getColumnIndex(node)+1;
+                setOnMouseExitedHandler(gridPane); 
             }
+            
         });
     }
+
+
+    
          
 }

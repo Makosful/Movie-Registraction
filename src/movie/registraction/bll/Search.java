@@ -199,7 +199,7 @@ public class Search
         
         //add all the filter search strings to one
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
-        System.out.println(sqlString);
+
         try
         {   //send the stitched together sql string and corresponding filters/search criteria to dal 
             return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);

@@ -1,18 +1,28 @@
 package movie.registraction.gui.model;
 
 import com.jfoenix.controls.JFXCheckBox;
+import java.awt.Desktop;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
@@ -494,21 +504,27 @@ public class MainWindowModel
     /**
      * Sets up a new rating instance with the given values
      *
+     * @param movieId        The movie to set rating on, as id
      * @param rating         The rating to set, as a double
-     * @param ratingType     The type of rating
      * @param gridPaneRating The GridPane in which to set the rating
      * @param lblRating      The label in which to set the rating
      */
-    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating)
+    public void setUpRating(int movieId, double rating, GridPane gridPaneRating, Label lblRating)
     {
+
         try
         {
-            Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
+            Rating r = new Rating(movieId, rating, gridPaneRating, lblRating);
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
-            System.out.println("Could not create new rating");
+            System.out.println("Could not create a new rating");
         }
+        catch (FileNotFoundException ex)
+        {
+            System.out.println("Image files for rating could not be loaded");
+        }
+ 
     }
 
     /**
@@ -805,5 +821,5 @@ public class MainWindowModel
     {
         bll.setSearchText(text);
     }
-
+    
 }

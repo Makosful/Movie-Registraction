@@ -106,6 +106,8 @@ public class MainWindowController implements Initializable
     Label lblMovieLength;
     Label lblLastView;
     Label lblIMDBId;
+    Label lblRating;
+    Label lblRatingImdb;
     //</editor-fold>
 
     /**
@@ -339,13 +341,26 @@ public class MainWindowController implements Initializable
 
         lblImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
         lblImdbRating.setStyle("-fx-text-fill: black");
-
-        lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating() + "/10");
+        
+        if(movie.getPersonalRating() != -1)
+        {
+            lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating() + "/10");
+        }
+        else
+        {
+            lblPersonalRating.setText("Personal rating: Not rated");
+        }
         lblPersonalRating.setStyle("-fx-text-fill: black");
 
         lblLastView.setText("Last viewed on: " + movie.getLastView());
         lblLastView.setStyle("-fx-text-fill: black");
 
+        lblRating = new Label("");
+        lblRating.setStyle("-fx-text-fill: black");
+        
+        lblRatingImdb = new Label();
+        lblRatingImdb.setStyle("-fx-text-fill: black");
+        
         //HYPERLINK
         imdbURL.setText("http://www.imdb.com/title/" + movie.getImdbLink());
         //imdbURL.setStyle("-fx-text-fill: black");
@@ -357,7 +372,12 @@ public class MainWindowController implements Initializable
         popGrid.setPadding(new Insets(30));
         popGrid.setHgap(20);
         popGrid.setVgap(10);
-
+       
+        GridPane ratingGrid = new GridPane();
+        ratingGrid.setStyle("-fx-cursor: hand");
+        
+        model.setUpRating(movie.getId(), movie.getPersonalRating(), ratingGrid, lblRating);
+        
         popGrid.add(lblMovieTitle, 0, 0);
         popGrid.add(lblGenre, 0, 1);
         popGrid.add(lblYear, 0, 2);
@@ -365,9 +385,11 @@ public class MainWindowController implements Initializable
         popGrid.add(lblPersonalRating, 0, 4);
         popGrid.add(lblLastView, 0, 5);
         popGrid.add(imdbURL, 0, 6);
+        popGrid.add(ratingGrid, 0, 7);
+        popGrid.add(lblRating, 1, 7);
 
-        gridHeight = 300;
-        gridWidth = 400;
+        gridHeight = 350;
+        gridWidth = 425;
         popGrid.setPrefSize(gridWidth, gridHeight);
         //</editor-fold>
 
@@ -531,16 +553,9 @@ public class MainWindowController implements Initializable
     }
 
     /**
-<<<<<<< HEAD
      * Deletes movie from database, tilepane and arraylist which cointains imageviews.
      * @param imageView
      * @param movie
-=======
-     * Deletes movie.
-     *
-     * @param imageView The ImageView to delete
-     * @param movie     The Movie within
->>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
     private void deleteMovie(ImageView imageView, Movie movie)
     {
@@ -604,10 +619,6 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();
     }
-    /**
-     * MediaPlayer window.
-     * @param imageView
-     * @throws IOException 
 
 
     /**
@@ -616,7 +627,6 @@ public class MainWindowController implements Initializable
      * @param imageView The ImageView with the Movie to play
      *
      * @throws IOException
->>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
     private void PlayMovieCustomPlayer(ImageView imageView) throws IOException
     {
