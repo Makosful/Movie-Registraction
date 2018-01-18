@@ -95,14 +95,16 @@ public class Search
      */
     public void setRating(String rating)
     {
-        if (rating.equals("All"))
-        {
-            this.rating = -1;
-        }
-        else
-        {
-            String number = rating.replaceAll("\\D+", "");
-            this.rating = Integer.parseInt(number);
+        if(rating != null){
+            if (rating.equals("All"))
+            {
+                this.rating = -1;
+            }
+            else
+            {
+                String number = rating.replaceAll("\\D+", "");
+                this.rating = Integer.parseInt(number);
+            }
         }
     }
 
@@ -330,13 +332,21 @@ public class Search
         {
             sqlOrderBy = " ORDER BY Movie.personalRating";
         }
-        if (sort.equals("Descending"))
-        {
-            sqlOrderBy += " DESC";
+        //if filters are cleared sort is null
+        if(sort != null){
+            if (sort.equals("Descending"))
+            {
+                sqlOrderBy += " DESC";
+            }
+            else if (sort.equals("Ascending"))
+            {
+                sqlOrderBy += " ASC";
+            }
         }
-        else if (sort.equals("Ascending"))
+        else
         {
-            sqlOrderBy += " ASC";
+            sort = "Descending";
+            sqlOrderBy += " DESC";
         }
         return sqlOrderBy;
     }
@@ -346,7 +356,7 @@ public class Search
      *
      * @param sqlRating         String which is added a sql query to
      *
-     * @return TODO
+     * @return String containing sql
      */
     private String setSqlSearchRating(String sqlRating)
     {
@@ -366,7 +376,7 @@ public class Search
     /**
      * Clear the search filters
      *
-     * @throws BLLException TODO
+     * @throws BLLException
      */
     public void clearFilters() throws BLLException
     {

@@ -197,7 +197,8 @@ public class MainWindowController implements Initializable
     {
         model.fxmlClearFilters();
         prepareSearch();
-
+        
+        //uncheck checkboxes
         getGenreList().forEach((cb) ->
         {
             cb.selectedProperty().set(false);
@@ -205,8 +206,11 @@ public class MainWindowController implements Initializable
         getYearList().forEach((cb) ->
         {
             cb.selectedProperty().set(false);
-        }); //comBoxSortOrder.getSelectionModel().clearSelection();
-        //comBoxMinRating.getSelectionModel().clearSelection();
+        }); 
+        
+        //set comboboxes to default / clear selcted value
+        comBoxSortOrder.getSelectionModel().clearSelection();
+        comBoxMinRating.getSelectionModel().clearSelection();
     }
 
     /**
@@ -570,8 +574,8 @@ public class MainWindowController implements Initializable
     private void removeMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
-
-        model.removeMovie(movie.getId(), imageView, imageViewList);
+        model.removeMovie(movie.getId());
+        imageViewList.remove(imageView);
 
     }
 
