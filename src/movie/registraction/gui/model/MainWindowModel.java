@@ -34,8 +34,6 @@ public class MainWindowModel
     private final ObservableList<String> allCategories;
     private final ObservableList<Path> moviePaths;
     private final ObservableList<Path> changeList;
-    private final int IMAGE_HEIGHT = 200;
-    private final int IMAGE_WIDTH = 150;
 
     private final ArrayList<String> extensionList;
 
@@ -649,20 +647,7 @@ public class MainWindowModel
             System.out.println(ex);
         }
     }
-
-    /**
-     * Sets the imageView/poster dimentions and id
-     *
-     * @param imageView The ImageView to set
-     * @param movie     The Movie from which to get the data
-     */
-    public void imageViewSizeAndId(ImageView imageView, Movie movie)
-    {
-        imageView.setFitHeight(IMAGE_HEIGHT);
-        imageView.setFitWidth(IMAGE_WIDTH);
-        imageView.setId("" + movie.getId());
-    }
-
+    
     /**
      * Passes and sets the movie genre in search through bll
      *
