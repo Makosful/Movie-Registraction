@@ -1,8 +1,8 @@
 package movie.registraction.bll;
 
-import movie.registraction.bll.exception.BLLException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import movie.registraction.bll.exception.BLLException;
 
 /**
  *
@@ -10,10 +10,6 @@ import java.net.URL;
  */
 public class OmdbSearch
 {
-
-    public OmdbSearch()
-    {
-    }
 
     /**
      * Creates a URL for OMDB
@@ -24,7 +20,7 @@ public class OmdbSearch
      *
      * @return An URL for the OMDB website
      *
-     * @throws BLLException
+     * @throws BLLException Throws an exception if it fails to access the API
      */
     public URL getOmdbTitleResult(String text) throws BLLException
     {
