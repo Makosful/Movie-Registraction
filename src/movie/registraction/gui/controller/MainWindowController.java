@@ -570,8 +570,8 @@ public class MainWindowController implements Initializable
     private void removeMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
-
-        model.removeMovie(movie.getId(), imageView, imageViewList);
+        model.removeMovie(movie.getId());
+        imageViewList.remove(imageView);
 
     }
 

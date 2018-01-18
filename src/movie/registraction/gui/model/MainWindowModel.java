@@ -573,12 +573,11 @@ public class MainWindowModel
      * @param imageView     The imageView of the movie to remove
      * @param imageViewList The list to remove imageView from
      */
-    public void removeMovie(int id, ImageView imageView, List<ImageView> imageViewList)
+    public void removeMovie(int id)
     {
         try
         {
             bll.removeMovie(id);
-            imageViewList.remove(imageView);
         }
         catch (BLLException ex)
         {
