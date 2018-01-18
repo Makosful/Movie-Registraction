@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,7 +30,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
-import movie.registraction.bll.exception.BLLException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
 
@@ -84,12 +85,12 @@ public class MainWindowController implements Initializable
     //<editor-fold defaultstate="collapsed" desc="Different Variables">
     private MainWindowModel model;
 
-    private final int IMAGE_HEIGHT;
-    private final int IMAGE_WIDTH;
-
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
+
+    private final int IMAGE_HEIGHT;
+    private final int IMAGE_WIDTH;
 
     List<ImageView> imageViewList;
 
@@ -145,7 +146,6 @@ public class MainWindowController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-
         SetupTilePane();
         setupContextMenu();
         popOverVisible = false;
@@ -564,6 +564,7 @@ public class MainWindowController implements Initializable
     private void removeMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
+
         model.removeMovie(movie.getId(), imageView, imageViewList);
 
     }
@@ -636,11 +637,11 @@ public class MainWindowController implements Initializable
      */
     private void PlayMovieCustomPlayer(ImageView imageView)
     {
-        File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
+//        String fxml = new File("/movie/registraction/gui/view/MediaWindow.fxml");
         FXMLLoader fxmlLoader;
         try
         {
-            fxmlLoader = new FXMLLoader(fxml.toURL());
+            fxmlLoader = new FXMLLoader(getClass().getResource("/movie/registraction/gui/view/MediaWindow.fxml"));
             Parent root;
             root = fxmlLoader.load();
             Stage stage = new Stage();
@@ -650,6 +651,14 @@ public class MainWindowController implements Initializable
             controller = fxmlLoader.getController();
 
             controller.setImageView(imageView);
+            controller.setImageView(imageView);
+            controller.MediaSetup(model);
+
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            stage.setMinHeight(700);
+            stage.setMinWidth(825);
 
             stage.setScene(new Scene(root));
             stage.show();
@@ -657,14 +666,12 @@ public class MainWindowController implements Initializable
             stage.setMinHeight(700);
             stage.setMinWidth(825);
         }
-        catch (MalformedURLException ex)
-        {
-            System.out.println(ex);
-        }
+
         catch (IOException ex)
         {
-            System.out.println(ex);
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
@@ -679,6 +686,7 @@ public class MainWindowController implements Initializable
     {
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
+
         flpGenre.getChildren().setAll(getGenreList());
         flpYear.getChildren().setAll(getYearList());
 

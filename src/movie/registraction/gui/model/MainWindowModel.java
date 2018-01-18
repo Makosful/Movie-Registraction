@@ -13,12 +13,14 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.Rating;
 import movie.registraction.bll.exception.BLLException;
+import movie.registraction.dal.exception.DALException;
 
 /**
  *
@@ -33,7 +35,9 @@ public class MainWindowModel
     private final ObservableList<String> allCategories;
     private final ObservableList<Path> moviePaths;
     private final ObservableList<Path> changeList;
-
+    private final int IMAGE_HEIGHT = 200;
+    private final int IMAGE_WIDTH = 150;
+    
     private final ArrayList<String> extensionList;
 
     /**
@@ -448,16 +452,9 @@ public class MainWindowModel
      * @param gridPaneRating The GridPane in which to set the rating
      * @param lblRating      The label in which to set the rating
      */
-    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating)
+    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating) throws DALException
     {
-        try
-        {
-            Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Could not create new rating");
-        }
+        Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
     }
 
     /**
@@ -612,6 +609,19 @@ public class MainWindowModel
         {
             System.out.println(ex);
         }
+    }
+
+    /**
+     * Sets the imageView/poster dimentions and id
+     *
+     * @param imageView The ImageView to set
+     * @param movie     The Movie from which to get the data
+     */
+    public void imageViewSizeAndId(ImageView imageView, Movie movie)
+    {
+        imageView.setFitHeight(IMAGE_HEIGHT);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageView.setId("" + movie.getId());
     }
 
     /**

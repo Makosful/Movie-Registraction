@@ -94,7 +94,7 @@ public class MediaWindowController implements Initializable
 
         progressSliderSetup();
 
-        MediaSetup();
+        //MediaSetup(mdl);
 
         MediaDoubleClick();
 
@@ -110,7 +110,7 @@ public class MediaWindowController implements Initializable
         });
     }
 
-    private void MediaSetup()
+    public void MediaSetup(MainWindowModel mdl)
     {
         isPlaying = false;
 
