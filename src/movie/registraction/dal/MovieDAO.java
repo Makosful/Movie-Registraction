@@ -1,17 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package movie.registraction.dal;
 
-import movie.registraction.dal.exception.DALException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +8,7 @@ import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
+import movie.registraction.dal.exception.DALException;
 
 /**
  *
@@ -29,7 +19,7 @@ public class MovieDAO
 
     DataBaseConnector db;
 
-    public MovieDAO() 
+    public MovieDAO()
     {
         db = new DataBaseConnector();
     }
@@ -38,6 +28,8 @@ public class MovieDAO
      * Adds the provided category
      *
      * @param category
+     *
+     * @throws movie.registraction.dal.exception.DALException
      */
     public void addCategory(String category) throws DALException
     {
@@ -119,6 +111,8 @@ public class MovieDAO
      *
      * @param movieId
      * @param category
+     *
+     * @throws movie.registraction.dal.exception.DALException
      */
     public void removeMovieCategory(int movieId, String category) throws DALException
     {
@@ -566,7 +560,7 @@ public class MovieDAO
                     preparedStatement.setString(i, "%" + searchText + "%");
                 }
             }
-            
+
             ResultSet rs = preparedStatement.executeQuery();
 
             List<Movie> movies = new ArrayList();
