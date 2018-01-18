@@ -48,7 +48,7 @@ public class Search
     }
 
     /**
-     * Sets the goven categories to List of strings categories if its not
+     * Sets the given categories to List of strings categories if its not
      * already there,
      * if it already existing remove it from the list
      *
