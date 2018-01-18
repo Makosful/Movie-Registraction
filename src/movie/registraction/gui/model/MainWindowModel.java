@@ -459,7 +459,7 @@ public class MainWindowModel
         // First tries to get the file
         try
         {
-            lib = bll.loadDirectory("path.txt");
+            lib = bll.readFile("path.txt");
         }
         catch (BLLException ex)
         {
