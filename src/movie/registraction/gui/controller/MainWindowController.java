@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -126,17 +128,10 @@ public class MainWindowController implements Initializable
         setupContextMenu();
         popOverVisible = false;
 
-        try
-        {
-            // Access the Model
-            model = new MainWindowModel();
-            model.loadMovies(tilePane, model.getAllMovies());
-            imageClick();
-        }
-        catch (BLLException ex)
-        {
-            System.out.println(ex);
-        }
+        // Access the Model
+        model = new MainWindowModel();
+        model.loadMovies(tilePane, model.getAllMovies());
+        imageClick();
 
         defaultValues();
 
@@ -198,23 +193,34 @@ public class MainWindowController implements Initializable
      *
      * @param event The event that called this method
      *
-     * @throws IOException
      */
     @FXML
-    private void btnChangeCategories(ActionEvent event) throws IOException
+    private void btnChangeCategories(ActionEvent event) 
     {
         File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-        Parent root;
-        root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(anchorPane.getScene().getWindow());
-        EditCategoriesController controller;
-        controller = fxmlLoader.getController();
+        FXMLLoader fxmlLoader;
+        try
+        {
+            fxmlLoader = new FXMLLoader(fxml.toURL());
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            EditCategoriesController controller;
+            controller = fxmlLoader.getController();
 
-        stage.setScene(new Scene(root));
-        stage.show();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch (MalformedURLException ex)
+        {
+            System.out.println(ex);
+        }
+        catch (IOException ex)
+        {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -225,24 +231,32 @@ public class MainWindowController implements Initializable
      * prompted.
      *
      * @param event The event that called this method
-     *
-     * @throws MalformedURLException
-     * @throws IOException
      */
-    private void openChangeMovieCategoriesWindow(Movie selectedMovie) throws MalformedURLException, IOException
+    private void openChangeMovieCategoriesWindow(Movie selectedMovie)
     {
-        File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-        Parent root;
-        root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(anchorPane.getScene().getWindow());
-        EditMovieCategoryController controller;
-        controller = fxmlLoader.getController();
-        controller.changeMovieCategories(selectedMovie);
-        stage.setScene(new Scene(root));
-        stage.show();
+        try
+        {
+            File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            EditMovieCategoryController controller;
+            controller = fxmlLoader.getController();
+            controller.changeMovieCategories(selectedMovie);
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch (MalformedURLException ex)
+        {
+            System.out.println(ex);
+        }
+        catch (IOException ex)
+        {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -251,7 +265,7 @@ public class MainWindowController implements Initializable
      * @param event The event that called this method
      */
     @FXML
-    private void uploadFiles(ActionEvent event) throws BLLException
+    private void uploadFiles(ActionEvent event) 
     {
         setChosenFilesWithPicture();
     }
@@ -490,14 +504,7 @@ public class MainWindowController implements Initializable
                 System.out.println(movie.getFilePath());
 //                model.openFileInNative(new File(movie.getFilePath()));
                 model.setLastView(movie.getId());
-                try
-                {
-                    PlayMovieCustomPlayer(imageView);
-                }
-                catch (IOException ex)
-                {
-                    System.out.println(ex);
-                }
+                PlayMovieCustomPlayer(imageView);
                 contextMenu.hide();
             }
         });
@@ -507,14 +514,7 @@ public class MainWindowController implements Initializable
             @Override
             public void handle(ActionEvent event)
             {
-                try
-                {
-                    openChangeMovieCategoriesWindow(movie);
-                }
-                catch (IOException ex)
-                {
-                    System.out.println("Cannot open changecategorywindow");
-                }
+                openChangeMovieCategoriesWindow(movie);
                 contextMenu.hide();
             }
         });
@@ -602,24 +602,17 @@ public class MainWindowController implements Initializable
         imageClick();
     }
     /**
-     * MediaPlayer window.
-     * @param imageView
-     * @throws IOException 
-
-
-    /**
      * Opens a Movie in our custom media player
-     *
      * @param imageView The ImageView with the Movie to play
-     *
-     * @throws IOException
->>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
-    private void PlayMovieCustomPlayer(ImageView imageView) throws IOException
+    private void PlayMovieCustomPlayer(ImageView imageView)
     {
         File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-        Parent root;
+        FXMLLoader fxmlLoader;
+        try
+        {
+            fxmlLoader = new FXMLLoader(fxml.toURL());
+                    Parent root;
         root = fxmlLoader.load();
         Stage stage = new Stage();
         stage.initModality(Modality.WINDOW_MODAL);
@@ -634,6 +627,15 @@ public class MainWindowController implements Initializable
 
         stage.setMinHeight(700);
         stage.setMinWidth(825);
+        }
+        catch (MalformedURLException ex)
+        {
+            System.out.println(ex);
+        }
+        catch (IOException ex)
+        {
+            System.out.println(ex);
+        }
     }
     /**
      *Expanding the accordion panes to the titledpane.

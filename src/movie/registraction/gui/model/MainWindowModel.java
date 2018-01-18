@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -48,10 +50,8 @@ public class MainWindowModel
 
     /**
      * The constructor
-     *
-     * @throws DALException
      */
-    public MainWindowModel()
+    public MainWindowModel() 
     {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 150;
@@ -62,7 +62,6 @@ public class MainWindowModel
         }
         catch (BLLException ex)
         {
-            System.out.println(ex);
         }
 
         years = FXCollections.observableArrayList();
@@ -196,11 +195,19 @@ public class MainWindowModel
      *
      * @return all categories in observable list
      *
-     * @throws movie.registraction.bll.exception.BLLException
      */
-    public ObservableList<String> loadCategories() throws BLLException
+    public ObservableList<String> loadCategories() 
     {
-        return bll.loadCategories();
+        ObservableList<String> categories =  null;
+        try
+        {
+            categories = bll.loadCategories();
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+        return categories;
     }
 
     /**
@@ -395,10 +402,8 @@ public class MainWindowModel
      * @param tilePane The tilePane to set the image into
      * @param image    The picture to set in
      * @param url      The URL of the image
-     *
-     * @throws DALException
      */
-    public void setPictures(TilePane tilePane, File image, String url) throws DALException
+    public void setPictures(TilePane tilePane, File image, String url) 
     {
         ImageView imageView = new ImageView(url);
         imageView.setFitHeight(IMAGE_HEIGHT);
