@@ -598,16 +598,24 @@ public class BLLManager
     {
         search.setRating(rating);
     }
-        /**
+
+    /**
      * TODO
+     *
      * @return TODO
-     * @throws movie.registraction.bll.exception.BLLException
+     *
+     * @throws BLLException TODO
      */
     public List<Movie> prepareSearch() throws BLLException
     {
         return search.prepareSearch();
     }
 
+    /**
+     * TODO
+     *
+     * @throws BLLException TODO
+     */
     public void clearFilters() throws BLLException
     {
         search.clearFilters();
@@ -660,5 +668,5 @@ public class BLLManager
         categories.saveMovieCategories();
     }
     //</editor-fold>
-    
+
 }
