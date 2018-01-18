@@ -622,7 +622,7 @@ public class MainWindowController implements Initializable
 
     /**
      * Filtering after descending or ascending, based on title or rating.
-     * Handles the sot order in the comboboc
+     * Handles the sot order in the combo box
      *
      * @param event The event that called this method
      */
@@ -642,7 +642,6 @@ public class MainWindowController implements Initializable
      */
     private void PlayMovieCustomPlayer(ImageView imageView)
     {
-//        String fxml = new File("/movie/registraction/gui/view/MediaWindow.fxml");
         FXMLLoader fxmlLoader;
         try
         {
@@ -680,10 +679,10 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Expanding the accordion panes to the titledpane.
-     * Adding genre and year checkboxes to the different flowpanes.
-     * Mouse events, everytime click is registerede on checkbox,
-     * we make the filtering and register contextmenues, popovers etc to the
+     * Expanding the accordion panes to the titled pane.
+     * Adding genre and year check boxes to the different flowpanes.
+     * Mouse events, every click is registered on checkbox,
+     * we make the filtering and register context menus, pop overs etc to the
      * images/movie.
      * Sets the default values
      */
@@ -735,7 +734,7 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Sets the imageView/poster dimentions and id
+     * Sets the imageView/poster dimensions and id
      *
      * @param imageView The ImageView to set
      * @param movie     The Movie from which to get the data
@@ -749,7 +748,7 @@ public class MainWindowController implements Initializable
 
     /**
      * Adds Movies to the TilePane
-     * Gets the seach result in form of a list of movies, which is looped throuh
+     * Gets the search result in form of a list of movies, which is looped through
      * adding a new imageView/poster to the tilePane
      */
     public void prepareSearch()
@@ -806,8 +805,8 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Making imageViews, setting their sizes, adding them to an arraylist,
-     * adding them to our tilepane, and finally giving the imageviews an id,
+     * Making imageViews, setting their sizes, adding them to an array list,
+     * adding them to our tile pane, and finally giving the image views an id,
      * that will refer to the actual movie.
      *
      * @param image The picture to set in
@@ -824,7 +823,7 @@ public class MainWindowController implements Initializable
         model.setImageId(image, imageView);
     }
     /**
-     * Adds movies to db and program if they dont exist in db/program.
+     * Adds movies to db and program if they don't exist in db/program.
      */
     private void chooseFiles()
     {
@@ -862,8 +861,8 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Checks whether contextmenu is open or not, if yes, it closes.
-     * Incase user dobbleclicks several times, so it doesnt stack.
+     * Checks whether context menu is open or not, if yes, it closes.
+     * Incase user double clicks several times, so it doesn't stack.
      */
     public void contextMenuOpenOrNot()
     {
