@@ -531,16 +531,12 @@ public class MainWindowController implements Initializable
     }
 
     /**
-<<<<<<< HEAD
-     * Deletes movie from database, tilepane and arraylist which cointains imageviews.
      * @param imageView
      * @param movie
-=======
      * Deletes movie.
      *
      * @param imageView The ImageView to delete
      * @param movie     The Movie within
->>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
     private void deleteMovie(ImageView imageView, Movie movie)
     {
