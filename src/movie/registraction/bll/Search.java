@@ -370,7 +370,6 @@ public class Search
      */
     public void clearFilters() throws BLLException
     {
-        System.out.println("HDWHD");
         categories.clear();
         year.clear();
         order = "Title";
