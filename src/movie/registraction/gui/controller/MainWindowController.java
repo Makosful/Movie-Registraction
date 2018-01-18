@@ -127,8 +127,8 @@ public class MainWindowController implements Initializable
 
     public MainWindowController()
     {
-        IMAGE_HEIGHT = 200;
-        IMAGE_WIDTH = 200;
+        IMAGE_HEIGHT = 150;
+        IMAGE_WIDTH = 125;
 
         years = FXCollections.observableArrayList();
         genres = FXCollections.observableArrayList();
@@ -375,8 +375,8 @@ public class MainWindowController implements Initializable
 
         lblImdbRating.setText("IMDB rating: " + movie.getImdbRating() + "/10");
         lblImdbRating.setStyle("-fx-text-fill: black");
-        
-        if(movie.getPersonalRating() != -1)
+
+        if (movie.getPersonalRating() != -1)
         {
             lblPersonalRating.setText("Personal rating: " + movie.getPersonalRating() + "/10");
         }
@@ -391,10 +391,10 @@ public class MainWindowController implements Initializable
 
         lblRating = new Label("");
         lblRating.setStyle("-fx-text-fill: black");
-        
+
         lblRatingImdb = new Label();
         lblRatingImdb.setStyle("-fx-text-fill: black");
-        
+
         //HYPERLINK
         imdbURL.setText("http://www.imdb.com/title/" + movie.getImdbLink());
         //imdbURL.setStyle("-fx-text-fill: black");
@@ -406,12 +406,12 @@ public class MainWindowController implements Initializable
         popGrid.setPadding(new Insets(30));
         popGrid.setHgap(20);
         popGrid.setVgap(10);
-       
+
         GridPane ratingGrid = new GridPane();
         ratingGrid.setStyle("-fx-cursor: hand");
-        
+
         model.setUpRating(movie.getId(), movie.getPersonalRating(), ratingGrid, lblRating);
-        
+
         popGrid.add(lblMovieTitle, 0, 0);
         popGrid.add(lblGenre, 0, 1);
         popGrid.add(lblYear, 0, 2);
@@ -561,7 +561,9 @@ public class MainWindowController implements Initializable
     }
 
     /**
-     * Deletes movie from database, tilepane and arraylist which cointains imageviews.
+     * Deletes movie from database, tilepane and arraylist which cointains
+     * imageviews.
+     *
      * @param imageView The ImageView to delete
      * @param movie     The Movie within
      */
@@ -638,6 +640,7 @@ public class MainWindowController implements Initializable
      * Opens a Movie in our custom media player
      *
      * @param imageView The ImageView with the Movie to play
+     *
      * @throws IOException
      */
     private void PlayMovieCustomPlayer(ImageView imageView)
@@ -648,27 +651,20 @@ public class MainWindowController implements Initializable
             fxmlLoader = new FXMLLoader(getClass().getResource("/movie/registraction/gui/view/MediaWindow.fxml"));
             Parent root;
             root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(anchorPane.getScene().getWindow());
+            
             MediaWindowController controller;
             controller = fxmlLoader.getController();
-
             controller.setImageView(imageView);
             controller.setImageView(imageView);
             controller.MediaSetup(model);
-
-            stage.setScene(new Scene(root));
-            stage.show();
-
+            
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
             stage.setMinHeight(700);
             stage.setMinWidth(825);
-
             stage.setScene(new Scene(root));
             stage.show();
-
-            stage.setMinHeight(700);
-            stage.setMinWidth(825);
         }
 
         catch (IOException ex)
@@ -748,7 +744,8 @@ public class MainWindowController implements Initializable
 
     /**
      * Adds Movies to the TilePane
-     * Gets the search result in form of a list of movies, which is looped through
+     * Gets the search result in form of a list of movies, which is looped
+     * through
      * adding a new imageView/poster to the tilePane
      */
     public void prepareSearch()
@@ -822,29 +819,31 @@ public class MainWindowController implements Initializable
         tilePane.getChildren().add(imageView);
         model.setImageId(image, imageView);
     }
+
     /**
      * Adds movies to db and program if they don't exist in db/program.
      */
     private void chooseFiles()
     {
-            for(File chosenFile : model.chooseFile())
+        for (File chosenFile : model.chooseFile())
+        {
+            String nameOfMovie = model.splitDot(chosenFile.getName());
+            String[] metaData = model.getMovieMetaData(nameOfMovie);
+
+            if (!model.movieAlreadyExisting(metaData[0].toLowerCase()))
             {
-                String nameOfMovie = model.splitDot(chosenFile.getName());
-                String[] metaData = model.getMovieMetaData(nameOfMovie);
-                
-                if (!model.movieAlreadyExisting(metaData[0].toLowerCase()))
-                {
-                    model.addMovie(metaData, chosenFile.getPath());
-                    String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
-                    imgPath = "https:" + imgPath;
-                    setPictures(chosenFile, imgPath);
-                }
-                else
-                {
-                    alertButtonMovieAlreadyExist();
-                }
+                model.addMovie(metaData, chosenFile.getPath());
+                String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
+                imgPath = "https:" + imgPath;
+                setPictures(chosenFile, imgPath);
+            }
+            else
+            {
+                alertButtonMovieAlreadyExist();
             }
         }
+    }
+
     /**
      * Alert if movie already exists.
      */
