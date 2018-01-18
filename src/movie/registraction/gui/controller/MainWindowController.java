@@ -23,7 +23,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.DALException;
+import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
 

@@ -1,4 +1,4 @@
-package movie.registraction.dal;
+package movie.registraction.dal.exception;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
