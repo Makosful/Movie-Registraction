@@ -165,7 +165,9 @@ public class Search
         if (!searchText.isEmpty())
         {
             //If its the first filter add where clause in first iteration
-            if (sqlSearchCategory.isEmpty() && sqlSearchYear.isEmpty() && sqlRating.isEmpty())
+            if (sqlSearchCategory.isEmpty() 
+                && sqlSearchYear.isEmpty() 
+                && sqlRating.isEmpty())
             {
                 sqlSearch += "WHERE ";
             }
@@ -194,20 +196,22 @@ public class Search
 
         //Check if years filters are added, and at least one of the other remainding filters
         // are added too, if they are, set an "AND" keyword in the sql query
-        if (!sqlSearchYear.isEmpty() && (!sqlSearch.isEmpty() || !sqlRating.isEmpty()))
+        if (!sqlSearchYear.isEmpty() 
+            && (!sqlSearch.isEmpty() 
+            || !sqlRating.isEmpty()))
         {
             sqlSearchYear += " AND ";
         }
 
         //Check if the rating filter is added, and at least one of the other remainding filters
         // are added too, if they are, set an "AND" keyword in the sql query
-        if (!sqlRating.isEmpty() && !sqlSearch.isEmpty())
+        if (!sqlRating.isEmpty() 
+            && !sqlSearch.isEmpty())
         {
             sqlRating += " AND ";
         }
 
         //add all the filter search strings to one
-
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
 
         try
@@ -283,7 +287,6 @@ public class Search
     {
         for (Map.Entry<String, String> entry : year.entrySet())
         {
-
             //If its the first filter add where clause in first iteration
             if (categories.isEmpty() && sqlSearchYear.isEmpty())
             {
