@@ -245,19 +245,13 @@ public class DALManager
      */
     public void addMovie(String[] movieMetaData, String filePath) throws DALException
     {
-        try
-        {
-            int id = mDAO.addMovie(movieMetaData, filePath);
 
-            String[] metaMovieCategories = movieMetaData[5].split(" ");
-            for (String cat : metaMovieCategories)
-            {
-                mDAO.addMovieCategory(id, cat);
-            }
-        }
-        catch (DALException ex)
+        int id = mDAO.addMovie(movieMetaData, filePath);
+
+        String[] metaMovieCategories = movieMetaData[5].split(" ");
+        for (String cat : metaMovieCategories)
         {
-            throw new DALException();
+            mDAO.addMovieCategory(id, cat);
         }
     }
 
@@ -265,7 +259,6 @@ public class DALManager
      * Add a change listener to a folder and all sub folders
      *
      * @param folders
-     * @param root    The root folder to watch
      */
     public void directoryWatcher(ArrayList folders)
     {
@@ -296,14 +289,7 @@ public class DALManager
      */
     public void removeMovieCategory(int movieid, String category) throws DALException
     {
-        try
-        {
-            mDAO.removeMovieCategory(movieid, category);
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
+        mDAO.removeMovieCategory(movieid, category);
     }
 
     /**
@@ -317,14 +303,7 @@ public class DALManager
      */
     public void addMovieCategory(int movieid, String category) throws DALException
     {
-        try
-        {
-            mDAO.addMovieCategory(movieid, category);
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
+        mDAO.addMovieCategory(movieid, category);
     }
 
     /**
@@ -336,15 +315,7 @@ public class DALManager
      */
     public List<String> getAllCategories() throws DALException
     {
-        try
-        {
-            return mDAO.getAllCategories();
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
-
+        return mDAO.getAllCategories();
     }
 
     /**
@@ -356,14 +327,7 @@ public class DALManager
      */
     public void removeCategory(String cat) throws DALException
     {
-        try
-        {
-            mDAO.removeCategory(cat);
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
+        mDAO.removeCategory(cat);
     }
 
     /**
@@ -375,14 +339,7 @@ public class DALManager
      */
     public void addCategory(String cat) throws DALException
     {
-        try
-        {
-            mDAO.addCategory(cat);
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
+        mDAO.addCategory(cat);
     }
 
     /**
@@ -396,14 +353,7 @@ public class DALManager
      */
     public void setPersonalRating(int movieId, int rating) throws DALException
     {
-        try
-        {
-            mDAO.setPersonalRating(movieId, rating);
-        }
-        catch (DALException ex)
-        {
-            throw new DALException();
-        }
+        mDAO.setPersonalRating(movieId, rating);
     }
 
     /**
