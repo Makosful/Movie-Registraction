@@ -385,6 +385,18 @@ public class MainWindowModel
             System.out.println("One or more invalid file(s) / None selected");
         }
     }
+<<<<<<< HEAD
+    /**
+     * Making imageViews, setting their sizes, adding them to an arraylist,
+     * adding them to our tilepane, and finally giving the imageviews an id,
+     * that will refer to the actual movie.
+     * @param tilePane
+     * @param chosenFile
+     * @param imgUrl
+     * @throws DALException 
+     */
+    public void setPictures(TilePane tilePane, File chosenFile, String imgUrl) throws DALException
+=======
 
     /**
      * Sets the picture in the TilePane
@@ -396,6 +408,7 @@ public class MainWindowModel
      * @throws DALException
      */
     public void setPictures(TilePane tilePane, File image, String url) throws DALException
+>>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
     {
         ImageView imageView = new ImageView(url);
         imageView.setFitHeight(IMAGE_HEIGHT);
@@ -629,12 +642,11 @@ public class MainWindowModel
             System.out.println(ex);
         }
     }
-
     /**
+     * Finding the specific movie, which has same id as imageid
+     * This is to find the object, that belongs to the image.
      * Gets the info of a Movie in the given ImageView
-     *
      * @param imageView The ImageView which Movie to get info on
-     *
      * @return Returns a Movie with the same ID as the ImageView
      */
     public Movie getMovieInfo(ImageView imageView)
@@ -676,11 +688,12 @@ public class MainWindowModel
      *
      * @param id The IF of the Movie to remove
      */
-    public void removeMovie(int id)
+    public void removeMovie(int id, ImageView imageView)
     {
         try
         {
             bll.removeMovie(id);
+            imageViewList.remove(imageView);
         }
         catch (BLLException ex)
         {
@@ -822,4 +835,5 @@ public class MainWindowModel
     {
         bll.setSearchText(text);
     }
+    
 }

@@ -292,6 +292,8 @@ public class MainWindowController implements Initializable
         /**
          * Creates a for each loop for all the movie categories and allows us to
          * display them.
+         * Code makes a new line, and throws the remaining genres down,
+         * once 4, 8 or 12 categories have been added. This is due to space.
          */
         String genreCategories = null;
         for (int i = 0; i < movie.getCategories().size(); i++)
@@ -300,13 +302,13 @@ public class MainWindowController implements Initializable
             {
                 genreCategories = movie.getCategories().get(i);
             }
-            else if (i <= 3)
+            else if(i == 4 || i == 8 || i == 12)
             {
-                genreCategories += " " + movie.getCategories().get(i);
+                genreCategories += "\n" + movie.getCategories().get(i);
             }
             else
             {
-                genreCategories += "\n" + movie.getCategories().get(i);
+                genreCategories += " " + movie.getCategories().get(i);
             }
         }
 
@@ -529,15 +531,22 @@ public class MainWindowController implements Initializable
     }
 
     /**
+<<<<<<< HEAD
+     * Deletes movie from database, tilepane and arraylist which cointains imageviews.
+     * @param imageView
+     * @param movie
+=======
      * Deletes movie.
      *
      * @param imageView The ImageView to delete
      * @param movie     The Movie within
+>>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
     private void deleteMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
-        model.removeMovie(movie.getId());
+        model.removeMovie(movie.getId(), imageView);
+       
     }
 
     /**
@@ -553,6 +562,8 @@ public class MainWindowController implements Initializable
     }
 
     /**
+     * Filtering after minimum stars.
+     * @param event 
      * Handles the minimun rating
      *
      * @param event The event that called this method
@@ -564,7 +575,9 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();
     }
-
+    /**
+     * Filtering after the radiobuttons, "title" or "rating"
+     * @param event 
     /**
      * Handles the sort order
      *
@@ -579,10 +592,9 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();
     }
-
     /**
+     * Filtering after descending or ascending, based on title or rating.
      * Handles the sot order in the comboboc
-     *
      * @param event The event that called this method
      */
     @FXML
@@ -592,6 +604,11 @@ public class MainWindowController implements Initializable
         model.prepareSearch(tilePane);
         imageClick();
     }
+    /**
+     * MediaPlayer window.
+     * @param imageView
+     * @throws IOException 
+
 
     /**
      * Opens a Movie in our custom media player
@@ -599,6 +616,7 @@ public class MainWindowController implements Initializable
      * @param imageView The ImageView with the Movie to play
      *
      * @throws IOException
+>>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
     private void PlayMovieCustomPlayer(ImageView imageView) throws IOException
     {
@@ -620,8 +638,12 @@ public class MainWindowController implements Initializable
         stage.setMinHeight(700);
         stage.setMinWidth(825);
     }
-
     /**
+     *Expanding the accordion panes to the titledpane.
+     * Adding genre and year checkboxes to the different flowpanes.
+     * Mouse events, everytime click is registerede on checkbox,
+     * we make the filtering and register contextmenues, popovers etc to the
+     * images/movie.
      * Sets the default values
      */
     private void defaultValues()
@@ -657,5 +679,4 @@ public class MainWindowController implements Initializable
             });
         }
     }
-
 }

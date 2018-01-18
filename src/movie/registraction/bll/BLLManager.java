@@ -382,6 +382,12 @@ public class BLLManager
         }
     }
 
+        /**
+     * Finding the specific movie, which has same id as imageid
+     * This is to find the object, that belongs to the image.
+     * @param imageView
+     * @return 
+     */
     public Movie getMovieInfo(ImageView imageView) throws BLLException
     {
         Movie movieObject = null;

@@ -5,7 +5,6 @@
  */
 package movie.registraction.dal;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,8 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import movie.registraction.be.Movie;
@@ -482,6 +479,7 @@ public class MovieDAO {
                 i++;
                 preparedStatement.setString(i, category);                
             }
+            
             for(Map.Entry<String, String> y : year.entrySet()) {
                 String key = y.getKey();
                 String value = y.getValue();
