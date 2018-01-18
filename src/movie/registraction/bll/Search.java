@@ -47,7 +47,7 @@ public class Search
      * already there,
      * if it already existing remove it from the list
      *
-     * @param category
+     * @param category TODO
      */
     public void setSearchCategories(String category)
     {
@@ -66,7 +66,7 @@ public class Search
      * Sets the given decades to hashmap year, by splitting the string
      * if its already in the hashmap remove it
      *
-     * @param years
+     * @param years TODO
      */
     public void setSearchYears(String years)
     {
@@ -86,7 +86,7 @@ public class Search
      * Sets the given rating, by removing all charecters in string
      * and converting the string to int
      *
-     * @param rating
+     * @param rating TODO
      */
     public void setRating(String rating)
     {
@@ -104,7 +104,7 @@ public class Search
     /**
      * Sets the specific order type as string
      *
-     * @param order
+     * @param order TODO
      */
     public void setOrder(String order)
     {
@@ -114,7 +114,7 @@ public class Search
     /**
      * Sets the given sort type as string
      *
-     * @param sort
+     * @param sort TODO
      */
     public void setSort(String sort)
     {
@@ -124,13 +124,21 @@ public class Search
     /**
      * Sets the given search string
      *
-     * @param searchText
+     * @param searchText TODO
      */
     public void setSearchText(String searchText)
     {
         this.searchText = searchText;
     }
 
+    /**
+     * TODO
+     *
+     * @return TODO
+     *
+     * @throws BLLException Throws an exception if it fails to connect to the
+     *                      database
+     */
     public List<Movie> prepareSearch() throws BLLException
     {
         //Init the sql queries
@@ -211,9 +219,9 @@ public class Search
     /**
      * Checks if a given string is numeric
      *
-     * @param str
+     * @param str TODO
      *
-     * @return
+     * @return TODO
      */
     public boolean isNumeric(String str)
     {
@@ -231,9 +239,9 @@ public class Search
     /**
      * Stitches together the sql string for the categories filter
      *
-     * @param sqlSearchCategory
+     * @param sqlSearchCategory TODO
      *
-     * @return
+     * @return TODO
      */
     private String setSqlSearchCategory(String sqlSearchCategory)
     {
@@ -262,9 +270,9 @@ public class Search
     /**
      * Stitches together the sql string for the years(DECADES) filter
      *
-     * @param sqlSearchYear
+     * @param sqlSearchYear TODO
      *
-     * @return
+     * @return TODO
      */
     private String setSqlSearchYear(String sqlSearchYear)
     {
@@ -299,9 +307,9 @@ public class Search
     /**
      * Stitches together the sql string for the order filter
      *
-     * @param sqlOrderBy
+     * @param sqlOrderBy TODO
      *
-     * @return
+     * @return TODO
      */
     private String setSqlSearchOrder(String sqlOrderBy)
     {
@@ -328,11 +336,11 @@ public class Search
     /**
      * Stitches together the sql string for the rating filter
      *
-     * @param sqlRating
-     * @param sqlSearchYear
-     * @param sqlSearchCategory
+     * @param sqlRating         TODO
+     * @param sqlSearchYear     TODO
+     * @param sqlSearchCategory TODO
      *
-     * @return
+     * @return Returns a String containing aprepared statement
      */
     private String setSqlSearchRating(String sqlRating, String sqlSearchYear, String sqlSearchCategory)
     {
@@ -352,7 +360,8 @@ public class Search
     /**
      * Clear the search filters
      *
-     * @throws BLLException
+     * @throws BLLException Throws an exception if it fails to connect to the
+     *                      storage
      */
     public void clearFilters() throws BLLException
     {
