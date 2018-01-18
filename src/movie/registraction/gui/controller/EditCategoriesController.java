@@ -6,10 +6,7 @@
 package movie.registraction.gui.controller;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,8 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import movie.registraction.bll.exception.BLLException;
-import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -39,24 +34,16 @@ public class EditCategoriesController implements Initializable
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        try {
-            m = new MainWindowModel();
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
-        }
+        m = new MainWindowModel();
 
-        try
-        {
-            lstViewAllCategories.setItems(m.loadCategories());
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Could not load list");
-        }
+        lstViewAllCategories.setItems(m.loadCategories());
     }
 
     @FXML

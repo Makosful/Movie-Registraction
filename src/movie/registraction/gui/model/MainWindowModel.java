@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -20,10 +18,9 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
-import movie.registraction.bll.exception.BLLException;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.Rating;
-import movie.registraction.dal.exception.DALException;
+import movie.registraction.bll.exception.BLLException;
 
 /**
  *
@@ -51,7 +48,7 @@ public class MainWindowModel
     /**
      * The constructor
      */
-    public MainWindowModel() 
+    public MainWindowModel()
     {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 150;
@@ -196,9 +193,9 @@ public class MainWindowModel
      * @return all categories in observable list
      *
      */
-    public ObservableList<String> loadCategories() 
+    public ObservableList<String> loadCategories()
     {
-        ObservableList<String> categories =  null;
+        ObservableList<String> categories = null;
         try
         {
             categories = bll.loadCategories();
@@ -403,7 +400,7 @@ public class MainWindowModel
      * @param image    The picture to set in
      * @param url      The URL of the image
      */
-    public void setPictures(TilePane tilePane, File image, String url) 
+    public void setPictures(TilePane tilePane, File image, String url)
     {
         ImageView imageView = new ImageView(url);
         imageView.setFitHeight(IMAGE_HEIGHT);
@@ -511,7 +508,7 @@ public class MainWindowModel
         {
             Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
         }
-        catch (DALException ex)
+        catch (BLLException ex)
         {
             System.out.println("Could not create new rating");
         }
