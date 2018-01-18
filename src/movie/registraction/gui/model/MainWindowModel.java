@@ -595,28 +595,6 @@ public class MainWindowModel
     }
 
     /**
-     * Tries to match ids of image and movie.
-     *
-     * @param imageView The ImageView which Movie to find
-     *
-     * @return Returns the Movie object with the same ID as the provided
-     *         ImageView
-     */
-    public Movie getMovieIdMatch(ImageView imageView)
-    {
-        Movie idMatchMovie = null;
-        try
-        {
-            idMatchMovie = bll.getMovieInfo(imageView);
-        }
-        catch (BLLException ex)
-        {
-            System.out.println(ex);
-        }
-        return idMatchMovie;
-    }
-
-    /**
      * Call to findOldAndBadMovies in bll,
      * in order to find old and bad movies to remove
      */
