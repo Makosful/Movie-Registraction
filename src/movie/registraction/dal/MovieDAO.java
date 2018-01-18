@@ -11,7 +11,6 @@ import movie.registraction.be.Movie;
 import movie.registraction.dal.exception.DALException;
 
 /**
- *
  * @author B
  */
 public class MovieDAO
@@ -27,9 +26,10 @@ public class MovieDAO
     /**
      * Adds the provided category
      *
-     * @param category
+     * @param category The category to add, as a String
      *
-     * @throws movie.registraction.dal.exception.DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
     public void addCategory(String category) throws DALException
     {
@@ -52,9 +52,10 @@ public class MovieDAO
     /**
      * Removes the provided category
      *
-     * @param category
+     * @param category The category to remove, as a String
      *
-     * @throws movie.registraction.dal.exception.DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
     public void removeCategory(String category) throws DALException
     {
@@ -76,14 +77,15 @@ public class MovieDAO
     /**
      * Adds a category to a specific movie
      *
-     * @param movieId
-     * @param category
+     * @param id       The ID of the Movie
+     * @param category The category to add
      *
-     * @throws movie.registraction.dal.exception.DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
-    public void addMovieCategory(int movieId, String category) throws DALException
+    public void addMovieCategory(int id, String category) throws DALException
     {
-        System.out.println("Add:" + movieId + category);
+        System.out.println("Add:" + id + category);
 
         int categoryId;
         categoryId = getCategoryId(category);
@@ -95,7 +97,7 @@ public class MovieDAO
             PreparedStatement preparedStatement = con.prepareStatement(sql);
 
             preparedStatement.setInt(1, categoryId);
-            preparedStatement.setInt(2, movieId);
+            preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
         }
@@ -109,15 +111,16 @@ public class MovieDAO
     /**
      * Removes a category from a specific movie
      *
-     * @param movieId
-     * @param category
+     * @param id       Th ID of the Movie
+     * @param category The category to remove
      *
-     * @throws movie.registraction.dal.exception.DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
-    public void removeMovieCategory(int movieId, String category) throws DALException
+    public void removeMovieCategory(int id, String category) throws DALException
     {
 
-        System.out.println("Remove:" + movieId + category);
+        System.out.println("Remove:" + id + category);
 
         int categoryId;
         categoryId = getCategoryId(category);
@@ -127,7 +130,7 @@ public class MovieDAO
             String sql = "DELETE FROM CatMovie WHERE movieId = ? AND categoryId = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
 
-            preparedStatement.setInt(1, movieId);
+            preparedStatement.setInt(1, id);
             preparedStatement.setInt(2, categoryId);
 
             preparedStatement.executeUpdate();
@@ -142,9 +145,10 @@ public class MovieDAO
     /**
      * Returns all categories
      *
-     * @return List of strings
+     * @return List of Strings containing all the categories
      *
-     * @throws movie.registraction.dal.exception.DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
     public List<String> getAllCategories() throws DALException
     {
@@ -175,9 +179,10 @@ public class MovieDAO
      *
      * @param category
      *
-     * @return int id
+     * @return The ID of the category as an int
      *
-     * @throws SQLException
+     * @throws SQLException Throws and exception if it fails to access the
+     *                      database
      */
     private int getCategoryId(String category) throws DALException
     {
@@ -209,9 +214,10 @@ public class MovieDAO
      * new
      * movie instance
      *
-     * @return
+     * @return Returns an ObservableList of all Movies
      *
-     * @throws DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
     public ObservableList<Movie> getAllMovies() throws DALException
     {
@@ -268,12 +274,13 @@ public class MovieDAO
      * categories appear several times in the reultsets, when using LEFT/RIGHT
      * or INNER JOIN.
      *
-     * @param rs
-     * @param previousMovie
+     * @param rs            The ResultSet retrievd from the DataBase
+     * @param previousMovie TODO
      *
-     * @return
+     * @return Returns a Movie created from the DataBase
      *
-     * @throws SQLException
+     * @throws SQLException Throws and exception if it fails to access the
+     *                      database
      */
     private Movie createMovieFromDB(ResultSet rs, Movie previousMovie) throws DALException
     {
@@ -314,14 +321,15 @@ public class MovieDAO
     /**
      * Add a new movie to the database
      *
-     * @param movieMetaData
-     * @param filePath
+     * @param metadata A String Array containing the MetaData of a Movie
+     * @param filePath The local file path of the Movie
      *
-     * @return
+     * @return Returns the dataBase ID of the Movie
      *
-     * @throws DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
-    public int addMovie(String[] movieMetaData, String filePath) throws DALException
+    public int addMovie(String[] metadata, String filePath) throws DALException
     {
         try (Connection con = db.getConnection())
         {
@@ -332,14 +340,14 @@ public class MovieDAO
                                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, movieMetaData[0]);
+            preparedStatement.setString(1, metadata[0]);
             preparedStatement.setString(2, filePath);
-            preparedStatement.setString(3, movieMetaData[4]);
-            preparedStatement.setString(4, movieMetaData[6]);
+            preparedStatement.setString(3, metadata[4]);
+            preparedStatement.setString(4, metadata[6]);
             preparedStatement.setDouble(5, -1);
-            preparedStatement.setDouble(6, Double.parseDouble(movieMetaData[3]));
-            preparedStatement.setInt(7, Integer.parseInt(movieMetaData[1]));
-            preparedStatement.setInt(8, Integer.parseInt(movieMetaData[2]));
+            preparedStatement.setDouble(6, Double.parseDouble(metadata[3]));
+            preparedStatement.setInt(7, Integer.parseInt(metadata[1]));
+            preparedStatement.setInt(8, Integer.parseInt(metadata[2]));
 
             preparedStatement.executeUpdate();
 
@@ -360,12 +368,13 @@ public class MovieDAO
     /**
      * Sets the users rating for a specific movie in the database
      *
-     * @param movieId
-     * @param personalRating
+     * @param id             The ID of the Movie to rate
+     * @param personalRating The value of the personal rating
      *
-     * @throws DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
-    public void setPersonalRating(int movieId, int personalRating) throws DALException
+    public void setPersonalRating(int id, int personalRating) throws DALException
     {
 
         try (Connection con = db.getConnection())
@@ -377,7 +386,7 @@ public class MovieDAO
 
             PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
             preparedStatement.setInt(1, personalRating);
-            preparedStatement.setInt(2, movieId);
+            preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
         }
         catch (SQLException ex)
@@ -389,22 +398,23 @@ public class MovieDAO
     /**
      * Remove a specific movie and its categories depending in the movie id
      *
-     * @param movieId
+     * @param id The ID of the Movie
      *
-     * @throws DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
-    public void removeMovie(int movieId) throws DALException
+    public void removeMovie(int id) throws DALException
     {
         try (Connection con = db.getConnection())
         {
-            System.out.println(movieId);
+            System.out.println(id);
 
             String sql = "DELETE Movie FROM Movie "
                          + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "
                          + "WHERE Movie.id = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setInt(1, movieId);
+            preparedStatement.setInt(1, id);
             preparedStatement.execute();
 
         }
@@ -418,11 +428,12 @@ public class MovieDAO
      * When playing a movie this mehtod is called,
      * it sets the last view of the specified movie with the given movie ID
      *
-     * @param movieId
+     * @param id The ID of the Movie
      *
-     * @throws DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
-    public void setLastView(int movieId) throws DALException
+    public void setLastView(int id) throws DALException
     {
 
         try (Connection con = db.getConnection())
@@ -431,7 +442,7 @@ public class MovieDAO
                                + "SET Movie.lastView = GETDATE() "
                                + "WHERE id = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
-            preparedStatement.setInt(1, movieId);
+            preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
 
         }
@@ -445,13 +456,14 @@ public class MovieDAO
      * This method is to get a imgPath from a specific movie.
      * So that it can be thrown into the tilepane.
      *
-     * @param movieName
+     * @param title Thge title of the Movie
      *
-     * @return
+     * @return Returns a String containing the URL to the Movie's image
      *
-     * @throws DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
-    public String getSpecificMovieImage(String movieName) throws DALException
+    public String getSpecificMovieImage(String title) throws DALException
     {
         String imageLink = null;
         try (Connection con = db.getConnection())
@@ -459,7 +471,7 @@ public class MovieDAO
             String sqlInsert = "SELECT imgPath FROM Movie WHERE name = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
-            preparedStatement.setString(1, movieName);
+            preparedStatement.setString(1, title);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next())
             {
@@ -482,16 +494,17 @@ public class MovieDAO
      * Movie objects from the resultset and returns a list of the resulting
      * movies.
      *
-     * @param sqlString
-     * @param categories
-     * @param year
-     * @param rating
-     * @param searchText
-     * @param searchNumeric
+     * @param sqlString     TODO
+     * @param categories    TODO
+     * @param year          TODO
+     * @param rating        TODO
+     * @param searchText    TODO
+     * @param searchNumeric TODO
      *
-     * @return ArrayList of movies
+     * @return Returns an ArrayList of Movies containing the search results
      *
-     * @throws DALException
+     * @throws DALException Throws and exception if it fails to access the
+     *                      database
      */
     public List<Movie> searchMovies(String sqlString,
                                     List<String> categories,
