@@ -69,7 +69,7 @@ public class EditMovieCategoryController implements Initializable
             listViewChosen.setItems(m.loadChosenMovieCategories(selectedMovie));
 
         }
-        catch (IOException | DALException ex)
+        catch (DALException ex)
         {
             System.out.println(ex.getMessage());
         }
