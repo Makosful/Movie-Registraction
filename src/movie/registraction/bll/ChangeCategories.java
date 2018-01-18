@@ -92,7 +92,7 @@ public class ChangeCategories
      * The removeMovieCategory list and chosenMovieCategory list is then looped
      * through,
      * adding/removing the categories in the database to this specific movie.
-     * @throws movie.registraction.dal.exception.DALException
+     * @throws movie.registraction.bll.exception.BLLException
      */
     public void saveMovieCategories() throws BLLException 
     {
@@ -135,7 +135,7 @@ public class ChangeCategories
     /**
      * Gets all categories from the db
      * @return ObservableList of strings
-     * @throws movie.registraction.bll.BLLException
+     * @throws movie.registraction.bll.exception.BLLException
      */
     public ObservableList<String> allCategories() throws BLLException 
     {
@@ -186,6 +186,7 @@ public class ChangeCategories
      * The removeMovieCategory list and category list is then looped
      * through,
      * adding/removing the categories in the database to this specific movie.
+     * @throws movie.registraction.bll.exception.BLLException
      */
     public void saveCategories() throws BLLException
     {        
@@ -220,7 +221,8 @@ public class ChangeCategories
     }
 
     /**
-     * 
+     * Gets all categories and adds them to an observableList to be returned and 
+     * used when initializing Edit Categories  
      * @return
      * @throws BLLException 
      */
