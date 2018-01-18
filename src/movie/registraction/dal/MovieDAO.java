@@ -479,6 +479,7 @@ public class MovieDAO {
                 i++;
                 preparedStatement.setString(i, category);                
             }
+            
             for(Map.Entry<String, String> y : year.entrySet()) {
                 String key = y.getKey();
                 String value = y.getValue();

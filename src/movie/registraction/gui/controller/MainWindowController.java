@@ -82,7 +82,7 @@ public class MainWindowController implements Initializable
     private int gridHeight;
     private int gridWidth;
     boolean popOverVisible;
-    
+
     Movie moviePoster;
 
     VBox vBox;
@@ -113,11 +113,13 @@ public class MainWindowController implements Initializable
      * We create our tile pane and also our context menu for the image view
      * followed by setting our popOvers visibility to false (used to bug fix)
      *
-     * @param url
-     * @param rb
+     * @param location  The location used to resolve relative paths for the root
+     *                  object, or null if the location is not known.
+     * @param resources The resources used to localize the root object, or null
+     *                  if the root object was not localized.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb)
+    public void initialize(URL location, ResourceBundle resources)
     {
         SetupTilePane();
         setupContextMenu();
@@ -136,7 +138,7 @@ public class MainWindowController implements Initializable
         }
 
         defaultValues();
-        
+
         //Initializing methods
         comboBoxSetup();
 
@@ -156,7 +158,7 @@ public class MainWindowController implements Initializable
     /**
      * Searches for movies based on the title
      *
-     * @param event
+     * @param event The event that called this method
      */
     @FXML
     private void titleSearch(ActionEvent event)
@@ -169,23 +171,23 @@ public class MainWindowController implements Initializable
     /**
      * Clears the filters
      *
-     * @param event
+     * @param event The event that called this method
      */
     @FXML
     private void clearFilters(ActionEvent event)
     {
         model.fxmlClearFilters();
         model.prepareSearch(tilePane);
-        
-        for(CheckBox cb: model.getGenreList(tilePane))
+
+        for (CheckBox cb : model.getGenreList())
         {
             cb.selectedProperty().set(false);
         }
-        for(CheckBox cb: model.getYearList(tilePane))
+        for (CheckBox cb : model.getYearList())
         {
             cb.selectedProperty().set(false);
         }
-        
+
         //comBoxSortOrder.getSelectionModel().clearSelection();
         //comBoxMinRating.getSelectionModel().clearSelection();
     }
@@ -193,7 +195,7 @@ public class MainWindowController implements Initializable
     /**
      * Change the global categories
      *
-     * @param event
+     * @param event The event that called this method
      *
      * @throws IOException
      */
@@ -221,7 +223,7 @@ public class MainWindowController implements Initializable
      * parameters for it to function and lastly display it to the user when
      * prompted.
      *
-     * @param event
+     * @param event The event that called this method
      *
      * @throws MalformedURLException
      * @throws IOException
@@ -245,7 +247,7 @@ public class MainWindowController implements Initializable
     /**
      * Runs two methods which are described below (line 244)
      *
-     * @param event
+     * @param event The event that called this method
      */
     @FXML
     private void uploadFiles(ActionEvent event) throws DALException
@@ -260,7 +262,7 @@ public class MainWindowController implements Initializable
      * line 388)
      * Setting the moviePoster files and picture.
      */
-    private void setChosenFilesWithPicture() throws DALException
+    private void setChosenFilesWithPicture()
     {
         model.chooseFile(tilePane);
         imageClick();
@@ -278,6 +280,12 @@ public class MainWindowController implements Initializable
         tilePane.setVgap(20);
     }
 
+    /**
+     * Sets up the popover window
+     *
+     * @param movie The Movie which it clicked on
+     * @param event The mouse that clicked
+     */
     private void PopOverSetup(Movie movie, MouseEvent event)
     {
         //<editor-fold defaultstate="collapsed" desc="Foreach loop w/ moviePoster categories">
@@ -414,7 +422,7 @@ public class MainWindowController implements Initializable
      */
     private void imageClick()
     {
-        model.GetImageViewList().forEach((imageView) ->
+        model.getImageViewList().forEach((imageView) ->
         {
             imageView.setOnMouseClicked((MouseEvent event) ->
             {
@@ -423,7 +431,7 @@ public class MainWindowController implements Initializable
                 if (mouseButton == MouseButton.PRIMARY)
                 {
                     // getting movieInfo everytime u click, to stay updated with database.
-                    moviePoster =  model.getMovieInfo(imageView);
+                    moviePoster = model.getMovieInfo(imageView);
                     PopOverSetup(moviePoster, event);
                     System.out.println(moviePoster.getMovieLength());
                     model.contextMenuOpenOrNot(contextMenu);
@@ -444,7 +452,7 @@ public class MainWindowController implements Initializable
     /**
      * Sets the library
      *
-     * @param event
+     * @param event The event that called this method
      */
     @FXML
     private void setLibrary(ActionEvent event)
@@ -467,8 +475,8 @@ public class MainWindowController implements Initializable
     /**
      * Making the setOnActions for context menu.
      *
-     * @param imageView
-     * @param movie
+     * @param imageView The ImageView to set the ContextMenu for
+     * @param movie     The Movie within
      */
     public void contextMenuAction(ImageView imageView, Movie movie)
     {
@@ -523,9 +531,16 @@ public class MainWindowController implements Initializable
     }
 
     /**
+<<<<<<< HEAD
      * Deletes movie from database, tilepane and arraylist which cointains imageviews.
      * @param imageView
      * @param movie
+=======
+     * Deletes movie.
+     *
+     * @param imageView The ImageView to delete
+     * @param movie     The Movie within
+>>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
     private void deleteMovie(ImageView imageView, Movie movie)
     {
@@ -549,30 +564,38 @@ public class MainWindowController implements Initializable
     /**
      * Filtering after minimum stars.
      * @param event 
+     * Handles the minimun rating
+     *
+     * @param event The event that called this method
      */
     @FXML
     private void comBoxMinRatingHandler(ActionEvent event)
     {
-      model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
-      model.prepareSearch(tilePane);
-      imageClick();
+        model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
+        model.prepareSearch(tilePane);
+        imageClick();
     }
     /**
      * Filtering after the radiobuttons, "title" or "rating"
      * @param event 
+    /**
+     * Handles the sort order
+     *
+     * @param event The event that called this method
      */
     @FXML
     private void setOrderHandler(ActionEvent event)
     {
-        
+
         RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
         model.setOrderSearch(orderRadiobtn.getText());
         model.prepareSearch(tilePane);
-        imageClick();       
+        imageClick();
     }
     /**
      * Filtering after descending or ascending, based on title or rating.
-     * @param event 
+     * Handles the sot order in the comboboc
+     * @param event The event that called this method
      */
     @FXML
     private void comBoxSortOrderHandler(ActionEvent event)
@@ -585,6 +608,15 @@ public class MainWindowController implements Initializable
      * MediaPlayer window.
      * @param imageView
      * @throws IOException 
+
+
+    /**
+     * Opens a Movie in our custom media player
+     *
+     * @param imageView The ImageView with the Movie to play
+     *
+     * @throws IOException
+>>>>>>> 3b5df55d6342934e055d86c09212faf29b267dbc
      */
     private void PlayMovieCustomPlayer(ImageView imageView) throws IOException
     {
@@ -599,46 +631,48 @@ public class MainWindowController implements Initializable
         controller = fxmlLoader.getController();
 
         controller.setImageView(imageView);
-        
+
         stage.setScene(new Scene(root));
         stage.show();
-        
+
         stage.setMinHeight(700);
         stage.setMinWidth(825);
     }
-    
     /**
      *Expanding the accordion panes to the titledpane.
      * Adding genre and year checkboxes to the different flowpanes.
      * Mouse events, everytime click is registerede on checkbox,
      * we make the filtering and register contextmenues, popovers etc to the
      * images/movie.
+     * Sets the default values
      */
     private void defaultValues()
     {
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreList(tilePane));
-        flpYear.getChildren().setAll(model.getYearList(tilePane));
-        
-        for(CheckBox cb: model.getGenreList(tilePane))
+        flpGenre.getChildren().setAll(model.getGenreList());
+        flpYear.getChildren().setAll(model.getYearList());
+
+        for (CheckBox cb : model.getGenreList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                public void handle(MouseEvent e) {
-                    model.setSearchCategories(cb.getText()); 
+                public void handle(MouseEvent e)
+                {
+                    model.setSearchCategories(cb.getText());
                     model.prepareSearch(tilePane);
                     imageClick();
                 }
             });
         }
-        
-        for(CheckBox cb: model.getYearList(tilePane))
+
+        for (CheckBox cb : model.getYearList())
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
-                public void handle(MouseEvent e) {
-                    model.setSearchYears(cb.getText()); 
+                public void handle(MouseEvent e)
+                {
+                    model.setSearchYears(cb.getText());
                     model.prepareSearch(tilePane);
                     imageClick();
                 }
