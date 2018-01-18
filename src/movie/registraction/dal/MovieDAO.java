@@ -451,11 +451,11 @@ public class MovieDAO {
      * @throws DALException 
      */
     public List<Movie> searchMovies(String sqlString,
-                                              List<String> categories,
-                                              HashMap<String, String> year,
-                                              int rating,
-                                              String searchText,
-                                              boolean searchNumeric) throws DALException
+                                    List<String> categories,
+                                    HashMap<String, String> year,
+                                    int rating,
+                                    String searchText,
+                                    boolean searchNumeric) throws DALException
     {
         try (Connection con = db.getConnection())
         {
