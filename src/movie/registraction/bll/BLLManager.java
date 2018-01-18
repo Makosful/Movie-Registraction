@@ -269,11 +269,9 @@ public class BLLManager
     {
         for (Movie movie : getAllMovies())
         {
-            // Better solution?
-            // String fileName = splitDot(file.getName());
-            //
+            
             // Removing the dot and text after, so only the text is in the string.
-            String fileName = file.getName().split("\\.")[0];
+            String fileName = splitDot(file.getName());
 
             // If database movie title matches chosenfile name.
             if (movie.getMovieTitle().equalsIgnoreCase(fileName))
