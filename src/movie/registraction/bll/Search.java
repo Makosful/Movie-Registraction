@@ -122,8 +122,10 @@ public class Search
         
         sqlRating = setSqlSearchRating(sqlRating, sqlSearchCategory, sqlSearchYear);
         
+        //Stitches together the sql string for the searchText filter
         if(!searchText.isEmpty())
         {  
+            //if 
             if(sqlSearchCategory.isEmpty() && sqlSearchYear.isEmpty() && sqlRating.isEmpty())
             {
                 sqlSearch += "WHERE ";
@@ -141,26 +143,35 @@ public class Search
             }
         }
         
-        
-        if(!sqlSearchCategory.isEmpty() && (!sqlSearchYear.isEmpty() || !sqlSearch.isEmpty() || !sqlRating.isEmpty()))
+        //Check if categories are added, and at least one of the other filters
+        // are added too, if they are, set an "AND" keyword in the sql query
+        if(!sqlSearchCategory.isEmpty() 
+           && (!sqlSearchYear.isEmpty() 
+           || !sqlSearch.isEmpty() 
+           || !sqlRating.isEmpty()))
         {
             sqlSearchCategory += " AND ";
         }
         
+        //Check if years filters are added, and at least one of the other remainding filters
+        // are added too, if they are, set an "AND" keyword in the sql query
         if(!sqlSearchYear.isEmpty() && (!sqlSearch.isEmpty() || !sqlRating.isEmpty()))
         {
             sqlSearchYear += " AND ";
         }
         
+        //Check if the rating filter is added, and at least one of the other remainding filters
+        // are added too, if they are, set an "AND" keyword in the sql query
         if(!sqlRating.isEmpty() && !sqlSearch.isEmpty())
         {
             sqlRating += " AND ";
         }
         
+        //add all the filter search strings to one
         String sqlString = sqlSearchCategory+sqlSearchYear+sqlRating+sqlSearch+sqlOrderBy;
         System.out.println(sqlString);
         try
-        {
+        {   //send the stitched together sql string and corresponding filters/search criteria to dal 
             return dal.searchMovies(sqlString, categories, year, rating, searchText, searchNumeric);
         }
         catch (DALException ex)
@@ -190,31 +201,39 @@ public class Search
         return true;
     }
     
+    /**
+     * Stitches together the sql string for the categories filter
+     * @param sqlSearchCategory
+     * @return 
+     */
     private String setSqlSearchCategory(String sqlSearchCategory)
     {
         for(String criteria : categories) {
 
+            //If it is the first iteration add "WHERE" 
             if(sqlSearchCategory.isEmpty())
             {
-                sqlSearchCategory += "WHERE (";
+                sqlSearchCategory += "WHERE ";
             }
-            else
+            else //in between the subselects in the query
             {   
-                sqlSearchCategory += " OR ";
+                sqlSearchCategory += " AND ";
             }
 
-            sqlSearchCategory += "Category.name = ?" ;
+            sqlSearchCategory += "EXISTS( SELECT CatMovie.categoryId, CatMovie.movieId "
+                               + "FROM CatMovie JOIN Category ON Category.id = CatMovie.categoryId"
+                               + " WHERE Movie.id = CatMovie.movieId AND Category.name IN (?) )" ;
         }
-        
-        if(!sqlSearchCategory.isEmpty())
-        {
-            sqlSearchCategory += ")";
-        }
+
         
         return sqlSearchCategory; 
     }
     
-    
+    /**
+     * Stitches together the sql string for the years(DECADES) filter
+     * @param sqlSearchYear
+     * @return 
+     */
     private String setSqlSearchYear(String sqlSearchYear)
     {
         for(Map.Entry<String, String> entry : year.entrySet()) {
@@ -243,6 +262,11 @@ public class Search
         return sqlSearchYear;
     }
     
+    /**
+     * Stitches together the sql string for the order filter
+     * @param sqlOrderBy
+     * @return 
+     */
     private String setSqlSearchOrder(String sqlOrderBy)
     {
         
@@ -265,6 +289,13 @@ public class Search
         return sqlOrderBy;
     }
     
+    /**
+     * Stitches together the sql string for the rating filter
+     * @param sqlRating
+     * @param sqlSearchYear
+     * @param sqlSearchCategory
+     * @return 
+     */
     private String setSqlSearchRating(String sqlRating, String sqlSearchYear, String sqlSearchCategory)
     {
         if(rating != -1)
@@ -278,6 +309,10 @@ public class Search
         return sqlRating; 
     }
 
+    /**
+     * Clear the search filters
+     * @throws BLLException 
+     */
     public void clearFilters() throws BLLException
     {
         System.out.println("HDWHD");
