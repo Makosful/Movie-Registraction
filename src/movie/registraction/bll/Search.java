@@ -98,7 +98,6 @@ public class Search
         if(rating != null){
             if (rating.equals("All"))
             {
-                System.out.println("hej");
                 this.rating = -1;
             }
             else
