@@ -10,17 +10,16 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
 import movie.registraction.bll.BLLManager;
 import movie.registraction.bll.Rating;
 import movie.registraction.bll.exception.BLLException;
-import movie.registraction.dal.exception.DALException;
 
 /**
  *
@@ -29,7 +28,6 @@ import movie.registraction.dal.exception.DALException;
 public class MainWindowModel
 {
 
-
     private BLLManager bll;
 
     private final ObservableList<String> allCategories;
@@ -37,7 +35,7 @@ public class MainWindowModel
     private final ObservableList<Path> changeList;
     private final int IMAGE_HEIGHT = 200;
     private final int IMAGE_WIDTH = 150;
-    
+
     private final ArrayList<String> extensionList;
 
     /**
@@ -101,11 +99,11 @@ public class MainWindowModel
             else
             {
                 // Add all entries to the library
-                for (String filePath : updateLibrary)
+                updateLibrary.forEach((filePath) ->
                 {
                     String fileName = new File(filePath).toPath().getFileName().toString();
                     this.addMovie(fileName, filePath);
-                }
+                });
             }
         }
         catch (BLLException ex)
@@ -319,6 +317,7 @@ public class MainWindowModel
     /**
      * Setting the tile setup.
      *
+     * @return TODO
      */
     public List<File> chooseFile()
     {
@@ -353,8 +352,8 @@ public class MainWindowModel
      * adding them to our tilepane, and finally giving the imageviews an id,
      * that will refer to the actual movie.
      *
-     * @param fileImage    The picture to set in
-     * @param imageView  The image to set imageId to.
+     * @param fileImage The picture to set in
+     * @param imageView The image to set imageId to.
      */
     public void setImageId(File fileImage, ImageView imageView)
     {
@@ -451,8 +450,11 @@ public class MainWindowModel
      * @param ratingType     The type of rating
      * @param gridPaneRating The GridPane in which to set the rating
      * @param lblRating      The label in which to set the rating
+     *
+     * @throws BLLException Throws an exception if it fails to access the
+     *                      database
      */
-    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating) throws DALException
+    public void setUpRating(double rating, String ratingType, GridPane gridPaneRating, Label lblRating) throws BLLException
     {
         Rating r = new Rating(rating, ratingType, gridPaneRating, lblRating);
     }
@@ -466,7 +468,6 @@ public class MainWindowModel
     {
         return moviePaths;
     }
-
 
     /**
      * Gets the list of all movies
@@ -530,8 +531,9 @@ public class MainWindowModel
      * Passes the movie ID to bll and further down to dataaccess
      * in order to delete it in the db
      *
-     * @param id The IF of the Movie to remove
-     * @param imageView
+     * @param id            The IF of the Movie to remove
+     * @param imageView     TODO
+     * @param imageViewList TODO
      */
     public void removeMovie(int id, ImageView imageView, List<ImageView> imageViewList)
     {
@@ -653,8 +655,10 @@ public class MainWindowModel
     {
         bll.setSearchText(text);
     }
-        /**
+
+    /**
      * TODO
+     *
      * @return TODO
      */
     public List<Movie> prepareSearch()
@@ -671,23 +675,30 @@ public class MainWindowModel
         return movies;
     }
 
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
     public ObservableList<String> allCategories()
     {
-        ObservableList<String> allCategories = null;
+        ObservableList<String> returnCats = null;
         try
         {
-            allCategories = bll.allCategories();
+            returnCats = bll.allCategories();
         }
         catch (BLLException ex)
         {
             System.out.println(ex);
         }
-        return allCategories;
+        return returnCats;
     }
-        /**
+
+    /**
      * Splits a String up every time it sees a . (peroid)
      *
-     * @param string The String to split up
+     *
+     * @param stringToSplit TODO
      *
      * @return Returns the same String, but now plit up
      */
@@ -695,15 +706,14 @@ public class MainWindowModel
     {
         return bll.splitDot(stringToSplit);
     }
-        /**
+
+    /**
      * Check if movie already exists in the database
      *
      * @param title The title of the Movie
      *
      * @return Returns true if it found a match, false if the movie doesn't
      *         exist in the database
-     *
-     * @throws BLLException Throws an excption if it fails to access the storage
      */
     public boolean movieAlreadyExisting(String title)
     {
@@ -718,15 +728,14 @@ public class MainWindowModel
         }
         return ifMovieExist;
     }
-        /**
+
+    /**
      * This method is to get a imgPath from a specific movie. So that it can be
      * thrown into the tilepane.
      *
      * @param title The title of the movie
      *
      * @return Returnd a String containing the URL for the Movie image
-     *
-     * @throws BLLException Throws an exception if it fails to acces the API
      */
     public String getSpecificMovieImage(String title)
     {
