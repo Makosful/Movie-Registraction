@@ -823,32 +823,31 @@ public class MainWindowController implements Initializable
         tilePane.getChildren().add(imageView);
         model.setImageId(image, imageView);
     }
-
+    /**
+     * Adds movies to db and program if they dont exist in db/program.
+     */
     private void chooseFiles()
     {
-        if (model.chooseFile() != null)
-        {
-            model.chooseFile().forEach((chosenFile) ->
+            for(File chosenFile : model.chooseFile())
             {
                 String nameOfMovie = model.splitDot(chosenFile.getName());
 
                 if (!model.movieAlreadyExisting(nameOfMovie.toLowerCase()))
                 {
-
                     model.addMovie(nameOfMovie, chosenFile.getPath());
                     String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
                     imgPath = "https:" + imgPath;
                     setPictures(chosenFile, imgPath);
-
                 }
                 else
                 {
                     alertButtonMovieAlreadyExist();
                 }
-            });
+            }
         }
-    }
-
+    /**
+     * Alert if movie already exists.
+     */
     private void alertButtonMovieAlreadyExist()
     {
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
