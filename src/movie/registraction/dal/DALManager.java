@@ -26,7 +26,8 @@ public class DALManager
     /**
      * Constructor
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to initiate the DAL
+     *                      layer objects
      */
     public DALManager() throws DALException
     {
@@ -300,36 +301,39 @@ public class DALManager
      * Sends the given category and specific movieid to MovieDAO where it is
      * removed in the db
      *
-     * @param movieid
-     * @param category
+     * @param id       The ID of the Movie
+     * @param category The category to remove
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
      */
-    public void removeMovieCategory(int movieid, String category) throws DALException
+    public void removeMovieCategory(int id, String category) throws DALException
     {
-        mDAO.removeMovieCategory(movieid, category);
+        mDAO.removeMovieCategory(id, category);
     }
 
     /**
      * Sends the given category and specific movieid to MovieDAO
      * where it is added to the db
      *
-     * @param movieid
-     * @param category
+     * @param id       The ID of the Movie
+     * @param category The category to add
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
      */
-    public void addMovieCategory(int movieid, String category) throws DALException
+    public void addMovieCategory(int id, String category) throws DALException
     {
-        mDAO.addMovieCategory(movieid, category);
+        mDAO.addMovieCategory(id, category);
     }
 
     /**
      * gets all categories from the database and MovieDAO and retur
      *
-     * @return
+     * @return Returns a List of Strings with all the categories
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      databse
      */
     public List<String> getAllCategories() throws DALException
     {
@@ -339,39 +343,42 @@ public class DALManager
     /**
      * Sends the given category to MovieDAO where it is removed in the db
      *
-     * @param cat
+     * @param category The category to remove
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
      */
-    public void removeCategory(String cat) throws DALException
+    public void removeCategory(String category) throws DALException
     {
-        mDAO.removeCategory(cat);
+        mDAO.removeCategory(category);
     }
 
     /**
      * Sends the given category to MovieDAO where it is added to the db
      *
-     * @param cat
+     * @param category The category to add
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
      */
-    public void addCategory(String cat) throws DALException
+    public void addCategory(String category) throws DALException
     {
-        mDAO.addCategory(cat);
+        mDAO.addCategory(category);
     }
 
     /**
      * Sends the personal rating and movie id to MovieDAO to update
      * personalrating
      *
-     * @param movieId
-     * @param rating
+     * @param id     The ID of the Movie
+     * @param rating The value of the personal rating
      *
-     * @throws DALException
+     * @throws DALException Throws an exception if it fails to access the
+     *                      database
      */
-    public void setPersonalRating(int movieId, int rating) throws DALException
+    public void setPersonalRating(int id, int rating) throws DALException
     {
-        mDAO.setPersonalRating(movieId, rating);
+        mDAO.setPersonalRating(id, rating);
     }
 
     /**
