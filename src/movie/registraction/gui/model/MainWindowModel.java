@@ -637,25 +637,6 @@ public class MainWindowModel
     }
 
     /**
-     * This loads all the movies from start.
-     *
-     * @param tilePane The TilePane in which to add the Movies
-     * @param movies   The List of Movies to add to the TilePane
-     */
-    public void loadMovies(TilePane tilePane, List<Movie> movies)
-    {
-        ImageView imageView;
-        imageViewList = new ArrayList();
-        for (Movie movie : movies)
-        {
-            imageView = new ImageView("https:" + movie.getImgPath());
-            imageViewSizeAndId(imageView, movie);
-            imageViewList.add(imageView);
-            tilePane.getChildren().add(imageView);
-        }
-    }
-
-    /**
      * Passes the movie ID to bll and further down to dataaccess
      * in order to delete it in the db
      *
@@ -723,33 +704,6 @@ public class MainWindowModel
     }
 
     /**
-     * Adds Movies to the TilePane
-     * Gets the seach result in form of a list of movies, which is looped throuh
-     * adding a new imageView/poster to the tilePane
-     *
-     * @param tilePane The TilePane which will be given the ImageViews
-     */
-    public void prepareSearch(TilePane tilePane)
-    {
-        imageViewList.clear();
-        tilePane.getChildren().clear();
-        try
-        {
-            for (Movie movie : bll.prepareSearch())
-            {
-                ImageView imageView = new ImageView("https:" + movie.getImgPath());
-                imageViewSizeAndId(imageView, movie);
-                imageViewList.add(imageView);
-                tilePane.getChildren().add(imageView);
-            }
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Could not retrieve the searchresult of movies");
-        }
-    }
-
-    /**
      * Passes the movieId to set the date of the last view
      *
      * @param id The ID of the Movie last viewed
@@ -764,19 +718,6 @@ public class MainWindowModel
         {
             System.out.println(ex);
         }
-    }
-
-    /**
-     * Sets the imageView/poster dimentions and id
-     *
-     * @param imageView The ImageView to set
-     * @param movie     The Movie from which to get the data
-     */
-    public void imageViewSizeAndId(ImageView imageView, Movie movie)
-    {
-        imageView.setFitHeight(IMAGE_HEIGHT);
-        imageView.setFitWidth(IMAGE_WIDTH);
-        imageView.setId("" + movie.getId());
     }
 
     /**
@@ -807,6 +748,20 @@ public class MainWindowModel
     public void setSearchText(String text)
     {
         bll.setSearchText(text);
+    }
+    
+    public List<Movie> prepareSearch()
+    {
+        List<Movie> movies = new ArrayList();
+        try
+        {
+            movies = bll.prepareSearch();
+        }
+        catch (BLLException ex)
+        {
+            System.out.println(ex);
+        }
+        return movies;
     }
 
 }
