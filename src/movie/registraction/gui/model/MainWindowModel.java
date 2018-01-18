@@ -643,7 +643,10 @@ public class MainWindowModel
     {
         bll.setSearchText(text);
     }
-    
+        /**
+     * TODO
+     * @return TODO
+     */
     public List<Movie> prepareSearch()
     {
         List<Movie> movies = new ArrayList();
@@ -671,12 +674,27 @@ public class MainWindowModel
         }
         return allCategories;
     }
-    
+        /**
+     * Splits a String up every time it sees a . (peroid)
+     *
+     * @param string The String to split up
+     *
+     * @return Returns the same String, but now plit up
+     */
     public String splitDot(String stringToSplit)
     {
         return bll.splitDot(stringToSplit);
     }
-    
+        /**
+     * Check if movie already exists in the database
+     *
+     * @param title The title of the Movie
+     *
+     * @return Returns true if it found a match, false if the movie doesn't
+     *         exist in the database
+     *
+     * @throws BLLException Throws an excption if it fails to access the storage
+     */
     public boolean movieAlreadyExisting(String title)
     {
         Boolean ifMovieExist = false;
@@ -690,7 +708,16 @@ public class MainWindowModel
         }
         return ifMovieExist;
     }
-    
+        /**
+     * This method is to get a imgPath from a specific movie. So that it can be
+     * thrown into the tilepane.
+     *
+     * @param title The title of the movie
+     *
+     * @return Returnd a String containing the URL for the Movie image
+     *
+     * @throws BLLException Throws an exception if it fails to acces the API
+     */
     public String getSpecificMovieImage(String title)
     {
         String movieTitle = null;

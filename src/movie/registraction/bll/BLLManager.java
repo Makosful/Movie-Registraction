@@ -598,7 +598,11 @@ public class BLLManager
     {
         search.setRating(rating);
     }
-
+        /**
+     * TODO
+     * @return TODO
+     * @throws movie.registraction.bll.exception.BLLException
+     */
     public List<Movie> prepareSearch() throws BLLException
     {
         return search.prepareSearch();
