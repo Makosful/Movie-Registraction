@@ -12,8 +12,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -35,12 +33,13 @@ public class BLLManager
 
     // DAL Layer manager
     DALManager dal;
-    
+
     //Filter search
     Search search;
-    
+
     //
     ChangeCategories categories;
+
     public BLLManager() throws BLLException, DALException
     {
         try
@@ -290,7 +289,7 @@ public class BLLManager
             //get all the categories by using substring with genre and director as start and end index
             else if (meta1.contains("Genre:"))
             {
-                
+
                 meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
                 meta[5] = meta[5].replace(",", "");
                 System.out.println(meta[5]);
@@ -462,7 +461,7 @@ public class BLLManager
 
         return localList;
     }
-    
+
     public void setLastView(int movieId) throws BLLException
     {
         try
@@ -476,8 +475,6 @@ public class BLLManager
     }
 
     //Search
-    
-    
     public void setSearchText(String text)
     {
         search.setSearchText(text);
@@ -510,18 +507,17 @@ public class BLLManager
 
     public List<Movie> prepareSearch() throws BLLException
     {
-  
+
         return search.prepareSearch();
 
     }
-    
-    public void clearFilters()
+
+    public void clearFilters() throws BLLException
     {
         search.clearFilters();
     }
-    
+
     //Categories
-    
     public ObservableList<String> allCategories() throws BLLException
     {
         return categories.allCategories();
@@ -529,7 +525,7 @@ public class BLLManager
 
     public ObservableList<String> loadCategories() throws BLLException
     {
-       return categories.loadCategories();
+        return categories.loadCategories();
     }
 
     public void addChosenCategory(String category)
@@ -566,6 +562,5 @@ public class BLLManager
     {
         categories.saveMovieCategories();
     }
-
 
 }

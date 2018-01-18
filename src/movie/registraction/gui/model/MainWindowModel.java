@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -20,7 +18,9 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import movie.registraction.be.Movie;
-import movie.registraction.bll.*;
+import movie.registraction.bll.BLLException;
+import movie.registraction.bll.BLLManager;
+import movie.registraction.bll.Rating;
 import movie.registraction.dal.DALException;
 
 /**
@@ -46,8 +46,6 @@ public class MainWindowModel
 
     private final ArrayList<String> extensionList;
 
-
-
     public MainWindowModel() throws DALException
     {
         IMAGE_HEIGHT = 200;
@@ -65,7 +63,7 @@ public class MainWindowModel
         genres = FXCollections.observableArrayList();
         others = FXCollections.observableArrayList();
         changeList = bll.getChangeList();
-       
+
         moviePaths = FXCollections.observableArrayList();
         allCategories = FXCollections.observableArrayList();
 
@@ -156,7 +154,13 @@ public class MainWindowModel
      */
     public void fxmlClearFilters()
     {
-        bll.clearFilters();
+        try
+        {
+            bll.clearFilters();
+        }
+        catch (BLLException ex)
+        {
+        }
     }
 
     /**
@@ -185,7 +189,7 @@ public class MainWindowModel
      */
     public ObservableList<String> loadCategories() throws BLLException
     {
-            return bll.loadCategories();
+        return bll.loadCategories();
     }
 
     /**
@@ -223,7 +227,6 @@ public class MainWindowModel
             System.out.println("Could not save categories");
         }
 
-        
     }
 
     /**
@@ -273,7 +276,7 @@ public class MainWindowModel
         {
             System.out.println("Could not save the movie categories");
         }
-        
+
     }
 
     /**
@@ -531,7 +534,7 @@ public class MainWindowModel
             for (String category : bll.allCategories())
             {
                 JFXCheckBox cb = new JFXCheckBox(category);
-                
+
                 genres.add(cb);
             }
         }
@@ -555,7 +558,7 @@ public class MainWindowModel
             int j = 1900 + (i * 10);
             int q = 1900 + ((1 + i) * 10);
             JFXCheckBox cb = new JFXCheckBox(j + "-" + q);
-            
+
             years.add(cb);
 
         }
@@ -585,7 +588,7 @@ public class MainWindowModel
     }
 
     /**
-     * Call to findOldAndBadMovies in bll, 
+     * Call to findOldAndBadMovies in bll,
      * in order to find old and bad movies to remove
      */
     public void findOldAndBadMovies()
@@ -631,11 +634,12 @@ public class MainWindowModel
             tilePane.getChildren().add(imageView);
         }
     }
-    
+
     /**
-     * Passes the movie ID to bll and further down to dataaccess 
+     * Passes the movie ID to bll and further down to dataaccess
      * in order to delete it in the db
-     * @param id 
+     *
+     * @param id
      */
     public void removeMovie(int id)
     {
@@ -663,7 +667,8 @@ public class MainWindowModel
 
     /**
      * passes the rating filter number as string to search class through bll
-     * @param rating 
+     *
+     * @param rating
      */
     public void setRatingSearch(String rating)
     {
@@ -672,7 +677,8 @@ public class MainWindowModel
 
     /**
      * Passes the sort ASC/DESC to search class through bll
-     * @param selectedItem 
+     *
+     * @param selectedItem
      */
     public void setSortOrder(String selectedItem)
     {
@@ -681,17 +687,19 @@ public class MainWindowModel
 
     /**
      * Passes the selected order used in search
-     * @param selectedToggle 
+     *
+     * @param selectedToggle
      */
     public void setOrderSearch(String selectedToggle)
     {
         bll.setOrder(selectedToggle);
     }
-    
+
     /**
      * Gets the seach result in form of a list of movies, which is looped throuh
      * adding a new imageView/poster to the tilePane
-     * @param tilePane 
+     *
+     * @param tilePane
      */
     public void prepareSearch(TilePane tilePane)
     {
@@ -699,7 +707,7 @@ public class MainWindowModel
         tilePane.getChildren().clear();
         try
         {
-            for(Movie movie : bll.prepareSearch())
+            for (Movie movie : bll.prepareSearch())
             {
                 ImageView imageView = new ImageView("https:" + movie.getImgPath());
                 imageViewSizeAndId(imageView, movie);
@@ -712,10 +720,11 @@ public class MainWindowModel
             System.out.println("Could not retrieve the searchresult of movies");
         }
     }
-    
+
     /**
      * Passes the movieId to set the date of the last view
-     * @param movieId 
+     *
+     * @param movieId
      */
     public void setLastView(int movieId)
     {
@@ -728,11 +737,12 @@ public class MainWindowModel
             System.out.println(ex);
         }
     }
-    
+
     /**
      * Sets the imageView/poster dimentions and id
+     *
      * @param imageView
-     * @param movie 
+     * @param movie
      */
     public void imageViewSizeAndId(ImageView imageView, Movie movie)
     {
@@ -743,16 +753,18 @@ public class MainWindowModel
 
     /**
      * Passes and sets the movie genre in search through bll
-     * @param categories 
+     *
+     * @param categories
      */
     public void setSearchCategories(String categories)
     {
-        bll.setSearchCategories(categories); 
+        bll.setSearchCategories(categories);
     }
 
     /**
      * Passes and sets the selected filter years
-     * @param years 
+     *
+     * @param years
      */
     public void setSearchYears(String years)
     {
@@ -760,8 +772,9 @@ public class MainWindowModel
     }
 
     /**
-     * Sends the searched text to seach class to prepare a sql query 
-     * @param text 
+     * Sends the searched text to seach class to prepare a sql query
+     *
+     * @param text
      */
     public void setSearchText(String text)
     {
