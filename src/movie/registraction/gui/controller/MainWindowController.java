@@ -83,7 +83,7 @@ public class MainWindowController implements Initializable
 
     //<editor-fold defaultstate="collapsed" desc="Different Variables">
     private MainWindowModel model;
-    
+
     private final int IMAGE_HEIGHT;
     private final int IMAGE_WIDTH;
 
@@ -92,8 +92,7 @@ public class MainWindowController implements Initializable
     boolean popOverVisible;
 
     List<ImageView> imageViewList;
-    
-    
+
     Movie moviePoster;
 
     VBox vBox;
@@ -118,21 +117,21 @@ public class MainWindowController implements Initializable
     Label lblLastView;
     Label lblIMDBId;
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="JFXCheckboxlists">
     private final ObservableList<JFXCheckBox> genres;
     private final ObservableList<JFXCheckBox> years;
 //</editor-fold>
-   
-    
+
     public MainWindowController()
     {
         IMAGE_HEIGHT = 200;
         IMAGE_WIDTH = 200;
-       
+
         years = FXCollections.observableArrayList();
         genres = FXCollections.observableArrayList();
     }
+
     /**
      * Our initializer, which is run when the program has its initial start up.
      * We create our tile pane and also our context menu for the image view
@@ -146,7 +145,7 @@ public class MainWindowController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        
+
         SetupTilePane();
         setupContextMenu();
         popOverVisible = false;
@@ -218,7 +217,7 @@ public class MainWindowController implements Initializable
      *
      */
     @FXML
-    private void btnChangeCategories(ActionEvent event) 
+    private void btnChangeCategories(ActionEvent event)
     {
         File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
         FXMLLoader fxmlLoader;
@@ -288,7 +287,7 @@ public class MainWindowController implements Initializable
      * @param event The event that called this method
      */
     @FXML
-    private void uploadFiles(ActionEvent event) 
+    private void uploadFiles(ActionEvent event)
     {
         setChosenFilesWithPicture();
     }
@@ -340,7 +339,7 @@ public class MainWindowController implements Initializable
             {
                 genreCategories = movie.getCategories().get(i);
             }
-            else if(i == 4 || i == 8 || i == 12)
+            else if (i == 4 || i == 8 || i == 12)
             {
                 genreCategories += "\n" + movie.getCategories().get(i);
             }
@@ -557,7 +556,7 @@ public class MainWindowController implements Initializable
     /**
      * @param imageView
      * @param movie
-     * Deletes movie.
+     *                  Deletes movie.
      *
      * @param imageView The ImageView to delete
      * @param movie     The Movie within
@@ -566,7 +565,7 @@ public class MainWindowController implements Initializable
     {
         tilePane.getChildren().remove(imageView);
         model.removeMovie(movie.getId(), imageView, imageViewList);
-       
+
     }
 
     /**
@@ -583,8 +582,9 @@ public class MainWindowController implements Initializable
 
     /**
      * Filtering after minimum stars.
-     * @param event 
-     * Handles the minimun rating
+     *
+     * @param event
+     *              Handles the minimun rating
      *
      * @param event The event that called this method
      */
@@ -595,11 +595,13 @@ public class MainWindowController implements Initializable
         prepareSearch();
         imageClick();
     }
+
     /**
      * Filtering after the radiobuttons, "title" or "rating"
-     * @param event 
-    /**
-     * Handles the sort order
+     *
+     * @param event
+     *              /**
+     *              Handles the sort order
      *
      * @param event The event that called this method
      */
@@ -612,9 +614,11 @@ public class MainWindowController implements Initializable
         prepareSearch();
         imageClick();
     }
+
     /**
      * Filtering after descending or ascending, based on title or rating.
      * Handles the sot order in the comboboc
+     *
      * @param event The event that called this method
      */
     @FXML
@@ -624,8 +628,10 @@ public class MainWindowController implements Initializable
         prepareSearch();
         imageClick();
     }
+
     /**
      * Opens a Movie in our custom media player
+     *
      * @param imageView The ImageView with the Movie to play
      */
     private void PlayMovieCustomPlayer(ImageView imageView)
@@ -635,21 +641,21 @@ public class MainWindowController implements Initializable
         try
         {
             fxmlLoader = new FXMLLoader(fxml.toURL());
-                    Parent root;
-        root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(anchorPane.getScene().getWindow());
-        MediaWindowController controller;
-        controller = fxmlLoader.getController();
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            MediaWindowController controller;
+            controller = fxmlLoader.getController();
 
-        controller.setImageView(imageView);
+            controller.setImageView(imageView);
 
-        stage.setScene(new Scene(root));
-        stage.show();
+            stage.setScene(new Scene(root));
+            stage.show();
 
-        stage.setMinHeight(700);
-        stage.setMinWidth(825);
+            stage.setMinHeight(700);
+            stage.setMinWidth(825);
         }
         catch (MalformedURLException ex)
         {
@@ -660,8 +666,9 @@ public class MainWindowController implements Initializable
             System.out.println(ex);
         }
     }
+
     /**
-     *Expanding the accordion panes to the titledpane.
+     * Expanding the accordion panes to the titledpane.
      * Adding genre and year checkboxes to the different flowpanes.
      * Mouse events, everytime click is registerede on checkbox,
      * we make the filtering and register contextmenues, popovers etc to the
@@ -679,6 +686,7 @@ public class MainWindowController implements Initializable
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
+                @Override
                 public void handle(MouseEvent e)
                 {
                     model.setSearchCategories(cb.getText());
@@ -692,6 +700,7 @@ public class MainWindowController implements Initializable
         {
             cb.setOnMouseClicked(new EventHandler<MouseEvent>()
             {
+                @Override
                 public void handle(MouseEvent e)
                 {
                     model.setSearchYears(cb.getText());
@@ -701,9 +710,10 @@ public class MainWindowController implements Initializable
             });
         }
     }
-    
-        /**
+
+    /**
      * This loads all the movies from start.
+     *
      * @param tilePane The TilePane in which to add the Movies
      * @param movies   The List of Movies to add to the TilePane
      */
@@ -732,8 +742,8 @@ public class MainWindowController implements Initializable
         imageView.setFitWidth(IMAGE_WIDTH);
         imageView.setId("" + movie.getId());
     }
-    
-        /**
+
+    /**
      * Adds Movies to the TilePane
      * Gets the seach result in form of a list of movies, which is looped throuh
      * adding a new imageView/poster to the tilePane
@@ -745,16 +755,16 @@ public class MainWindowController implements Initializable
         imageViewList.clear();
         tilePane.getChildren().clear();
 
-            for (Movie movie : model.prepareSearch())
-            {
-                ImageView imageView = new ImageView("https:" + movie.getImgPath());
-                imageViewSizeAndId(imageView, movie);
-                imageViewList.add(imageView);
-                tilePane.getChildren().add(imageView);
-            }
+        for (Movie movie : model.prepareSearch())
+        {
+            ImageView imageView = new ImageView("https:" + movie.getImgPath());
+            imageViewSizeAndId(imageView, movie);
+            imageViewList.add(imageView);
+            tilePane.getChildren().add(imageView);
         }
-    
-            /**
+    }
+
+    /**
      * Returns the list of CheckBoxes for the years
      *
      * @return Returns a List of JFXCheckBoxes with all the
@@ -772,24 +782,23 @@ public class MainWindowController implements Initializable
 
         return years;
     }
-    
-        /**
+
+    /**
      * Gets the list of Genres
      *
      * @return Returns a List of JFXCheckBoxes with all the genres
      */
     public ObservableList<JFXCheckBox> getGenreList()
     {
-            for (String category : model.allCategories())
-            {
-                JFXCheckBox cb = new JFXCheckBox(category);
+        for (String category : model.allCategories())
+        {
+            JFXCheckBox cb = new JFXCheckBox(category);
 
-                genres.add(cb);
-            }
+            genres.add(cb);
+        }
         return genres;
     }
-    
-    
+
     /**
      * Making imageViews, setting their sizes, adding them to an arraylist,
      * adding them to our tilepane, and finally giving the imageviews an id,
@@ -809,32 +818,32 @@ public class MainWindowController implements Initializable
         tilePane.getChildren().add(imageView);
         model.setImageId(image, imageView);
     }
-    
+
     private void chooseFiles()
     {
-        if(model.chooseFile() != null)
+        if (model.chooseFile() != null)
         {
-            for(File chosenFile : model.chooseFile())
+            for (File chosenFile : model.chooseFile())
             {
-            String nameOfMovie = model.splitDot(chosenFile.getName());
+                String nameOfMovie = model.splitDot(chosenFile.getName());
 
-                    if (!model.movieAlreadyExisting(nameOfMovie.toLowerCase()))
-                    {
+                if (!model.movieAlreadyExisting(nameOfMovie.toLowerCase()))
+                {
 
-                        model.addMovie(nameOfMovie, chosenFile.getPath());
-                        String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
-                        imgPath = "https:" + imgPath;
-                        setPictures(chosenFile, imgPath);
+                    model.addMovie(nameOfMovie, chosenFile.getPath());
+                    String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
+                    imgPath = "https:" + imgPath;
+                    setPictures(chosenFile, imgPath);
 
-                    }
-                    else
-                    {
-                        alertButtonMovieAlreadyExist();
-                    }
                 }
+                else
+                {
+                    alertButtonMovieAlreadyExist();
+                }
+            }
         }
     }
-    
+
     private void alertButtonMovieAlreadyExist()
     {
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
@@ -847,7 +856,7 @@ public class MainWindowController implements Initializable
             alert.close();
         }
     }
-    
+
     /**
      * Checks whether contextmenu is open or not, if yes, it closes.
      * Incase user dobbleclicks several times, so it doesnt stack.
@@ -863,4 +872,3 @@ public class MainWindowController implements Initializable
         }
     }
 }
-
