@@ -1,6 +1,5 @@
 package movie.registraction.bll;
 
-import movie.registraction.bll.exception.BLLException;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,8 +18,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.exception.DALException;
+import movie.registraction.bll.exception.BLLException;
 import movie.registraction.dal.DALManager;
+import movie.registraction.dal.exception.DALException;
 
 /**
  *
@@ -41,7 +41,13 @@ public class BLLManager
     //
     ChangeCategories categories;
 
-    public BLLManager() throws BLLException, DALException
+    /**
+     * Constructor
+     *
+     * @throws BLLException Throws a BLLException if any of the objects fail to
+     *                      initiate
+     */
+    public BLLManager() throws BLLException
     {
         try
         {
@@ -65,20 +71,29 @@ public class BLLManager
      *
      * @return a URL for OMDB
      *
-     * @throws BLLException
+     * @throws BLLException Throws BLLException if it fails to access OMDB
      */
     public URL getOmdbTitleResult(String text) throws BLLException
     {
         return omdb.getOmdbTitleResult(text);
     }
 
-    public String getSearchResult(URL searchLink) throws BLLException
+    /**
+     * Gets the OMDB search result
+     *
+     * @param url The URL to queue the search on the API
+     *
+     * @return Returns a String containing the search results
+     *
+     * @throws BLLException Throws BLLException if it fails to access OMDB
+     */
+    public String getSearchResult(URL url) throws BLLException
     {
         try
         {
             // Opens up a connection for us to READ from a buffered reader in an
             // inputstream from our API link.
-            URLConnection con = searchLink.openConnection();
+            URLConnection con = url.openConnection();
             BufferedReader buffRead = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             String res = "";
@@ -101,7 +116,8 @@ public class BLLManager
      *
      * @param file The tile to open
      *
-     * @throws BLLException
+     * @throws BLLException Throws BLLException if it fails to open the default
+     *                      application
      */
     public void openFileInNative(File file) throws BLLException
     {
@@ -129,7 +145,8 @@ public class BLLManager
      *             path prefixes the file name, the file will be stored in the
      *             application's root folder
      *
-     * @throws BLLException
+     * @throws BLLException Throws BLLEXception if it fails to write (to) the
+     *                      file
      */
     public void saveDirectory(String path) throws BLLException
     {
@@ -144,15 +161,15 @@ public class BLLManager
     }
 
     /**
-     * Loads the saved library directory
+     * Reads the first line of the file
      *
-     * @param path
+     * @param path The path of the file to read
      *
-     * @return
+     * @return Returns a String containing the comntent of the file's first line
      *
-     * @throws BLLException
+     * @throws BLLException Throws a BLLException if it failed to read the file
      */
-    public String loadDirectory(String path) throws BLLException
+    public String readFile(String path) throws BLLException
     {
         try
         {
@@ -166,14 +183,16 @@ public class BLLManager
 
     /**
      * Gets the list of movies in the library
-     *
      * Return the list of movies in the library as a String ArrayList
      *
-     * @param filter
+     * @param filter A list containing the file formats to allow through the
+     *               filter
      *
-     * @return
+     * @return Returns a List of Paths with all the files passed through the
+     *         filter
      *
-     * @throws BLLException
+     * @throws BLLException Throws a BLLException if it fails to read the
+     *                      folders and files
      */
     public ArrayList<Path> getMovieList(ArrayList<String> filter) throws BLLException
     {
@@ -187,6 +206,9 @@ public class BLLManager
         }
     }
 
+    /**
+     * Sets a listener on the library directory
+     */
     public void setDirectoryWatch()
     {
         dal.setDirectoryWatch();
@@ -195,15 +217,17 @@ public class BLLManager
     /**
      * Sends metadata to dataaccess layer to insert a movie
      *
-     * @param movieMetaData
-     * @param filePath
-     * @throws movie.registraction.bll.exception.BLLException
+     * @param metadata The MetaData to send, as a String Array
+     * @param path     The Path of the movie, as a String
+     *
+     * @throws BLLException Throws a BLLException of it failed to access to the
+     *                      storage
      */
-    public void addMovie(String[] movieMetaData, String filePath) throws BLLException
+    public void addMovie(String[] metadata, String path) throws BLLException
     {
         try
         {
-            dal.addMovie(movieMetaData, filePath);
+            dal.addMovie(metadata, path);
         }
         catch (DALException ex)
         {
@@ -211,6 +235,15 @@ public class BLLManager
         }
     }
 
+    /**
+     * Tries to get all the movies
+     *
+     * @return Returns an ObservableList of Movies with all the movies from
+     *         storage
+     *
+     * @throws BLLException Throws a BLLException if it fails to access the
+     *                      storage
+     */
     public ObservableList<Movie> getAllMovies() throws BLLException
     {
         try
@@ -223,12 +256,24 @@ public class BLLManager
         }
     }
 
-    public void setImageId(File files, ImageView imageView) throws BLLException
+    /**
+     * Sets the ImageView ID
+     *
+     * @param file      The Movie inside the ImageView
+     * @param imageView The ImageView to set the ID of
+     *
+     * @throws BLLException Throws an exception if it fails to access the
+     *                      storage
+     */
+    public void setImageId(File file, ImageView imageView) throws BLLException
     {
         for (Movie movie : getAllMovies())
         {
+            // Better solution?
+            // String fileName = splitDot(file.getName());
+            //
             // Removing the dot and text after, so only the text is in the string.
-            String fileName = files.getName().split("\\.")[0];
+            String fileName = file.getName().split("\\.")[0];
 
             // If database movie title matches chosenfile name.
             if (movie.getMovieTitle().equalsIgnoreCase(fileName))
@@ -243,15 +288,15 @@ public class BLLManager
     /**
      * Formats the metadata from searchresult, so its ready to be put in the db
      *
-     * @param searchLink
+     * @param url The URL of the movie to get MetaData on
      *
-     * @return
+     * @return Retuns a String Array with all the MetaData
      *
-     * @throws BLLException
+     * @throws BLLException Throws a BLLException if it fails to access the API
      */
-    public String[] getSearchMetaData(URL searchLink) throws BLLException
+    public String[] getSearchMetaData(URL url) throws BLLException
     {
-        String searchResult = this.getSearchResult(searchLink);
+        String searchResult = this.getSearchResult(url);
 
         searchResult = searchResult.replace("{", "")
                 .replace("}", "")
@@ -315,16 +360,17 @@ public class BLLManager
      * This method is to get a imgPath from a specific movie. So that it can be
      * thrown into the tilepane.
      *
-     * @param movieName
+     * @param title The title of the movie
      *
-     * @return
-     * @throws movie.registraction.bll.exception.BLLException
+     * @return Returnd a String containing the URL for the Movie image
+     *
+     * @throws BLLException Throws an exception if it fails to acces the API
      */
-    public String getSpecificMovieImage(String movieName) throws BLLException
+    public String getSpecificMovieImage(String title) throws BLLException
     {
         try
         {
-            return dal.getSpecificMovieImage(movieName);
+            return dal.getSpecificMovieImage(title);
         }
         catch (DALException ex)
         {
@@ -332,9 +378,16 @@ public class BLLManager
         }
     }
 
-    public String splitDot(String stringToSplit)
+    /**
+     * Splits a String up every time it sees a . (peroid)
+     *
+     * @param string The String to split up
+     *
+     * @return Returns the same String, but now plit up
+     */
+    public String splitDot(String string)
     {
-        return stringToSplit.split("\\.")[0];
+        return string.split("\\.")[0];
     }
 
     /**
@@ -342,7 +395,8 @@ public class BLLManager
      * under 6
      * ask the user if the movie should be deleted
      *
-     * @throws movie.registraction.bll.exception.BLLException
+     * @throws BLLException Throws an exception if it fails to access the
+     *                      storage
      */
     public void findOldAndBadMovies() throws BLLException
     {
@@ -381,11 +435,15 @@ public class BLLManager
         }
     }
 
-        /**
+    /**
      * Finding the specific movie, which has same id as imageid
      * This is to find the object, that belongs to the image.
-     * @param imageView
-     * @return 
+     *
+     * @param imageView The ImageView which to look in
+     *
+     * @return Return the Movie object within the ImageView
+     *
+     * @throws BLLException Throws an exception if it fails to access storage
      */
     public Movie getMovieInfo(ImageView imageView) throws BLLException
     {
@@ -402,21 +460,22 @@ public class BLLManager
     }
 
     /**
-     * Check if movie already exists in the db
+     * Check if movie already exists in the database
      *
-     * @param movieTitle
+     * @param title The title of the Movie
      *
-     * @return
+     * @return Returns true if it found a match, false if the movie doesn't
+     *         exist in the database
      *
-     * @throws movie.registraction.bll.BLLException
+     * @throws BLLException Throws an excption if it fails to access the storage
      */
-    public boolean movieAlreadyExisting(String movieTitle) throws BLLException
+    public boolean movieAlreadyExisting(String title) throws BLLException
     {
         boolean isAlreadyInDataBase = false;
 
         for (Movie m : getAllMovies())
         {
-            if (m.getMovieTitle().toLowerCase().equals(movieTitle.toLowerCase()))
+            if (m.getMovieTitle().toLowerCase().equals(title.toLowerCase()))
             {
                 isAlreadyInDataBase = true;
             }
@@ -425,6 +484,14 @@ public class BLLManager
         return isAlreadyInDataBase;
     }
 
+    /**
+     * Removes a Movie from the database
+     *
+     * @param id The ID of the Movie
+     *
+     * @throws BLLException throws an exception if it fails to access the
+     *                      database
+     */
     public void removeMovie(int id) throws BLLException
     {
         try
@@ -438,15 +505,29 @@ public class BLLManager
     }
 
     /**
-     * Gets the list holding the changed files
+     * Gets the list of files that's been moved and or altered.
      *
-     * @return
+     * @see "The WatchService in the DAL layer"
+     *
+     * @return Returns an ObservableList of Paths containing the all the files
+     *         that's been changed
      */
     public ObservableList<Path> getChangeList()
     {
         return dal.getChangeList();
     }
 
+    /**
+     * Gets all the files that's been added to the library
+     *
+     * @param movieList The list of all movies
+     *
+     * @return Returns a List of Strings containing the files added to the
+     *         library
+     *
+     * @throws BLLException Throws an exception if it fails to access the
+     *                      database
+     */
     public List<String> getUpdateLibrary(ArrayList<Path> movieList) throws BLLException
     {
         List<String> databaseList = new ArrayList<>();
@@ -467,11 +548,19 @@ public class BLLManager
         return localList;
     }
 
-    public void setLastView(int movieId) throws BLLException
+    /**
+     * Updates the last viewed date of a Movie
+     *
+     * @param id The ID if the Movie to update
+     *
+     * @throws BLLException Throws an exception if it fails to access the
+     *                      storage
+     */
+    public void setLastView(int id) throws BLLException
     {
         try
         {
-            dal.setLastView(movieId);
+            dal.setLastView(id);
         }
         catch (DALException ex)
         {
@@ -479,7 +568,7 @@ public class BLLManager
         }
     }
 
-    //Search
+    //<editor-fold defaultstate="collapsed" desc="Search">
     public void setSearchText(String text)
     {
         search.setSearchText(text);
@@ -510,19 +599,30 @@ public class BLLManager
         search.setRating(rating);
     }
 
+    /**
+     * TODO
+     *
+     * @return TODO
+     *
+     * @throws BLLException TODO
+     */
     public List<Movie> prepareSearch() throws BLLException
     {
-
         return search.prepareSearch();
-
     }
 
+    /**
+     * TODO
+     *
+     * @throws BLLException TODO
+     */
     public void clearFilters() throws BLLException
     {
         search.clearFilters();
     }
+    //</editor-fold>
 
-    //Categories
+    //<editor-fold defaultstate="collapsed" desc="Categories">
     public ObservableList<String> allCategories() throws BLLException
     {
         return categories.allCategories();
@@ -567,5 +667,6 @@ public class BLLManager
     {
         categories.saveMovieCategories();
     }
+    //</editor-fold>
 
 }

@@ -43,20 +43,9 @@ public class EditCategoriesController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        try {
-            m = new MainWindowModel();
-        } catch (DALException ex) {
-            System.out.println(ex.getMessage());
-        }
+        m = new MainWindowModel();
 
-        try
-        {
-            lstViewAllCategories.setItems(m.loadCategories());
-        }
-        catch (BLLException ex)
-        {
-            System.out.println("Could not load list");
-        }
+        lstViewAllCategories.setItems(m.loadCategories());
     }
 
     @FXML

@@ -14,6 +14,7 @@ public class DataBaseConnector
     private final SQLServerDataSource dataSource;
 
     /**
+     * Constructor
      * Setting the relevant info to the database connection.
      */
     public DataBaseConnector()
@@ -30,9 +31,10 @@ public class DataBaseConnector
     /**
      * Getting the connection from the database.
      *
-     * @return
+     * @return Returns a Connection
      *
-     * @throws SQLServerException
+     * @throws SQLServerException Throws an exception if it fails to connect to
+     *                            the database
      */
     public Connection getConnection() throws SQLServerException
     {

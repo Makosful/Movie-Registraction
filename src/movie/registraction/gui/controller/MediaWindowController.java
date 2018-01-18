@@ -41,6 +41,7 @@ import movie.registraction.gui.model.MainWindowModel;
  */
 public class MediaWindowController implements Initializable
 {
+
     @FXML
     private MediaView mediaView;
     @FXML
@@ -62,7 +63,7 @@ public class MediaWindowController implements Initializable
     private double MovieLengthMillis;
     private Duration duration;
     private String movieLength;
-    
+
     private MainWindowModel mdl;
 
     @FXML
@@ -78,8 +79,8 @@ public class MediaWindowController implements Initializable
     /**
      * Initializes the controller class.
      *
-     * @param url
-     * @param rb
+     * @param url TODO
+     * @param rb  TODO
      */
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -94,8 +95,7 @@ public class MediaWindowController implements Initializable
 
         progressSliderSetup();
 
-        MediaSetup();
-
+        //MediaSetup(mdl);
         MediaDoubleClick();
 
         splitPane.setDividerPosition(0, 0.95);
@@ -110,7 +110,7 @@ public class MediaWindowController implements Initializable
         });
     }
 
-    private void MediaSetup()
+    public void MediaSetup(MainWindowModel mdl)
     {
         isPlaying = false;
 
@@ -119,9 +119,9 @@ public class MediaWindowController implements Initializable
         mvw.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
         mvh.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
         mediaView.setPreserveRatio(false); //disables the "perfect" stretch ratio
-        
+
         String path = mdl.getMovieInfo(imageView).getFilePath();
-        
+
         media = new Media(new File(path).toURI().toString());
 
         mediaPlayer = new MediaPlayer(media);

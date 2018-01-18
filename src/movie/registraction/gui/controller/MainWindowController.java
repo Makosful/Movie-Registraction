@@ -6,9 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,7 +29,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 import org.controlsfx.control.PopOver;
 
@@ -83,6 +88,11 @@ public class MainWindowController implements Initializable
     private int gridWidth;
     boolean popOverVisible;
 
+    private final int IMAGE_HEIGHT;
+    private final int IMAGE_WIDTH;
+
+    List<ImageView> imageViewList;
+
     Movie moviePoster;
 
     VBox vBox;
@@ -110,6 +120,20 @@ public class MainWindowController implements Initializable
     Label lblRatingImdb;
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="JFXCheckboxlists">
+    private final ObservableList<JFXCheckBox> genres;
+    private final ObservableList<JFXCheckBox> years;
+//</editor-fold>
+
+    public MainWindowController()
+    {
+        IMAGE_HEIGHT = 200;
+        IMAGE_WIDTH = 200;
+
+        years = FXCollections.observableArrayList();
+        genres = FXCollections.observableArrayList();
+    }
+
     /**
      * Our initializer, which is run when the program has its initial start up.
      * We create our tile pane and also our context menu for the image view
@@ -127,17 +151,10 @@ public class MainWindowController implements Initializable
         setupContextMenu();
         popOverVisible = false;
 
-        try
-        {
-            // Access the Model
-            model = new MainWindowModel();
-            model.loadMovies(tilePane, model.getAllMovies());
-            imageClick();
-        }
-        catch (DALException ex)
-        {
-            System.out.println(ex);
-        }
+        // Access the Model
+        model = new MainWindowModel();
+        loadMovies(model.getAllMovies());
+        imageClick();
 
         defaultValues();
 
@@ -166,7 +183,7 @@ public class MainWindowController implements Initializable
     private void titleSearch(ActionEvent event)
     {
         model.setSearchText(txtTitleSearch.getText());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
 
@@ -179,18 +196,16 @@ public class MainWindowController implements Initializable
     private void clearFilters(ActionEvent event)
     {
         model.fxmlClearFilters();
-        model.prepareSearch(tilePane);
+        prepareSearch();
 
-        for (CheckBox cb : model.getGenreList())
+        getGenreList().forEach((cb) ->
         {
             cb.selectedProperty().set(false);
-        }
-        for (CheckBox cb : model.getYearList())
+        });
+        getYearList().forEach((cb) ->
         {
             cb.selectedProperty().set(false);
-        }
-
-        //comBoxSortOrder.getSelectionModel().clearSelection();
+        }); //comBoxSortOrder.getSelectionModel().clearSelection();
         //comBoxMinRating.getSelectionModel().clearSelection();
     }
 
@@ -199,23 +214,34 @@ public class MainWindowController implements Initializable
      *
      * @param event The event that called this method
      *
-     * @throws IOException
      */
     @FXML
-    private void btnChangeCategories(ActionEvent event) throws IOException
+    private void btnChangeCategories(ActionEvent event)
     {
         File fxml = new File("src/movie/registraction/gui/view/editCategories.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-        Parent root;
-        root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(anchorPane.getScene().getWindow());
-        EditCategoriesController controller;
-        controller = fxmlLoader.getController();
+        FXMLLoader fxmlLoader;
+        try
+        {
+            fxmlLoader = new FXMLLoader(fxml.toURL());
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            EditCategoriesController controller;
+            controller = fxmlLoader.getController();
 
-        stage.setScene(new Scene(root));
-        stage.show();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch (MalformedURLException ex)
+        {
+            System.out.println(ex);
+        }
+        catch (IOException ex)
+        {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -226,24 +252,32 @@ public class MainWindowController implements Initializable
      * prompted.
      *
      * @param event The event that called this method
-     *
-     * @throws MalformedURLException
-     * @throws IOException
      */
-    private void openChangeMovieCategoriesWindow(Movie selectedMovie) throws MalformedURLException, IOException
+    private void openChangeMovieCategoriesWindow(Movie selectedMovie)
     {
-        File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-        Parent root;
-        root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(anchorPane.getScene().getWindow());
-        EditMovieCategoryController controller;
-        controller = fxmlLoader.getController();
-        controller.changeMovieCategories(selectedMovie);
-        stage.setScene(new Scene(root));
-        stage.show();
+        try
+        {
+            File fxml = new File("src/movie/registraction/gui/view/EditMovieCategory.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            EditMovieCategoryController controller;
+            controller = fxmlLoader.getController();
+            controller.changeMovieCategories(selectedMovie);
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch (MalformedURLException ex)
+        {
+            System.out.println(ex);
+        }
+        catch (IOException ex)
+        {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -252,7 +286,7 @@ public class MainWindowController implements Initializable
      * @param event The event that called this method
      */
     @FXML
-    private void uploadFiles(ActionEvent event) throws DALException
+    private void uploadFiles(ActionEvent event)
     {
         setChosenFilesWithPicture();
     }
@@ -266,7 +300,7 @@ public class MainWindowController implements Initializable
      */
     private void setChosenFilesWithPicture()
     {
-        model.chooseFile(tilePane);
+        chooseFiles();
         imageClick();
     }
 
@@ -304,7 +338,7 @@ public class MainWindowController implements Initializable
             {
                 genreCategories = movie.getCategories().get(i);
             }
-            else if(i == 4 || i == 8 || i == 12)
+            else if (i == 4 || i == 8 || i == 12)
             {
                 genreCategories += "\n" + movie.getCategories().get(i);
             }
@@ -444,7 +478,7 @@ public class MainWindowController implements Initializable
      */
     private void imageClick()
     {
-        model.getImageViewList().forEach((imageView) ->
+        imageViewList.forEach((imageView) ->
         {
             imageView.setOnMouseClicked((MouseEvent event) ->
             {
@@ -456,7 +490,7 @@ public class MainWindowController implements Initializable
                     moviePoster = model.getMovieInfo(imageView);
                     PopOverSetup(moviePoster, event);
                     System.out.println(moviePoster.getMovieLength());
-                    model.contextMenuOpenOrNot(contextMenu);
+                    contextMenuOpenOrNot();
                 }
 
                 else if (mouseButton == MouseButton.SECONDARY)
@@ -464,7 +498,7 @@ public class MainWindowController implements Initializable
                     moviePoster = model.getMovieInfo(imageView);
                     closePopOverIfRightClick();
                     contextMenuAction(imageView, moviePoster);
-                    model.contextMenuOpenOrNot(contextMenu);
+                    contextMenuOpenOrNot();
                     contextMenu.show(tilePane, event.getScreenX() - 5, event.getScreenY() - 5);
                 }
             });
@@ -503,65 +537,40 @@ public class MainWindowController implements Initializable
     public void contextMenuAction(ImageView imageView, Movie movie)
     {
         //<editor-fold defaultstate="collapsed" desc="setOnAction">
-        playMovie.setOnAction(new EventHandler<ActionEvent>()
+        playMovie.setOnAction((ActionEvent event) ->
         {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                System.out.println(movie.getFilePath());
+            System.out.println(movie.getFilePath());
 //                model.openFileInNative(new File(movie.getFilePath()));
-                model.setLastView(movie.getId());
-                try
-                {
-                    PlayMovieCustomPlayer(imageView);
-                }
-                catch (IOException ex)
-                {
-                    System.out.println(ex);
-                }
-                contextMenu.hide();
-            }
+            model.setLastView(movie.getId());
+            PlayMovieCustomPlayer(imageView);
+            contextMenu.hide();
         });
 
-        editData.setOnAction(new EventHandler<ActionEvent>()
+        editData.setOnAction((ActionEvent event) ->
         {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                try
-                {
-                    openChangeMovieCategoriesWindow(movie);
-                }
-                catch (IOException ex)
-                {
-                    System.out.println("Cannot open changecategorywindow");
-                }
-                contextMenu.hide();
-            }
+            openChangeMovieCategoriesWindow(movie);
+            contextMenu.hide();
         });
 
-        deleteMovie.setOnAction(new EventHandler<ActionEvent>()
+        deleteMovie.setOnAction((ActionEvent event) ->
         {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                deleteMovie(imageView, movie);
-                contextMenu.hide();
-            }
+            removeMovie(imageView, movie);
+            contextMenu.hide();
         });
         //</editor-fold>
     }
 
     /**
      * Deletes movie from database, tilepane and arraylist which cointains imageviews.
-     * @param imageView
-     * @param movie
+     * @param imageView The ImageView to delete
+     * @param movie     The Movie within
      */
-    private void deleteMovie(ImageView imageView, Movie movie)
+    private void removeMovie(ImageView imageView, Movie movie)
     {
         tilePane.getChildren().remove(imageView);
-        model.removeMovie(movie.getId(), imageView);
-       
+
+        model.removeMovie(movie.getId(), imageView, imageViewList);
+
     }
 
     /**
@@ -578,8 +587,9 @@ public class MainWindowController implements Initializable
 
     /**
      * Filtering after minimum stars.
-     * @param event 
-     * Handles the minimun rating
+     *
+     * @param event
+     *              Handles the minimun rating
      *
      * @param event The event that called this method
      */
@@ -587,14 +597,16 @@ public class MainWindowController implements Initializable
     private void comBoxMinRatingHandler(ActionEvent event)
     {
         model.setRatingSearch(comBoxMinRating.getSelectionModel().getSelectedItem());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
+
     /**
      * Filtering after the radiobuttons, "title" or "rating"
-     * @param event 
-    /**
-     * Handles the sort order
+     *
+     * @param event
+     *              /**
+     *              Handles the sort order
      *
      * @param event The event that called this method
      */
@@ -604,52 +616,71 @@ public class MainWindowController implements Initializable
 
         RadioButton orderRadiobtn = (RadioButton) rbToggleGrp.getSelectedToggle();
         model.setOrderSearch(orderRadiobtn.getText());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
+
     /**
      * Filtering after descending or ascending, based on title or rating.
      * Handles the sot order in the comboboc
+     *
      * @param event The event that called this method
      */
     @FXML
     private void comBoxSortOrderHandler(ActionEvent event)
     {
         model.setSortOrder(comBoxSortOrder.getSelectionModel().getSelectedItem());
-        model.prepareSearch(tilePane);
+        prepareSearch();
         imageClick();
     }
-
 
     /**
      * Opens a Movie in our custom media player
      *
      * @param imageView The ImageView with the Movie to play
-     *
      * @throws IOException
      */
-    private void PlayMovieCustomPlayer(ImageView imageView) throws IOException
+    private void PlayMovieCustomPlayer(ImageView imageView)
     {
-        File fxml = new File("src/movie/registraction/gui/view/MediaWindow.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxml.toURL());
-        Parent root;
-        root = fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(anchorPane.getScene().getWindow());
-        MediaWindowController controller;
-        controller = fxmlLoader.getController();
+//        String fxml = new File("/movie/registraction/gui/view/MediaWindow.fxml");
+        FXMLLoader fxmlLoader;
+        try
+        {
+            fxmlLoader = new FXMLLoader(getClass().getResource("/movie/registraction/gui/view/MediaWindow.fxml"));
+            Parent root;
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(anchorPane.getScene().getWindow());
+            MediaWindowController controller;
+            controller = fxmlLoader.getController();
 
-        controller.setImageView(imageView);
+            controller.setImageView(imageView);
+            controller.setImageView(imageView);
+            controller.MediaSetup(model);
 
-        stage.setScene(new Scene(root));
-        stage.show();
+            stage.setScene(new Scene(root));
+            stage.show();
 
-        stage.setMinHeight(700);
-        stage.setMinWidth(825);
+            stage.setMinHeight(700);
+            stage.setMinWidth(825);
+
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            stage.setMinHeight(700);
+            stage.setMinWidth(825);
+        }
+
+        catch (IOException ex)
+        {
+            Logger.getLogger(MainWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
+
     /**
-     *Expanding the accordion panes to the titledpane.
+     * Expanding the accordion panes to the titledpane.
      * Adding genre and year checkboxes to the different flowpanes.
      * Mouse events, everytime click is registerede on checkbox,
      * we make the filtering and register contextmenues, popovers etc to the
@@ -660,33 +691,187 @@ public class MainWindowController implements Initializable
     {
         // Set default values
         acdPanes.setExpandedPane(acdGenre);
-        flpGenre.getChildren().setAll(model.getGenreList());
-        flpYear.getChildren().setAll(model.getYearList());
 
-        for (CheckBox cb : model.getGenreList())
+        flpGenre.getChildren().setAll(getGenreList());
+        flpYear.getChildren().setAll(getYearList());
+
+        getGenreList().forEach((cb) ->
         {
-            cb.setOnMouseClicked(new EventHandler<MouseEvent>()
+            cb.setOnMouseClicked((MouseEvent e) ->
             {
-                public void handle(MouseEvent e)
+                model.setSearchCategories(cb.getText());
+                prepareSearch();
+                imageClick();
+            });
+        });
+
+        getYearList().forEach((cb) ->
+        {
+            cb.setOnMouseClicked((MouseEvent e) ->
+            {
+                model.setSearchYears(cb.getText());
+                prepareSearch();
+                imageClick();
+            });
+        });
+    }
+
+    /**
+     * This loads all the movies from start.
+     *
+     * @param movies The List of Movies to add to the TilePane
+     */
+    public void loadMovies(List<Movie> movies)
+    {
+        ImageView imageView;
+        imageViewList = new ArrayList();
+        for (Movie movie : movies)
+        {
+            imageView = new ImageView("https:" + movie.getImgPath());
+            imageViewSizeAndId(imageView, movie);
+            imageViewList.add(imageView);
+            tilePane.getChildren().add(imageView);
+        }
+    }
+
+    /**
+     * Sets the imageView/poster dimentions and id
+     *
+     * @param imageView The ImageView to set
+     * @param movie     The Movie from which to get the data
+     */
+    public void imageViewSizeAndId(ImageView imageView, Movie movie)
+    {
+        imageView.setFitHeight(IMAGE_HEIGHT);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageView.setId("" + movie.getId());
+    }
+
+    /**
+     * Adds Movies to the TilePane
+     * Gets the seach result in form of a list of movies, which is looped throuh
+     * adding a new imageView/poster to the tilePane
+     */
+    public void prepareSearch()
+    {
+        imageViewList.clear();
+        tilePane.getChildren().clear();
+
+        model.prepareSearch().stream().map((movie) ->
+        {
+            ImageView imageView = new ImageView("https:" + movie.getImgPath());
+            imageViewSizeAndId(imageView, movie);
+            return imageView;
+        }).map((imageView) ->
+        {
+            imageViewList.add(imageView);
+            return imageView;
+        }).forEachOrdered((imageView) ->
+        {
+            tilePane.getChildren().add(imageView);
+        });
+    }
+
+    /**
+     * Returns the list of CheckBoxes for the years
+     *
+     * @return Returns a List of JFXCheckBoxes with all the
+     */
+    public ObservableList<JFXCheckBox> getYearList()
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            int j = 1900 + (i * 10);
+            int q = 1900 + ((1 + i) * 10);
+            JFXCheckBox cb = new JFXCheckBox(j + "-" + q);
+
+            years.add(cb);
+        }
+
+        return years;
+    }
+
+    /**
+     * Gets the list of Genres
+     *
+     * @return Returns a List of JFXCheckBoxes with all the genres
+     */
+    public ObservableList<JFXCheckBox> getGenreList()
+    {
+        model.allCategories().stream().map((category) -> new JFXCheckBox(category)).forEachOrdered((cb) ->
+        {
+            genres.add(cb);
+        });
+        return genres;
+    }
+
+    /**
+     * Making imageViews, setting their sizes, adding them to an arraylist,
+     * adding them to our tilepane, and finally giving the imageviews an id,
+     * that will refer to the actual movie.
+     *
+     * @param image The picture to set in
+     * @param url   The URL of the image
+     */
+    public void setPictures(File image, String url)
+    {
+        ImageView imageView = new ImageView(url);
+        imageView.setFitHeight(IMAGE_HEIGHT);
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageViewList.add(imageView);
+
+        tilePane.getChildren().add(imageView);
+        model.setImageId(image, imageView);
+    }
+
+    private void chooseFiles()
+    {
+        if (model.chooseFile() != null)
+        {
+            model.chooseFile().forEach((chosenFile) ->
+            {
+                String nameOfMovie = model.splitDot(chosenFile.getName());
+
+                if (!model.movieAlreadyExisting(nameOfMovie.toLowerCase()))
                 {
-                    model.setSearchCategories(cb.getText());
-                    model.prepareSearch(tilePane);
-                    imageClick();
+
+                    model.addMovie(nameOfMovie, chosenFile.getPath());
+                    String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
+                    imgPath = "https:" + imgPath;
+                    setPictures(chosenFile, imgPath);
+
+                }
+                else
+                {
+                    alertButtonMovieAlreadyExist();
                 }
             });
         }
+    }
 
-        for (CheckBox cb : model.getYearList())
+    private void alertButtonMovieAlreadyExist()
+    {
+        ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Selected Movie(s) has already been added",
+                                okButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == okButton)
         {
-            cb.setOnMouseClicked(new EventHandler<MouseEvent>()
-            {
-                public void handle(MouseEvent e)
-                {
-                    model.setSearchYears(cb.getText());
-                    model.prepareSearch(tilePane);
-                    imageClick();
-                }
-            });
+            alert.close();
+        }
+    }
+
+    /**
+     * Checks whether contextmenu is open or not, if yes, it closes.
+     * Incase user dobbleclicks several times, so it doesnt stack.
+     */
+    public void contextMenuOpenOrNot()
+    {
+        // So the contextMenu doesnt stack.
+        if (contextMenu.isShowing())
+        {
+            contextMenu.hide();
         }
     }
 }
