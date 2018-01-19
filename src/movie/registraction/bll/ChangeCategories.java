@@ -32,7 +32,6 @@ public class ChangeCategories
      */
     public ChangeCategories() throws DALException
     {
-
         try
         {
             dal = new DALManager();

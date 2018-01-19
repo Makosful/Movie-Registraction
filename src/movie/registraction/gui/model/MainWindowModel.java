@@ -56,10 +56,10 @@ public class MainWindowModel
         allCategories = FXCollections.observableArrayList();
 
         extensionList = new ArrayList();
-        extensionList.add(".jpg");
-        extensionList.add(".png");
         extensionList.add(".mp4");
         extensionList.add(".mpeg4");
+        extensionList.add(".wav");
+        extensionList.add(".flv");
         loadMovieFromLibrary();
         setupLibraryListener();
         bll.setDirectoryWatch();
@@ -480,7 +480,6 @@ public class MainWindowModel
      */
     public void setUpRating(int movieId, double rating, GridPane gridPaneRating, Label lblRating)
     {
-
         try
         {
             Rating r = new Rating(movieId, rating, gridPaneRating, lblRating);
