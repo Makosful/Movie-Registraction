@@ -197,7 +197,7 @@ public class MainWindowController implements Initializable
     {
         model.fxmlClearFilters();
         prepareSearch();
-        
+
         //uncheck checkboxes
         getGenreList().forEach((cb) ->
         {
@@ -206,8 +206,8 @@ public class MainWindowController implements Initializable
         getYearList().forEach((cb) ->
         {
             cb.selectedProperty().set(false);
-        }); 
-        
+        });
+
         //set comboboxes to default / clear selcted value
         comBoxSortOrder.getSelectionModel().clearSelection();
         comBoxMinRating.getSelectionModel().clearSelection();
@@ -240,11 +240,9 @@ public class MainWindowController implements Initializable
         }
         catch (MalformedURLException ex)
         {
-            System.out.println(ex);
         }
         catch (IOException ex)
         {
-            System.out.println(ex);
         }
     }
 
@@ -276,11 +274,9 @@ public class MainWindowController implements Initializable
         }
         catch (MalformedURLException ex)
         {
-            System.out.println(ex);
         }
         catch (IOException ex)
         {
-            System.out.println(ex);
         }
     }
 
@@ -655,13 +651,13 @@ public class MainWindowController implements Initializable
             fxmlLoader = new FXMLLoader(getClass().getResource("/movie/registraction/gui/view/MediaWindow.fxml"));
             Parent root;
             root = fxmlLoader.load();
-            
+
             MediaWindowController controller;
             controller = fxmlLoader.getController();
             controller.setImageView(imageView);
             controller.setImageView(imageView);
             controller.MediaSetup(model);
-            
+
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(anchorPane.getScene().getWindow());
@@ -838,15 +834,16 @@ public class MainWindowController implements Initializable
             String[] metaData = null;
             String nameOfMovie = model.splitDot(chosenFile.getName());
             /**
-             * Tries to execute this code (basically a check to whether this movie
+             * Tries to execute this code (basically a check to whether this
+             * movie
              * can be found on imdb or not)
              */
             try
             {
-             metaData = model.getMovieMetaData(nameOfMovie);
-             imdbMovie = true;
+                metaData = model.getMovieMetaData(nameOfMovie);
+                imdbMovie = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 imdbMovie = false;
                 alertMessage(nameOfMovie + " does not exist on IMDB");
@@ -860,7 +857,7 @@ public class MainWindowController implements Initializable
                 imgPath = "https:" + imgPath;
                 setPictures(chosenFile, imgPath);
             }
-            if(!movieNotInDatabase && imdbMovie)
+            if (!movieNotInDatabase && imdbMovie)
             {
                 alertMessage(nameOfMovie + " has already been added");
             }

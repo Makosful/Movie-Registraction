@@ -75,16 +75,12 @@ public class LibraryScan implements Runnable
                     {
                         Path p = new File(eventDir + "\\" + eventPath).toPath();
                         this.list.remove(p);
-                        //System.out.println("Removed: " + eventPath);
-                        //System.out.println(this.list.size());
                     }
 
                     if ("ENTRY_CREATE".equals(kind.toString()))
                     {
                         Path p = new File(eventDir + "\\" + eventPath).toPath();
                         this.list.add(p);
-                        //System.out.println("Created: " + eventPath);
-                        //System.out.println(this.list.size());
                     }
 
                 }
