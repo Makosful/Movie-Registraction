@@ -489,7 +489,6 @@ public class MainWindowController implements Initializable
                     // getting movieInfo everytime u click, to stay updated with database.
                     moviePoster = model.getMovieInfo(imageView);
                     PopOverSetup(moviePoster, event);
-                    System.out.println(moviePoster.getMovieLength());
                     contextMenuOpenOrNot();
                 }
 
@@ -539,8 +538,6 @@ public class MainWindowController implements Initializable
         //<editor-fold defaultstate="collapsed" desc="setOnAction">
         playMovie.setOnAction((ActionEvent event) ->
         {
-            System.out.println(movie.getFilePath());
-//                model.openFileInNative(new File(movie.getFilePath()));
             model.setLastView(movie.getId());
             PlayMovieCustomPlayer(imageView);
             contextMenu.hide();
