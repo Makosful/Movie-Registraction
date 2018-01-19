@@ -3,7 +3,6 @@ package movie.registraction.gui.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,8 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.MovieDAO;
-import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
@@ -23,7 +20,6 @@ public class EditMovieCategoryController implements Initializable
 {
 
     private MainWindowModel m;
-    private Movie movie;
 
     @FXML
     private ListView<String> listViewAll;
@@ -38,6 +34,11 @@ public class EditMovieCategoryController implements Initializable
         m = new MainWindowModel();
     }
 
+    /**
+     * Calls to save the changes of chosen movies
+     * Then it closes the window
+     * @param event 
+     */
     @FXML
     private void btnSave(ActionEvent event)
     {
@@ -46,6 +47,11 @@ public class EditMovieCategoryController implements Initializable
         stage.close();
     }
 
+    /**
+     * When pressing the remove button the listViewChosen lists selected item is removed from 
+     * the list.
+     * @param event 
+     */
     @FXML
     private void btnRemoveCat(ActionEvent event)
     {
@@ -53,26 +59,20 @@ public class EditMovieCategoryController implements Initializable
     }
 
     /**
-     * Todo
+     * Makes a call to get alle the categories from the specific movie and adds them 
+     * to the listView, the same with all categories. A listener is added to this 
+     * liswView of all categories, so when a new category is selected the 
+     * addChosenMovieCategory method is called to add the selected 
+     * category to the other list.
      *
-     * @param selectedMovie TODO
+     * @param selectedMovie Movie object
      */
     public void changeMovieCategories(Movie selectedMovie)
-    {
+    {        
+        listViewChosen.setItems(m.loadChosenMovieCategories(selectedMovie));
+
         listViewAll.setItems(m.getAllCategories());
-        try
-        {
-            MovieDAO mDAO = new MovieDAO();
-
-            ObservableList<Movie> movie = mDAO.getAllMovies();
-            listViewChosen.setItems(m.loadChosenMovieCategories(selectedMovie));
-
-        }
-        catch (DALException ex)
-        {
-            System.out.println(ex.getMessage());
-        }
-
+        
         listViewAll.getSelectionModel().selectedItemProperty()
                 .addListener((ObservableValue<? extends String> observable,
                               String oldValue, String newValue) ->

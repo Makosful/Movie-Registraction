@@ -33,15 +33,14 @@ public class MovieDAO
      */
     public void addCategory(String category) throws DALException
     {
-        System.out.println("Add:" + category);
         try (Connection con = db.getConnection())
         {
 
             String sql = "INSERT INTO Category Values (?)";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-
             preparedStatement.setString(1, category);
             preparedStatement.executeUpdate();
+            
         }
         catch (SQLException ex)
         {
@@ -59,14 +58,14 @@ public class MovieDAO
      */
     public void removeCategory(String category) throws DALException
     {
-        System.out.println("Remove:" + category);
-
         try (Connection con = db.getConnection())
         {
+            
             String sql = "DELETE FROM Category WHERE name = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, category);
             preparedStatement.executeUpdate();
+            
         }
         catch (SQLException ex)
         {
@@ -85,21 +84,18 @@ public class MovieDAO
      */
     public void addMovieCategory(int id, String category) throws DALException
     {
-        System.out.println("Add:" + id + category);
-
         int categoryId;
         categoryId = getCategoryId(category);
 
         try (Connection con = db.getConnection())
         {
+            
             String sql = "INSERT INTO CatMovie (categoryId, movieId) Values (?, ?)";
-
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-
             preparedStatement.setInt(1, categoryId);
-
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
+            
         }
         catch (SQLException ex)
         {
@@ -119,21 +115,18 @@ public class MovieDAO
      */
     public void removeMovieCategory(int id, String category) throws DALException
     {
-
-        System.out.println("Remove:" + id + category);
-
         int categoryId;
         categoryId = getCategoryId(category);
 
         try (Connection con = db.getConnection())
         {
+            
             String sql = "DELETE FROM CatMovie WHERE movieId = ? AND categoryId = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
-
             preparedStatement.setInt(1, id);
             preparedStatement.setInt(2, categoryId);
-
             preparedStatement.executeUpdate();
+            
         }
         catch (SQLException ex)
         {
@@ -155,7 +148,6 @@ public class MovieDAO
         try (Connection con = db.getConnection())
         {
             String sql = "SELECT name FROM Category";
-
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
 
@@ -244,9 +236,10 @@ public class MovieDAO
 
             ObservableList<Movie> movies = FXCollections.observableArrayList();
             Movie movie = new Movie();
+            
             while (rs.next())
             {
-
+                
                 movie = createMovieFromDB(rs, movie);
 
                 if (!movies.contains(movie))
@@ -275,7 +268,10 @@ public class MovieDAO
      * or INNER JOIN.
      *
      * @param rs            The ResultSet retrievd from the DataBase
-     * @param previousMovie TODO
+     * @param previousMovie the movieobject passed is the returned value of this method
+     *                      if the movie object is the same as the iteration before
+     *                      only add category, else create a new movie object, in both
+     *                      cases it is returned and used as parameter in next call.
      *
      * @return Returns a Movie created from the DataBase
      *
@@ -341,7 +337,7 @@ public class MovieDAO
             preparedStatement.setDouble(6, Double.parseDouble(metadata[3]));
             preparedStatement.setInt(7, Integer.parseInt(metadata[1]));
             preparedStatement.setInt(8, Integer.parseInt(metadata[2]));
-
+            
             preparedStatement.executeUpdate();
 
             ResultSet rsi = preparedStatement.getGeneratedKeys();
@@ -460,10 +456,10 @@ public class MovieDAO
         try (Connection con = db.getConnection())
         {
             String sqlInsert = "SELECT imgPath FROM Movie WHERE name = ?";
-
             PreparedStatement preparedStatement = con.prepareStatement(sqlInsert);
             preparedStatement.setString(1, title);
             ResultSet rs = preparedStatement.executeQuery();
+            
             if (rs.next())
             {
                 imageLink = rs.getString("imgPath");
@@ -485,12 +481,13 @@ public class MovieDAO
      * Movie objects from the resultset and returns a list of the resulting
      * movies.
      *
-     * @param sqlString     TODO
-     * @param categories    TODO
-     * @param year          TODO
-     * @param rating        TODO
-     * @param searchText    TODO
-     * @param searchNumeric TODO
+     * @param sqlString     String containing the sql query
+     * @param categories    List of categories as criteria for the search
+     * @param year          HashMap of years as criteria
+     * @param rating        the rating number movies should be above in the search
+     * @param searchText    The text String to search for
+     * @param searchNumeric boolean if true the searchtext is for years only
+     *                      else title and category
      *
      * @return Returns an ArrayList of Movies containing the search results
      *
@@ -526,6 +523,7 @@ public class MovieDAO
             PreparedStatement preparedStatement = con.prepareStatement(sql);
 
             int i = 0;
+            
             for (String category : categories)
             {
                 i++;
@@ -536,6 +534,7 @@ public class MovieDAO
             {
                 String key = y.getKey();
                 String value = y.getValue();
+                
                 i++;
                 preparedStatement.setInt(i, Integer.parseInt(key));
 
@@ -560,6 +559,7 @@ public class MovieDAO
                 {
                     i++;
                     preparedStatement.setString(i, "%" + searchText + "%");
+                    
                     i++;
                     preparedStatement.setString(i, "%" + searchText + "%");
                 }
@@ -569,6 +569,7 @@ public class MovieDAO
 
             List<Movie> movies = new ArrayList();
             Movie movie = new Movie();
+            
             while (rs.next())
             {
                 movie = createMovieFromDB(rs, movie);
@@ -585,7 +586,6 @@ public class MovieDAO
         }
         catch (SQLException ex)
         {
-            System.out.println(ex.getMessage());
             throw new DALException();
         }
 

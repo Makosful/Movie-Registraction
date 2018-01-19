@@ -64,7 +64,6 @@ public class Search
         {
             categories.remove(category);
         }
-
     }
 
     /**
@@ -84,7 +83,6 @@ public class Search
         {
             year.remove(decade[0], decade[1]);
         }
-
     }
 
     /**
@@ -95,7 +93,8 @@ public class Search
      */
     public void setRating(String rating)
     {
-        if(rating != null){
+        if(rating != null)
+        {
             if (rating.equals("All"))
             {
                 this.rating = -1;
@@ -147,16 +146,21 @@ public class Search
      */
     public List<Movie> prepareSearch() throws BLLException
     {
-        //Init the sql queries
+        //initialise the sql queries as String variables 
         String sqlSearchCategory = "";
         String sqlSearchYear = "";
         String sqlOrderBy = "";
         String sqlSearch = "";
         String sqlRating = "";
+        
+        //This boolean determines if the searchText is numeric, 
+        //if it numeric, the sql query for text search changes 
+        //to searching for only years else category names and movie title
         boolean searchNumeric = false;
 
+        //these methods returns a string cointaining part of a sql query
         sqlSearchCategory = setSqlSearchCategory(sqlSearchCategory);
-
+        
         sqlSearchYear = setSqlSearchYear(sqlSearchYear);
 
         sqlOrderBy = setSqlSearchOrder(sqlOrderBy);
@@ -232,7 +236,7 @@ public class Search
      *
      * @param str String to check if its numeric
      *
-     * @return boolean 
+     * @return boolean that determines if the seachText should be consideret numeric
      */
     public boolean isNumeric(String str)
     {
@@ -258,7 +262,6 @@ public class Search
     {
         for (String criteria : categories)
         {
-
             //If its the first filter add where clause in first iteration
             if (sqlSearchCategory.isEmpty())
             {
@@ -295,14 +298,15 @@ public class Search
                 sqlSearchYear = "WHERE (";
             }
             else if (sqlSearchYear.isEmpty())
-            {
+            {   //parentheses to encapsulate the year query and seperates it from 
+                //the other criterias
                 sqlSearchYear = "(";
             }
             else
             {
                 sqlSearchYear += " OR ";
             }
-
+            
             sqlSearchYear += "(Movie.year > ? AND Movie.year < ?)";
         }
 
@@ -323,15 +327,16 @@ public class Search
      */
     private String setSqlSearchOrder(String sqlOrderBy)
     {
-
+        
         if (order.equals("Title"))
         {
             sqlOrderBy = " ORDER BY Movie.name";
         }
-        if (order.equals("Rating"))
+        else if (order.equals("Rating"))
         {
             sqlOrderBy = " ORDER BY Movie.personalRating";
         }
+        
         //if filters are cleared sort is null
         if(sort != null)
         {
@@ -349,6 +354,7 @@ public class Search
             sort = "Descending";
             sqlOrderBy += " DESC";
         }
+        
         return sqlOrderBy;
     }
 
@@ -387,7 +393,6 @@ public class Search
         sort = "Decending";
         searchText = "";
         rating = -1;
-
     }
 
 }
