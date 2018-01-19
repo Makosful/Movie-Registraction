@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" stylesheets="@../../css/stylesheet.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="700.0" prefWidth="1300.0" stylesheets="@../../css/stylesheet.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="movie.registraction.gui.controller.MainWindowController">
     <children>
         <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -45,11 +45,6 @@
                         <TitledPane fx:id="acdYear" animated="false" layoutX="10.0" layoutY="10.0" text="Year">
                            <content>
                               <FlowPane fx:id="flpYear" hgap="25.0" />
-                           </content>
-                        </TitledPane>
-                        <TitledPane fx:id="acdOther" animated="false" layoutX="10.0" layoutY="10.0" text="Other">
-                           <content>
-                              <FlowPane fx:id="flpOther" hgap="25.0" />
                            </content>
                         </TitledPane>
                               </panes>
