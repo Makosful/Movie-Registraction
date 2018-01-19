@@ -11,8 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import movie.registraction.be.Movie;
-import movie.registraction.dal.MovieDAO;
-import movie.registraction.dal.exception.DALException;
 import movie.registraction.gui.model.MainWindowModel;
 
 /**
