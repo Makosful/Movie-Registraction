@@ -350,10 +350,9 @@ public class MainWindowModel
 
         // Defines what files it will look for
         FileChooser.ExtensionFilter videoFilter = new FileChooser.ExtensionFilter("Supported Video Files", "*.mp4", ".mpeg4", ".wav", ".flv");
-        //FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
 
         // Adds the filters
-        fc.getExtensionFilters().addAll(videoFilter/*, imageFilter*/);
+        fc.getExtensionFilters().addAll(videoFilter);
 
         // Opens the FileChooser and saves the results in a list
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);

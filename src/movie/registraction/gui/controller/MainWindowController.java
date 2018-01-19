@@ -849,7 +849,7 @@ public class MainWindowController implements Initializable
             catch(Exception e)
             {
                 imdbMovie = false;
-                alertButtonMovieAlreadyExist(nameOfMovie + " does not exist on IMDB");
+                alertMessage(nameOfMovie + " does not exist on IMDB");
             }
 
             if (imdbMovie && !model.movieAlreadyExisting(metaData[0].toLowerCase()))
@@ -862,7 +862,7 @@ public class MainWindowController implements Initializable
             }
             if(!movieNotInDatabase && imdbMovie)
             {
-                alertButtonMovieAlreadyExist(nameOfMovie + " has already been added");
+                alertMessage(nameOfMovie + " has already been added");
             }
         }
     }
@@ -870,7 +870,7 @@ public class MainWindowController implements Initializable
     /**
      * Alert if movie already exists.
      */
-    private void alertButtonMovieAlreadyExist(String message)
+    private void alertMessage(String message)
     {
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         Alert alert = new Alert(Alert.AlertType.ERROR, message,
