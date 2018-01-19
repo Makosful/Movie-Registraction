@@ -271,8 +271,8 @@ public class Search
             //subselect to select movies that contains all the chosen categories
             //and not only one of the categories
             sqlSearchCategory += "EXISTS( SELECT CatMovie.categoryId, CatMovie.movieId "
-                                 + "FROM CatMovie JOIN Category ON Category.id = CatMovie.categoryId"
-                                 + " WHERE Movie.id = CatMovie.movieId AND Category.name IN (?) )";
+                                 + "FROM CatMovie JOIN Category ON Category.id = CatMovie.categoryId "
+                                 + "WHERE Movie.id = CatMovie.movieId AND Category.name IN (?) )";
         }
 
         return sqlSearchCategory;
@@ -333,7 +333,8 @@ public class Search
             sqlOrderBy = " ORDER BY Movie.personalRating";
         }
         //if filters are cleared sort is null
-        if(sort != null){
+        if(sort != null)
+        {
             if (sort.equals("Descending"))
             {
                 sqlOrderBy += " DESC";

@@ -83,7 +83,7 @@ public class BLLManager
      *
      * @param url The URL to queue the search on the API
      *
-     * @return Returns a String containing the search results
+     * @return Returns a String containing the search results   
      *
      * @throws BLLException Throws BLLException if it fails to access OMDB
      */
@@ -400,13 +400,16 @@ public class BLLManager
     {
         try
         {
-            Date twoYearsBefore = new Date(System.currentTimeMillis() - (2 * 365 * 24 * 60 * 60 * 1000));
+              long oneYear = 365*24*60*60*1000;
+        
+       
+            Date twoYearsBefore = new Date(System.currentTimeMillis()-(oneYear*2));
             for (Movie m : getAllMovies())
             {
                 if (m.getLastView() != null)
                 {
-                    if (m.getLastView().after(twoYearsBefore) && m.getPersonalRating() < 6)
-                    {
+                    if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6 && m.getPersonalRating() != -1)
+                    {       
                         Alert alert = new Alert(AlertType.WARNING,
                                                 "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
                                                 + " og du har givet den en rating på " + m.getPersonalRating()
