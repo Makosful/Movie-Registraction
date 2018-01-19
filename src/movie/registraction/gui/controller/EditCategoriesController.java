@@ -48,18 +48,30 @@ public class EditCategoriesController implements Initializable
         lstViewAllCategories.setItems(m.loadCategories());
     }
 
+    /**
+     * Add a specific category, by passing string as category  
+     * @param event 
+     */
     @FXML
     private void btnAddCategory(ActionEvent event)
     {
         m.addChosenCategory(txtFieldCategory.getText());
     }
 
+    /**
+     * Remove a specific category, by passing string as category  
+     * @param event 
+     */
     @FXML
     private void btnRemoveCategory(ActionEvent event)
     {
         m.removeChosenCategory(lstViewAllCategories.getSelectionModel().getSelectedItem());
     }
 
+    /**
+     * Make a call down to save the changes and then closes the window
+     * @param event 
+     */
     @FXML
     private void btnSaveCategories(ActionEvent event)
     {
