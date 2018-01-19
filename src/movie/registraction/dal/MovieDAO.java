@@ -395,7 +395,6 @@ public class MovieDAO
     {
         try (Connection con = db.getConnection())
         {
-            System.out.println(id);
 
             String sql = "DELETE Movie FROM Movie "
                          + "LEFT JOIN CatMovie ON Movie.id = CatMovie.movieId "

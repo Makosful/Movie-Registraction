@@ -188,7 +188,6 @@ public class MediaWindowController implements Initializable
     private void resetControls()
     {
         lblTimer.setText(formatTime(mediaPlayer.getStartTime(), duration));
-        System.out.println(duration);
         progressSlider.setValue(0.0);
         btnPlayPause.setText("Play");
     }
@@ -200,7 +199,6 @@ public class MediaWindowController implements Initializable
         {
             mediaPlayer.setVolume(volumeSlider.getValue() / 100);
             volumeSlider.setValue(mediaPlayer.getVolume() * 100);
-            System.out.println(volumeSlider.getValue());
             lblVolume.setText(String.format("%.0f", new_val) + "%");
         });
     }
