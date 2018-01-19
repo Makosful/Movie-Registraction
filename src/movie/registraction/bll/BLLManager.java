@@ -83,7 +83,7 @@ public class BLLManager
      *
      * @param url The URL to queue the search on the API
      *
-     * @return Returns a String containing the search results   
+     * @return Returns a String containing the search results
      *
      * @throws BLLException Throws BLLException if it fails to access OMDB
      */
@@ -269,7 +269,7 @@ public class BLLManager
     {
         for (Movie movie : getAllMovies())
         {
-            
+
             // Removing the dot and text after, so only the text is in the string.
             String fileName = splitDot(file.getName());
 
@@ -302,7 +302,6 @@ public class BLLManager
                 .replace("]", "")
                 .replace("\"", "");
         String[] meta = searchResult.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-        System.out.println(searchResult);
         for (String meta1 : meta) //get title
         {
             if (meta1.contains("Title:"))
@@ -335,7 +334,6 @@ public class BLLManager
 
                 meta[5] = searchResult.substring(searchResult.indexOf("Genre"), searchResult.indexOf("Director"));
                 meta[5] = meta[5].replace(",", "");
-                System.out.println(meta[5]);
             }
             //imdb id
             else if (meta1.contains("imdbID:"))
@@ -400,24 +398,24 @@ public class BLLManager
     {
         try
         {
-            long oneYear = 365*24*60*60*1000;
-        
-            Date twoYearsBefore = new Date(System.currentTimeMillis()-(oneYear*2));
-            
+            long oneYear = 365 * 24 * 60 * 60 * 1000;
+
+            Date twoYearsBefore = new Date(System.currentTimeMillis() - (oneYear * 2));
+
             for (Movie m : getAllMovies())
             {
                 if (m.getLastView() != null)
                 {
                     if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6 && m.getPersonalRating() != -1)
-                    {       
+                    {
                         Alert alert = new Alert(AlertType.WARNING,
-                            "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
-                            + " og du har givet den en rating på " + m.getPersonalRating()
-                            + " , har du lyst til at slette den?",
-                            ButtonType.YES, ButtonType.NO);
+                                                "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
+                                                + " og du har givet den en rating på " + m.getPersonalRating()
+                                                + " , har du lyst til at slette den?",
+                                                ButtonType.YES, ButtonType.NO);
 
                         Optional<ButtonType> result = alert.showAndWait();
-                        
+
                         if (result.get() == ButtonType.YES)
                         {
                             dal.removeMovie(m.getId());
@@ -447,7 +445,7 @@ public class BLLManager
     public Movie getMovieInfo(ImageView imageView) throws BLLException
     {
         Movie movieObject = null;
-        
+
         for (Movie movie : getAllMovies())
         {
             //  Finding the ID that belongs to the movie.
@@ -456,22 +454,25 @@ public class BLLManager
                 movieObject = movie;
             }
         }
-        
+
         return movieObject;
     }
 
     /**
      * Check if movie already exists in the database
+     *
      * @param title The title of the Movie
+     *
      * @return Returns true if it found a match, false if the movie doesn't
      *         exist in the database
+     *
      * @throws BLLException Throws an excption if it fails to access the storage
      */
     public boolean movieAlreadyExisting(String title) throws BLLException
     {
 
         boolean isAlreadyInDataBase = false;
-        
+
         for (Movie m : getAllMovies())
         {
 
@@ -481,7 +482,7 @@ public class BLLManager
             }
 
         }
-        
+
         return isAlreadyInDataBase;
     }
 

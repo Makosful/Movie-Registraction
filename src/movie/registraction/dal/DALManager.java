@@ -116,7 +116,7 @@ public class DALManager
      */
     public void setDirectoryWatch()
     {
-        
+
         ArrayList<Path> singleFolders = new ArrayList();
 
         // Removes the dublicates
@@ -124,11 +124,6 @@ public class DALManager
                 -> (!singleFolders.contains(folder))).forEachOrdered((folder) ->
         {
             singleFolders.add(folder);
-        });
-
-        singleFolders.forEach((path) ->
-        {
-            System.out.println(path);
         });
 
         directoryWatcher(singleFolders);
@@ -268,7 +263,7 @@ public class DALManager
         int id = mDAO.addMovie(meta, filePath);
 
         String[] metaMovieCategories = meta[5].split(" ");
-        
+
         for (String cat : metaMovieCategories)
         {
             mDAO.addMovieCategory(id, cat);
@@ -412,9 +407,10 @@ public class DALManager
      * @param sqlString     String containing the sql query
      * @param categories    List of categories as criteria for the search
      * @param year          HashMap of years as criteria
-     * @param rating        the rating number movies should be above in the search
+     * @param rating        the rating number movies should be above in the
+     *                      search
      * @param searchText    The text to search for
-     * @param searchNumeric boolean if true the searchtext is for years only 
+     * @param searchNumeric boolean if true the searchtext is for years only
      *
      * @return Returns a List of all Movies matching the cireteria
      *
@@ -447,12 +443,13 @@ public class DALManager
      * Sets when you last saw the video.
      *
      * @param movieId
+     *
      * @throws DALException Throws an exception if it fails to access the
      *                      database
      */
-    public void setLastView(int movieId) throws DALException 
-    { 
-       mDAO.setLastView(movieId);
+    public void setLastView(int movieId) throws DALException
+    {
+        mDAO.setLastView(movieId);
     }
 
 }
