@@ -75,7 +75,6 @@ public class EditCategoriesController implements Initializable
     @FXML
     private void btnSaveCategories(ActionEvent event)
     {
-
         m.saveCategories();
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
