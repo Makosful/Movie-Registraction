@@ -27,10 +27,9 @@ public class ChangeCategories
     /**
      * Constructor
      *
-     * @throws DALException Throws an exception if it fails to initiate the DAL
-     *                      layer
+     * @throws movie.registraction.bll.exception.BLLException
      */
-    public ChangeCategories() throws DALException
+    public ChangeCategories() throws BLLException 
     {
         try
         {
@@ -38,7 +37,7 @@ public class ChangeCategories
         }
         catch (DALException ex)
         {
-            throw new DALException();
+            throw new BLLException();
         }
 
         this.removeCategory = new ArrayList();
