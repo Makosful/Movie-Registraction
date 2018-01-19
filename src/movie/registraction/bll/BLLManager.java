@@ -402,8 +402,8 @@ public class BLLManager
         {
             long oneYear = 365*24*60*60*1000;
         
-       
             Date twoYearsBefore = new Date(System.currentTimeMillis()-(oneYear*2));
+            
             for (Movie m : getAllMovies())
             {
                 if (m.getLastView() != null)
@@ -411,20 +411,18 @@ public class BLLManager
                     if (m.getLastView().before(twoYearsBefore) && m.getPersonalRating() < 6 && m.getPersonalRating() != -1)
                     {       
                         Alert alert = new Alert(AlertType.WARNING,
-                                                "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
-                                                + " og du har givet den en rating på " + m.getPersonalRating()
-                                                + " , har du lyst til at slette den?",
-                                                ButtonType.YES, ButtonType.NO);
+                            "Det er over 2 år siden du sidst har set " + m.getMovieTitle() + ","
+                            + " og du har givet den en rating på " + m.getPersonalRating()
+                            + " , har du lyst til at slette den?",
+                            ButtonType.YES, ButtonType.NO);
 
                         Optional<ButtonType> result = alert.showAndWait();
+                        
                         if (result.get() == ButtonType.YES)
                         {
                             dal.removeMovie(m.getId());
                         }
-                        else
-                        {
 
-                        }
                     }
                 }
 
@@ -449,6 +447,7 @@ public class BLLManager
     public Movie getMovieInfo(ImageView imageView) throws BLLException
     {
         Movie movieObject = null;
+        
         for (Movie movie : getAllMovies())
         {
             //  Finding the ID that belongs to the movie.
@@ -457,6 +456,7 @@ public class BLLManager
                 movieObject = movie;
             }
         }
+        
         return movieObject;
     }
 
@@ -474,14 +474,14 @@ public class BLLManager
         
         for (Movie m : getAllMovies())
         {
-            System.out.println(m.getMovieTitle());
+
             if (m.getMovieTitle().toLowerCase().equals(title.toLowerCase()))
             {
-                
                 isAlreadyInDataBase = true;
             }
 
         }
+        
         return isAlreadyInDataBase;
     }
 

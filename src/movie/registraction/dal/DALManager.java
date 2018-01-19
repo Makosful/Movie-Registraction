@@ -116,7 +116,7 @@ public class DALManager
      */
     public void setDirectoryWatch()
     {
-        //
+        
         ArrayList<Path> singleFolders = new ArrayList();
 
         // Removes the dublicates
@@ -268,6 +268,7 @@ public class DALManager
         int id = mDAO.addMovie(meta, filePath);
 
         String[] metaMovieCategories = meta[5].split(" ");
+        
         for (String cat : metaMovieCategories)
         {
             mDAO.addMovieCategory(id, cat);
@@ -281,8 +282,6 @@ public class DALManager
      */
     public void directoryWatcher(ArrayList root)
     {
-        System.out.println("Before thread");
-
         // Sets the folders in the library scanner
         this.lib.setFolders(root);
 
@@ -293,8 +292,6 @@ public class DALManager
         scan.start(); // Start the thread
 
         changes.setAll(lib.getObsList());
-
-        System.out.println("After thread");
     }
 
     /**
@@ -412,12 +409,12 @@ public class DALManager
     /**
      * Search the database for Movies matching the criteria
      *
-     * @param sqlString     TODO
-     * @param categories    TODO
-     * @param year          TODO
-     * @param rating        TODO
-     * @param searchText    TODO
-     * @param searchNumeric TODO
+     * @param sqlString     String containing the sql query
+     * @param categories    List of categories as criteria for the search
+     * @param year          HashMap of years as criteria
+     * @param rating        the rating number movies should be above in the search
+     * @param searchText    The text to search for
+     * @param searchNumeric boolean if true the searchtext is for years only 
      *
      * @return Returns a List of all Movies matching the cireteria
      *
