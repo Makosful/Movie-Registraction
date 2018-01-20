@@ -349,6 +349,7 @@ public class MainWindowController implements Initializable
         }
 
         //</editor-fold>
+       
         //<editor-fold defaultstate="collapsed" desc="PopOver Content">
         lblMovieTitle = new Label();
         lblGenre = new Label();
@@ -360,6 +361,7 @@ public class MainWindowController implements Initializable
         imdbURL = new Hyperlink();
 
         //</editor-fold>
+        
         //<editor-fold defaultstate="collapsed" desc="labelSetText">
         lblMovieTitle.setText("Title: " + movie.getMovieTitle());
         lblMovieTitle.setStyle("-fx-text-fill: black");
@@ -441,14 +443,6 @@ public class MainWindowController implements Initializable
             popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
         }
 
-        if (popOverVisible)
-        {
-            popOverVisible = true;
-            popOver.hide();
-            popOver = null;
-            popOver = new PopOver(popGrid);
-            popOver.show(tilePane, event.getScreenX() + 5, event.getScreenY());
-        }
         popOver.setDetachable(false);
         popOver.setDetached(false);
         popOver.setHeaderAlwaysVisible(true);
@@ -827,7 +821,7 @@ public class MainWindowController implements Initializable
             // Boolean for if it is a IMDB movie.
             Boolean imdbMovie = false;
             // Boolean for if movie is not in database;
-            Boolean movieNotInDatabase = false;
+            Boolean movieAlreadyInDatabase = false;
             String[] metaData = null;
             String nameOfMovie = model.splitDot(chosenFile.getName());
             /**
@@ -848,13 +842,12 @@ public class MainWindowController implements Initializable
 
             if (imdbMovie && !model.movieAlreadyExisting(metaData[0].toLowerCase()))
             {
-                movieNotInDatabase = true;
                 model.addMovie(metaData, chosenFile.getPath());
                 String imgPath = model.getSpecificMovieImage(model.splitDot(chosenFile.getName()));
                 imgPath = "https:" + imgPath;
                 setPictures(chosenFile, imgPath);
             }
-            if (!movieNotInDatabase && imdbMovie)
+            if (movieAlreadyInDatabase && imdbMovie)
             {
                 alertMessage(nameOfMovie + " has already been added");
             }
